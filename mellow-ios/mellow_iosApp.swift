@@ -25,7 +25,7 @@ struct mellow_iosApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TodayTabView()
         }
         .modelContainer(sharedModelContainer)
     }

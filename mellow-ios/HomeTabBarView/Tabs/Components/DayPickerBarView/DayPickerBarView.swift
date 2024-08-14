@@ -14,8 +14,6 @@ struct DayPickerBarView: View {
         VStack {
             DayPickerBarViewRepresentable(selectedDate: $date)
                 .frame(height: 44)
-                .background(Color("gunmetalBlue"))
-            Text("Horizontal Day Picker View \(date?.adjustToMidday())")
         }
     }
 }

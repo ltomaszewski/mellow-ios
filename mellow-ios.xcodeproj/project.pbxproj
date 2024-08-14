@@ -18,12 +18,12 @@
 		6D183CB32C6BBB6B00E41F93 /* HomeTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CB22C6BBB6B00E41F93 /* HomeTabBarView.swift */; };
 		6D183CB72C6BBBAD00E41F93 /* TodayTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CB62C6BBBAD00E41F93 /* TodayTabView.swift */; };
 		6D183CBA2C6BBBE800E41F93 /* DayPickerBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CB92C6BBBE800E41F93 /* DayPickerBarView.swift */; };
-		6D183CBC2C6BBDDF00E41F93 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CBB2C6BBDDF00E41F93 /* CustomTableViewCell.swift */; };
-		6D183CBE2C6BBDF600E41F93 /* DayPickerBarTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CBD2C6BBDF600E41F93 /* DayPickerBarTableView.swift */; };
 		6D183CC12C6BBE1100E41F93 /* DayPickerBarViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC02C6BBE1100E41F93 /* DayPickerBarViewRepresentable.swift */; };
 		6D183CC32C6BBE2700E41F93 /* DayPickerBarCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC22C6BBE2700E41F93 /* DayPickerBarCollectionView.swift */; };
 		6D183CC52C6BC65600E41F93 /* SFFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC42C6BC65600E41F93 /* SFFont.swift */; };
 		6D183CC72C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC62C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift */; };
+		6D77DF062C6C93FA001A7B93 /* SleepSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D77DF052C6C93FA001A7B93 /* SleepSession.swift */; };
+		6D77DF082C6C9407001A7B93 /* DatabaseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D77DF072C6C9407001A7B93 /* DatabaseStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,12 +58,12 @@
 		6D183CB22C6BBB6B00E41F93 /* HomeTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabBarView.swift; sourceTree = "<group>"; };
 		6D183CB62C6BBBAD00E41F93 /* TodayTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTabView.swift; sourceTree = "<group>"; };
 		6D183CB92C6BBBE800E41F93 /* DayPickerBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPickerBarView.swift; sourceTree = "<group>"; };
-		6D183CBB2C6BBDDF00E41F93 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
-		6D183CBD2C6BBDF600E41F93 /* DayPickerBarTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPickerBarTableView.swift; sourceTree = "<group>"; };
 		6D183CC02C6BBE1100E41F93 /* DayPickerBarViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPickerBarViewRepresentable.swift; sourceTree = "<group>"; };
 		6D183CC22C6BBE2700E41F93 /* DayPickerBarCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPickerBarCollectionView.swift; sourceTree = "<group>"; };
 		6D183CC42C6BC65600E41F93 /* SFFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SFFont.swift; sourceTree = "<group>"; };
 		6D183CC62C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DayPickerBarCollectionView+Cell.swift"; sourceTree = "<group>"; };
+		6D77DF052C6C93FA001A7B93 /* SleepSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepSession.swift; sourceTree = "<group>"; };
+		6D77DF072C6C9407001A7B93 /* DatabaseStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +119,8 @@
 				6D183C8A2C6BB95C00E41F93 /* Item.swift */,
 				6D183C8C2C6BB95D00E41F93 /* Assets.xcassets */,
 				6D183C8E2C6BB95D00E41F93 /* Preview Content */,
+				6D77DF042C6C93E1001A7B93 /* services */,
+				6D77DF032C6C93D8001A7B93 /* models */,
 				6D183CB52C6BBB9500E41F93 /* HomeTabBarView */,
 			);
 			path = "mellow-ios";
@@ -171,22 +173,36 @@
 			isa = PBXGroup;
 			children = (
 				6D183CC42C6BC65600E41F93 /* SFFont.swift */,
-				6D183CB92C6BBBE800E41F93 /* DayPickerBarView.swift */,
-				6D183CC02C6BBE1100E41F93 /* DayPickerBarViewRepresentable.swift */,
-				6D183CC22C6BBE2700E41F93 /* DayPickerBarCollectionView.swift */,
-				6D183CC62C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift */,
-				6D183CBF2C6BBDFE00E41F93 /* DayPickerBarTableView */,
+				6D183CC82C6BDA6300E41F93 /* DayPickerBarView */,
 			);
 			path = Components;
 			sourceTree = "<group>";
 		};
-		6D183CBF2C6BBDFE00E41F93 /* DayPickerBarTableView */ = {
+		6D183CC82C6BDA6300E41F93 /* DayPickerBarView */ = {
 			isa = PBXGroup;
 			children = (
-				6D183CBB2C6BBDDF00E41F93 /* CustomTableViewCell.swift */,
-				6D183CBD2C6BBDF600E41F93 /* DayPickerBarTableView.swift */,
+				6D183CB92C6BBBE800E41F93 /* DayPickerBarView.swift */,
+				6D183CC02C6BBE1100E41F93 /* DayPickerBarViewRepresentable.swift */,
+				6D183CC22C6BBE2700E41F93 /* DayPickerBarCollectionView.swift */,
+				6D183CC62C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift */,
 			);
-			path = DayPickerBarTableView;
+			path = DayPickerBarView;
+			sourceTree = "<group>";
+		};
+		6D77DF032C6C93D8001A7B93 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				6D77DF052C6C93FA001A7B93 /* SleepSession.swift */,
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
+		6D77DF042C6C93E1001A7B93 /* services */ = {
+			isa = PBXGroup;
+			children = (
+				6D77DF072C6C9407001A7B93 /* DatabaseStore.swift */,
+			);
+			path = services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -320,13 +336,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D183CC32C6BBE2700E41F93 /* DayPickerBarCollectionView.swift in Sources */,
+				6D77DF082C6C9407001A7B93 /* DatabaseStore.swift in Sources */,
 				6D183C892C6BB95C00E41F93 /* ContentView.swift in Sources */,
 				6D183CB72C6BBBAD00E41F93 /* TodayTabView.swift in Sources */,
-				6D183CBE2C6BBDF600E41F93 /* DayPickerBarTableView.swift in Sources */,
 				6D183CC52C6BC65600E41F93 /* SFFont.swift in Sources */,
 				6D183C8B2C6BB95C00E41F93 /* Item.swift in Sources */,
-				6D183CBC2C6BBDDF00E41F93 /* CustomTableViewCell.swift in Sources */,
 				6D183CBA2C6BBBE800E41F93 /* DayPickerBarView.swift in Sources */,
+				6D77DF062C6C93FA001A7B93 /* SleepSession.swift in Sources */,
 				6D183C872C6BB95C00E41F93 /* mellow_iosApp.swift in Sources */,
 				6D183CB32C6BBB6B00E41F93 /* HomeTabBarView.swift in Sources */,
 				6D183CC12C6BBE1100E41F93 /* DayPickerBarViewRepresentable.swift in Sources */,

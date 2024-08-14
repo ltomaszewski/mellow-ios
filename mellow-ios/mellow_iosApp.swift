@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct mellow_iosApp: App {
+    var databaseStore = DatabaseStore()
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -26,6 +28,7 @@ struct mellow_iosApp: App {
     var body: some Scene {
         WindowGroup {
             TodayTabView()
+                .environmentObject(databaseStore)
         }
         .modelContainer(sharedModelContainer)
     }

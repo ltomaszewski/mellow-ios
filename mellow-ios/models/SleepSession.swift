@@ -56,7 +56,7 @@ extension SleepSession {
         let currentDate = Date()
         
         // Randomize the start time within ±4 hours from the current date
-        let fourHoursInSeconds: TimeInterval = 4 * 60 * 60
+        let fourHoursInSeconds: TimeInterval = 24 * 60 * 60
         let randomTimeOffset = TimeInterval.random(in: -fourHoursInSeconds...fourHoursInSeconds)
         let startTime = currentDate.addingTimeInterval(randomTimeOffset)
         

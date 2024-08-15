@@ -49,7 +49,7 @@ class CalendarDayViewModel: ObservableObject {
                     let endDate = self?.endDate else {
                         fatalError("Cannot access start or end date in sleepSessions observable. This is likely an internal issue.")
                 }
-                return sessions.filter { $0.startTime > startDate && $0.endTime < endDate }
+                return sessions.filter { $0.startTime > startDate && $0.endTime < endDate }.sorted(by: { $0.startTime < $1.startTime})
             })
             .sink { [weak self] sleepSessions in
                 self?.updateSleepSessionEntries(with: sleepSessions)

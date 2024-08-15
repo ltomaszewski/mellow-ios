@@ -17,7 +17,7 @@ struct TodayTabView: View {
                 .frame(height: 64)
             HStack {
                 Button {
-                    let mockedElement = SleepSession.createMockedSession()
+                    let mockedElement = SleepSession.createMockedSession(currentDate: day ?? .now)
                     mockedElement.printDescription()
                     databaseStore.add(session: mockedElement)
                 } label: {
@@ -31,7 +31,8 @@ struct TodayTabView: View {
             }
             Text("\(day)")
                 .foregroundStyle(.white)
-            CalendarDayView(baseDate: .now, databaseStore: databaseStore)
+            CalendarDayView(date: $day,
+                            databaseStore: databaseStore)
             Spacer()
         }.background(Color("gunmetalBlue"))
     }

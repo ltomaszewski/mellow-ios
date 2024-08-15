@@ -5,7 +5,7 @@
 //  Created by Lukasz Tomaszewski on 14/08/2024.
 //
 
-import Foundation
+import SwiftUI
 import Combine
 
 class CalendarDayViewModel: ObservableObject {
@@ -18,8 +18,12 @@ class CalendarDayViewModel: ObservableObject {
     private let endDate: Date
     private var cancellables: Set<AnyCancellable> = []
     
-    init(baseDate: Date, databaseStore: DatabaseStore) {
-        let midDayDate = baseDate.adjustToMidday()
+    @Binding var date: Date?
+    
+    init(date: Binding<Date?>, databaseStore: DatabaseStore) {
+        self._date = date
+        
+        let midDayDate = (date.wrappedValue ?? .now).adjustToMidday()
         
         guard let startDate = midDayDate.adding(hours: -24) else {
             fatalError("Can not create startDate")

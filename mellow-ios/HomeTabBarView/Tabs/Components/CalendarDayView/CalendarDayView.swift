@@ -9,11 +9,10 @@ import SwiftUI
 
 struct CalendarDayView: View {
     private let hourSlotHeight: CGFloat = 48
-    @StateObject var viewModel: CalendarDayViewModel
+    @ObservedObject var viewModel: CalendarDayViewModel
     
-    init(baseDate: Date, databaseStore: DatabaseStore) {
-        _viewModel = StateObject(wrappedValue: CalendarDayViewModel(baseDate: baseDate,
-                                                                    databaseStore: databaseStore))
+    init(date: Binding<Date?>, databaseStore: DatabaseStore) {
+        _viewModel = ObservedObject(wrappedValue: CalendarDayViewModel(date: date, databaseStore: databaseStore))
     }
     
     var body: some View {
@@ -21,6 +20,7 @@ struct CalendarDayView: View {
             ScrollViewReader { scrollViewProxy in // allows for scroll to date
                 ScrollView(.vertical) {
                     ZStack {
+                        
                         VStack(spacing: 0) {
                             // TODO: Current tiem indicator
                             ForEach(viewModel.hours, id: \.self) { date in
@@ -45,6 +45,7 @@ struct CalendarDayView: View {
                             }
                             Spacer()
                         }
+                        
                     }
                     
                 }.onAppear(perform: {

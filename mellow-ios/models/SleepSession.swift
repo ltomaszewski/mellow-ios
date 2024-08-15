@@ -51,9 +51,8 @@ enum SleepSessionType: String {
 }
 
 extension SleepSession {
-    static func createMockedSession() -> SleepSession {
+    static func createMockedSession(currentDate: Date) -> SleepSession {
         // Current date and time
-        let currentDate = Date()
         
         // Randomize the start time within ±4 hours from the current date
         let fourHoursInSeconds: TimeInterval = 24 * 60 * 60

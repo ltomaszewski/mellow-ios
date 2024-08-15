@@ -26,6 +26,7 @@ extension Font {
     public static func sfTextInput() -> Font {
         .custom("SF Pro Display", fixedSize: 64)
     }
+    
     public static func sfText10() -> Font {
         .custom("SF Pro Display", fixedSize: 10)
     }
@@ -35,8 +36,14 @@ extension Font {
     public static func sfText14() -> Font {
         .custom("SF Pro Display", fixedSize: 14)
     }
+    public static func sfText16() -> Font {
+        .custom("SF Pro Display", fixedSize: 16)
+    }
     public static func sfText18() -> Font {
         .custom("SF Pro Display", fixedSize: 18)
+    }
+    public static func sfText20() -> Font {
+        .custom("SF Pro Display", fixedSize: 20)
     }
     public static func sfText26() -> Font {
         .custom("SF Pro Display", fixedSize: 26)

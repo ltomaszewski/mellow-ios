@@ -18,9 +18,9 @@ class DatabaseStore: ObservableObject {
         }
     }
     
-    func remove(session: SleepSession) {
+    func remove() {
         accessQueue.sync {
-            sleepSessions.removeAll(where: { $0.id == session.id })
+            sleepSessions.removeLast()
         }
     }
 }

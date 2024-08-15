@@ -24,15 +24,14 @@ struct TodayTabView: View {
                     Text("Add Event")
                 }
                 Button {
-                    print("Remove")
+                    databaseStore.remove()
                 } label: {
                     Text("Remove Event")
                 }
             }
             Text("\(day)")
                 .foregroundStyle(.white)
-            Text("Number of sessions in the store \(databaseStore.sleepSessions.count)")
-                .foregroundStyle(.white)
+            CalendarDayView(baseDate: .now, databaseStore: databaseStore)
             Spacer()
         }.background(Color("gunmetalBlue"))
     }

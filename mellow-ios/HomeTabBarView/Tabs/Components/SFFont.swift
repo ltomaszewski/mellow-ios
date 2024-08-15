@@ -32,6 +32,15 @@ extension Font {
     public static func sfText12() -> Font {
         .custom("SF Pro Display", fixedSize: 12)
     }
+    public static func sfText14() -> Font {
+        .custom("SF Pro Display", fixedSize: 14)
+    }
+    public static func sfText18() -> Font {
+        .custom("SF Pro Display", fixedSize: 18)
+    }
+    public static func sfText26() -> Font {
+        .custom("SF Pro Display", fixedSize: 26)
+    }
 }
 
 struct KidsyColors {

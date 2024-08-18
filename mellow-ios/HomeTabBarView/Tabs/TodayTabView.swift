@@ -12,6 +12,7 @@ struct TodayTabView: View {
     @State var day: Date? = Date.now.adjustToMidday()
     @State private var showAddSleepSession = false
     @State private var sheetHeight: CGFloat = 300
+    @State private var sheetWidth: CGFloat = 300
     
     var body: some View {
         ZStack {
@@ -42,9 +43,10 @@ struct TodayTabView: View {
             }
         }
         .sheet(isPresented: $showAddSleepSession, content: {
-            AddSleepView(date: day ?? .now)
+            AddSleepView(date: day ?? .now,
+                         width: $sheetWidth)
             .fixedSize(horizontal: false, vertical: true)
-            .modifier(GetHeightModifier(height: $sheetHeight))
+            .modifier(GetDimensionsModifier(height: $sheetHeight, width: $sheetWidth))
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })
         .background(Color("gunmetalBlue"))
@@ -55,13 +57,15 @@ struct TodayTabView: View {
     TodayTabView()
 }
 
-struct GetHeightModifier: ViewModifier {
+struct GetDimensionsModifier: ViewModifier {
     @Binding var height: CGFloat
+    @Binding var width: CGFloat
     
     func body(content: Content) -> some View {
         content.background(
             GeometryReader { geo -> Color in
                 height = geo.size.height
+                width = geo.size.width
                 return Color.clear
             }
         )

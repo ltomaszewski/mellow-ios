@@ -13,6 +13,8 @@ struct AddSleepView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var databaseStore: DatabaseStore
     
+    @Binding var width: CGFloat
+    
     @State private var startTime: Date?
     @State private var endTime: Date?
     @State private var selectedOption = "Nap"
@@ -21,7 +23,8 @@ struct AddSleepView: View {
     
     let options = ["Nap", "Sleep"]
     
-    init(date: Date) {
+    init(date: Date, width: Binding<CGFloat>) {
+        _width = width
         self.date = date
         self.startTime = date
         self.endTime = Calendar.current.date(byAdding: .minute, value: 60, to: date) ?? .now
@@ -70,12 +73,14 @@ struct AddSleepView: View {
                 
                 SleepTimePicker(text: "Start Time",
                                 date: $startTime,
-                                isDatePickerVisible: $startTimeIsDatePickerVisible)
+                                isDatePickerVisible: $startTimeIsDatePickerVisible,
+                                width: $width)
                 .foregroundStyle(.white)
                 
                 SleepTimePicker(text: "End Time",
                                 date: $endTime,
-                                isDatePickerVisible: $endTimeIsDatePicekrVisible)
+                                isDatePickerVisible: $endTimeIsDatePicekrVisible,
+                                width: $width)
                 .foregroundStyle(.white)
             }
         }
@@ -87,7 +92,7 @@ struct AddSleepView: View {
 
 struct AddSleepView_Previews: PreviewProvider {
     static var previews: some View {
-        AddSleepView(date: .now)
+        AddSleepView(date: .now, width: .init(get: { 200 }, set: { _ in }))
     }
 }
 

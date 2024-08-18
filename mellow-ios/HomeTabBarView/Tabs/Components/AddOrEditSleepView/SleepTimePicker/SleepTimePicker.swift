@@ -9,15 +9,19 @@ import SwiftUI
 
 struct SleepTimePicker: View {
     let text: String
-    @Binding var date: Date?
-    @ObservedObject private var viewModel: SleepTimePicker.ViewModel
-    @Binding private var isDatePickerVisible: Bool // State to manage date picker visibility
     
-    init(text: String, date: Binding<Date?>, isDatePickerVisible: Binding<Bool>) {
+    @ObservedObject private var viewModel: SleepTimePicker.ViewModel
+
+    @Binding var date: Date?
+    @Binding private var isDatePickerVisible: Bool // State to manage date picker visibility
+    @Binding var width: CGFloat
+    
+    init(text: String, date: Binding<Date?>, isDatePickerVisible: Binding<Bool>, width: Binding<CGFloat>) {
         self.text = text
         _date = date
         _viewModel = ObservedObject(wrappedValue: ViewModel(date: date.wrappedValue))
         _isDatePickerVisible = isDatePickerVisible
+        _width = width
     }
     
     var body: some View {
@@ -26,6 +30,7 @@ struct SleepTimePicker: View {
                 Text(text)
                     .font(.sfText16())
                     .padding(.trailing, 24)
+                    .frame(width: width * 0.3)
                 Text(viewModel.formattedDate)
                     .foregroundColor(.white)
                     .font(.sfText16())
@@ -68,5 +73,6 @@ struct SleepTimePicker: View {
 #Preview {
     SleepTimePicker(text: "Start Time",
                     date: .init(get: { nil }, set: { date in print("New Test Date \(date)") }),
-                    isDatePickerVisible: .init(get: { false }, set: { _ in }))
+                    isDatePickerVisible: .init(get: { false }, set: { _ in }),
+                    width: .init(get: { 400 }, set: { _ in }))
 }

@@ -72,7 +72,7 @@ struct SleepTimePicker: View {
 
 #Preview {
     SleepTimePicker(text: "Start Time",
-                    date: .init(get: { nil }, set: { date in print("New Test Date \(date)") }),
+                    date: .init(get: { .now }, set: { date in print("New Test Date \(date)") }),
                     isDatePickerVisible: .init(get: { false }, set: { _ in }),
                     width: .init(get: { 400 }, set: { _ in }))
 }

@@ -26,8 +26,8 @@ struct AddSleepView: View {
     init(date: Date, width: Binding<CGFloat>) {
         _width = width
         self.date = date
-        self.startTime = date
-        self.endTime = Calendar.current.date(byAdding: .minute, value: 60, to: date) ?? .now
+        _startTime = State(wrappedValue: date)
+        _endTime = State(wrappedValue: Calendar.current.date(byAdding: .minute, value: 60, to: date) ?? .now)
     }
     
     var body: some View {
@@ -70,6 +70,8 @@ struct AddSleepView: View {
                 .pickerStyle(SegmentedPickerStyle())
                 .tint(.white) // Set the tint color here
                 .padding()
+                .colorInvert()
+                .colorMultiply(.white)
                 
                 SleepTimePicker(text: "Start Time",
                                 date: $startTime,
@@ -93,13 +95,5 @@ struct AddSleepView: View {
 struct AddSleepView_Previews: PreviewProvider {
     static var previews: some View {
         AddSleepView(date: .now, width: .init(get: { 200 }, set: { _ in }))
-    }
-}
-
-
-private struct ViewHeightKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
     }
 }

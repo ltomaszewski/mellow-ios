@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TodayTabView: View {
     @EnvironmentObject var databaseStore: DatabaseStore
-    @State var day: Date = Date.now.adjustToMidday()
+    @State var date: Date = Date.now.adjustToMidday()
     @State private var showAddSleepSession = false
     @State private var sheetHeight: CGFloat = 300
     @State private var sheetWidth: CGFloat = 300
@@ -17,9 +17,10 @@ struct TodayTabView: View {
     var body: some View {
         ZStack {
             VStack {
-                DayPickerBarView(date: $day)
+                DayPickerBarView(date: $date)
                     .frame(height: 64)
-                CalendarDayViewWithPager(databaseStore: databaseStore, day: $day)
+                CalendarDayViewWithPager(databaseStore: databaseStore, 
+                                         date: $date)
                 Spacer()
             }
             
@@ -42,13 +43,14 @@ struct TodayTabView: View {
             }
         }
         .sheet(isPresented: $showAddSleepSession, content: {
-            AddSleepView(date: day,
+            AddSleepView(date: date,
                          width: $sheetWidth)
             .fixedSize(horizontal: false, vertical: true)
             .modifier(GetDimensionsModifier(height: $sheetHeight, width: $sheetWidth))
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })
         .background(Color("gunmetalBlue"))
+        .onChange(of: date) { _, _ in /* For unknown reason the date change do not invoke updateUIView inside DayPickerBarViewRepresentable without it */}
     }
 }
 

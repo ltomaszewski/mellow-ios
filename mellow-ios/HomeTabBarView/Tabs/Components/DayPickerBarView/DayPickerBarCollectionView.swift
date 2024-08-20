@@ -13,7 +13,7 @@ class DayPickerBarCollectionView: UIView, UICollectionViewDataSource, UICollecti
     private let collectionView: UICollectionView
     private let startDate: Date
     private var selectedIndexPath: IndexPath?
-    private var selectedDate: Date?
+    var selectedDate: Date?
     private let cellIdentifier = "CollectionViewCell"
     
     init(startDate: Date) {
@@ -28,6 +28,7 @@ class DayPickerBarCollectionView: UIView, UICollectionViewDataSource, UICollecti
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.collectionView.showsHorizontalScrollIndicator = false
         super.init(frame: .zero)
+        self.selectedDate = startDate.adjustToMidday()
         setupView()
     }
     
@@ -112,5 +113,19 @@ class DayPickerBarCollectionView: UIView, UICollectionViewDataSource, UICollecti
     func findTodayIndexPath() -> IndexPath {
         let middlePoint = maxNumberOfItems/2
         return .init(item: middlePoint, section: 0)
+    }
+    
+    func selectDate(_ date: Date, animated: Bool = true) {
+        let daysDifference = Calendar.current.dateComponents([.day], from: startDate, to: date).day ?? 0
+        let middlePoint = maxNumberOfItems / 2
+        let targetItem = middlePoint + daysDifference
+        
+        guard targetItem >= 0 && targetItem < maxNumberOfItems else {
+            print("Date is out of range for this collection view.")
+            return
+        }
+        
+        let targetIndexPath = IndexPath(item: targetItem, section: 0)
+        collectionView.selectItem(at: targetIndexPath, animated: animated, scrollPosition: .centeredHorizontally)
     }
 }

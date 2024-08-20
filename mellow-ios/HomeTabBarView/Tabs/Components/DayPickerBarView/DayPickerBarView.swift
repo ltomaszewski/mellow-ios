@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct DayPickerBarView: View {
-    @Binding var date: Date?
+    @Binding var date: Date
     
     var body: some View {
         VStack {
             DayPickerBarViewRepresentable(selectedDate: $date)
                 .frame(height: 44)
         }
+        .onChange(of: date) { _, _ in /* For unknown reason the date change do not invoke updateUIView inside DayPickerBarViewRepresentable without it */}
     }
 }
 

@@ -12,7 +12,7 @@ protocol DayPickerBarDelegate: AnyObject {
 }
 
 struct DayPickerBarViewRepresentable: UIViewRepresentable {
-    @Binding var selectedDate: Date?
+    @Binding var selectedDate: Date
 
     class Coordinator: NSObject, DayPickerBarDelegate {
         var parent: DayPickerBarViewRepresentable
@@ -40,5 +40,6 @@ struct DayPickerBarViewRepresentable: UIViewRepresentable {
         guard let view = uiView as? DayPickerBarCollectionView else {
             fatalError()
         }
+        view.selectDate(selectedDate, animated: true)
     }
 }

@@ -32,6 +32,7 @@
 		6D70912A2C6DF3B600007689 /* SleepSessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7091292C6DF3B600007689 /* SleepSessionViewModel.swift */; };
 		6D70912C2C6E1FE200007689 /* AddSleepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D70912B2C6E1FE200007689 /* AddSleepView.swift */; };
 		6D76C8902C732B100092C34E /* PageViewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D76C88F2C732B100092C34E /* PageViewContent.swift */; };
+		6D76C8922C748BE30092C34E /* CalendarDayViewWithPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D76C8912C748BE30092C34E /* CalendarDayViewWithPager.swift */; };
 		6D77DF062C6C93FA001A7B93 /* SleepSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D77DF052C6C93FA001A7B93 /* SleepSession.swift */; };
 		6D77DF082C6C9407001A7B93 /* DatabaseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D77DF072C6C9407001A7B93 /* DatabaseStore.swift */; };
 		6D77DF0B2C6C9DD9001A7B93 /* CalendarDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D77DF0A2C6C9DD9001A7B93 /* CalendarDayView.swift */; };
@@ -85,6 +86,7 @@
 		6D70912B2C6E1FE200007689 /* AddSleepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSleepView.swift; sourceTree = "<group>"; };
 		6D76C88D2C7325870092C34E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6D76C88F2C732B100092C34E /* PageViewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewContent.swift; sourceTree = "<group>"; };
+		6D76C8912C748BE30092C34E /* CalendarDayViewWithPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDayViewWithPager.swift; sourceTree = "<group>"; };
 		6D77DF052C6C93FA001A7B93 /* SleepSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepSession.swift; sourceTree = "<group>"; };
 		6D77DF072C6C9407001A7B93 /* DatabaseStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseStore.swift; sourceTree = "<group>"; };
 		6D77DF0A2C6C9DD9001A7B93 /* CalendarDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDayView.swift; sourceTree = "<group>"; };
@@ -279,6 +281,7 @@
 				6D7091202C6CA34000007689 /* HourTimeView.swift */,
 				6D7091222C6CA35800007689 /* DayHourSlotView.swift */,
 				6D7091262C6D25CB00007689 /* SleepSessionEntryView.swift */,
+				6D76C8912C748BE30092C34E /* CalendarDayViewWithPager.swift */,
 			);
 			path = CalendarDayView;
 			sourceTree = "<group>";
@@ -437,6 +440,7 @@
 				6D183CC72C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift in Sources */,
 				6D7091252C6CA37200007689 /* CalendarDayViewModel.swift in Sources */,
 				6D70912A2C6DF3B600007689 /* SleepSessionViewModel.swift in Sources */,
+				6D76C8922C748BE30092C34E /* CalendarDayViewWithPager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

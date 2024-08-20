@@ -7,21 +7,6 @@
 
 import SwiftUI
 
-struct CalendarDayViewWithPager: View {
-    var databaseStore: DatabaseStore
-    @Binding var day: Date
-    
-    var body: some View {
-        PageViewContent<CalendarDayView, Date>(startIndex: day,
-                                               getCurrentIndex: { $0.viewModel.midDayDate },
-                                               nextIndex: { $0.adjustDay(by: 1) },
-                                               previousIndex: { $0.adjustDay(by: -1) },
-                                               viewBuilder: { CalendarDayView(date: .constant($0), databaseStore: databaseStore) },
-                                               hasNextPage: { true },
-                                               hasPreviousPage: { true },
-                                               indexHasChanged: { day = $0 })
-    }
-}
 
 // A SwiftUI view that creates and manages a UIPageViewController
 struct PageViewContent<V: View, I: Hashable>: UIViewControllerRepresentable {

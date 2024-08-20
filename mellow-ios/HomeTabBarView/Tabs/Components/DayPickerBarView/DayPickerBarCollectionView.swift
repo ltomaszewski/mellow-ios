@@ -17,7 +17,7 @@ class DayPickerBarCollectionView: UIView, UICollectionViewDataSource, UICollecti
     private let cellIdentifier = "CollectionViewCell"
     
     init(startDate: Date) {
-        self.startDate = startDate
+        self.startDate = startDate.adjustToMidday()
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -28,7 +28,7 @@ class DayPickerBarCollectionView: UIView, UICollectionViewDataSource, UICollecti
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.collectionView.showsHorizontalScrollIndicator = false
         super.init(frame: .zero)
-        self.selectedDate = startDate.adjustToMidday()
+        self.selectedDate = startDate
         setupView()
     }
     

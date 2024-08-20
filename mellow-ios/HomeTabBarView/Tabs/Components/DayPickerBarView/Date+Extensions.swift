@@ -8,6 +8,13 @@
 import Foundation
 
 extension Date {
+    func adjustDay(by days: Int) -> Date {
+        guard let newDay = Calendar.current.date(byAdding: .day, value: days, to: self) else {
+            fatalError("Something went wrong during day creation in calendar pager for ")
+        }
+        return newDay
+    }
+    
     /// Adds or subtracts the specified number of hours from the current date.
     /// - Parameter hours: The number of hours to add (positive) or subtract (negative).
     /// - Returns: A new date adjusted by the specified number of hours.

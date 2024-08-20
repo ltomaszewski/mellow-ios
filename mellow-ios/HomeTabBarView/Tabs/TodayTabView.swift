@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TodayTabView: View {
     @EnvironmentObject var databaseStore: DatabaseStore
-    @State var day: Date? = Date.now.adjustToMidday()
+    @State var day: Date = Date.now.adjustToMidday()
     @State private var showAddSleepSession = false
     @State private var sheetHeight: CGFloat = 300
     @State private var sheetWidth: CGFloat = 300
@@ -19,8 +19,7 @@ struct TodayTabView: View {
             VStack {
                 DayPickerBarView(date: $day)
                     .frame(height: 64)
-                CalendarDayView(date: $day,
-                                databaseStore: databaseStore)
+                CalendarDayViewWithPager(databaseStore: databaseStore, day: $day)
                 Spacer()
             }
             
@@ -43,7 +42,7 @@ struct TodayTabView: View {
             }
         }
         .sheet(isPresented: $showAddSleepSession, content: {
-            AddSleepView(date: day ?? .now,
+            AddSleepView(date: day,
                          width: $sheetWidth)
             .fixedSize(horizontal: false, vertical: true)
             .modifier(GetDimensionsModifier(height: $sheetHeight, width: $sheetWidth))

@@ -20,7 +20,6 @@ struct CalendarDayView: View {
             ScrollViewReader { scrollViewProxy in // allows for scroll to date
                 ScrollView(.vertical) {
                     ZStack {
-                        
                         VStack(spacing: 0) {
                             // TODO: Current tiem indicator
                             ForEach(viewModel.hours, id: \.self) { date in
@@ -29,9 +28,7 @@ struct CalendarDayView: View {
                                     .id(date)
                             }
                         }
-                        
                         VStack(spacing: 0) {
-                            // TODO: Current tiem indicator
                             ForEach(viewModel.sleepSessionsEntries, id: \.self) { model in
                                 Rectangle()
                                     .frame(height: model.topOffset)
@@ -45,9 +42,7 @@ struct CalendarDayView: View {
                             }
                             Spacer()
                         }
-                        
                     }
-                    
                 }.onAppear(perform: {
                     let capacity = geometryProxy.frame(in: .local).height/48
                     let midScreenOffset = Int(capacity/2)

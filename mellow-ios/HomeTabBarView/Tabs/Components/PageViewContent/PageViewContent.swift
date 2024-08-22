@@ -9,8 +9,8 @@ import SwiftUI
 
 
 // A SwiftUI view that creates and manages a UIPageViewController
-struct PageViewContent<V: View, I: Hashable>: UIViewControllerRepresentable {
-    let startIndex: I
+struct PageViewContent<V: View, I: Hashable & Comparable>: UIViewControllerRepresentable {
+    @Binding var index: I
     var getCurrentIndex: (_ view: V) -> I
     var nextIndex: (_ lastIndex: I) -> I
     var previousIndex: (_ lastIndex: I) -> I
@@ -30,9 +30,10 @@ struct PageViewContent<V: View, I: Hashable>: UIViewControllerRepresentable {
         pageViewController.dataSource = context.coordinator
         pageViewController.delegate = context.coordinator
         
-        let viewController = viewBuilder(startIndex).viewController()
+        let viewController = viewBuilder(index).viewController()
         pageViewController.setViewControllers([viewController], direction: .forward, animated: false)
         pageViewController.view.backgroundColor = .clear
+        context.coordinator.viewController = pageViewController
         
         return pageViewController
     }
@@ -41,7 +42,11 @@ struct PageViewContent<V: View, I: Hashable>: UIViewControllerRepresentable {
     // Update the UIPageViewController in response to state changes
     func updateUIViewController(_ uiViewController: UIPageViewController, context: Context) {
         // Optionally, update the view controllers if your model changes
-//        print("updateUIViewController")
+        let currentIndex = context.coordinator.currentIndex
+        if currentIndex != index {
+            let viewController = viewBuilder(index).viewController()
+            context.coordinator.viewController?.setViewControllers([viewController], direction: (currentIndex > index) ? .reverse : .forward, animated: true)
+        }
     }
     
     // Coordinator to manage the data source and delegate methods
@@ -51,6 +56,14 @@ struct PageViewContent<V: View, I: Hashable>: UIViewControllerRepresentable {
 
     class Coordinator: NSObject, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
         var parent: PageViewContent
+        weak var viewController: UIPageViewController?
+        
+        var currentIndex: I {
+            guard let hostingViewController = viewController?.viewControllers?.first as? UIHostingController<V> else { fatalError() }
+            let rootView = hostingViewController.rootView
+            let index = parent.getCurrentIndex(rootView)
+            return index
+        }
         
         init(_ pageViewContent: PageViewContent) {
             self.parent = pageViewContent

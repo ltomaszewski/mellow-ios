@@ -24,8 +24,8 @@ struct AddSleepView: View {
     let options = ["Nap", "Sleep"]
     
     init(date: Date, width: Binding<CGFloat>) {
-        _width = width
         self.date = date
+        _width = width
         _startTime = State(wrappedValue: date)
         _endTime = State(wrappedValue: Calendar.current.date(byAdding: .minute, value: 60, to: date) ?? .now)
     }

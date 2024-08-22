@@ -11,7 +11,6 @@ struct CalendarDayViewWithPager: View {
     var databaseStore: DatabaseStore
     @Binding var date: Date
     
-    // TODO: If date has changed via tab on date bar the pageViewContent has to scroll to that view
     var body: some View {
         PageViewContent(index: $date,
                         getCurrentIndex: { $0.viewModel.midDayDate },

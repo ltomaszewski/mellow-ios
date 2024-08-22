@@ -28,7 +28,7 @@ class DayPickerBarCollectionView: UIView, UICollectionViewDataSource, UICollecti
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.collectionView.showsHorizontalScrollIndicator = false
         super.init(frame: .zero)
-        self.selectedDate = startDate
+        self.selectedDate = startDate.adjustToMidday()
         setupView()
     }
     
@@ -75,7 +75,6 @@ class DayPickerBarCollectionView: UIView, UICollectionViewDataSource, UICollecti
         
         let date = calculateDate(for: indexPath, base: startDate)
         cell.configure(with: date)
-
         if selectedIndexPath == nil {
             selectedIndexPath = findTodayIndexPath()
             collectionView.selectItem(at: findTodayIndexPath(), animated: false, scrollPosition: .centeredHorizontally)
@@ -127,5 +126,6 @@ class DayPickerBarCollectionView: UIView, UICollectionViewDataSource, UICollecti
         
         let targetIndexPath = IndexPath(item: targetItem, section: 0)
         collectionView.selectItem(at: targetIndexPath, animated: animated, scrollPosition: .centeredHorizontally)
+        self.selectedDate = date.adjustToMidday()
     }
 }

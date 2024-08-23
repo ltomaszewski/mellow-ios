@@ -14,6 +14,7 @@ struct AddSleepView: View {
     @EnvironmentObject var databaseStore: DatabaseStore
     
     @Binding var width: CGFloat
+    @Binding var session: SleepSession?
     
     @State private var startTime: Date?
     @State private var endTime: Date?
@@ -22,12 +23,21 @@ struct AddSleepView: View {
     @State private var endTimeIsDatePicekrVisible = false
     
     let options = ["Nap", "Sleep"]
+    private var sessionEditId: String?
     
-    init(date: Date, width: Binding<CGFloat>) {
+    init(date: Date, width: Binding<CGFloat>, session: Binding<SleepSession?>) {
         self.date = date
         _width = width
-        _startTime = State(wrappedValue: date)
-        _endTime = State(wrappedValue: Calendar.current.date(byAdding: .minute, value: 60, to: date) ?? .now)
+        if let session = session.wrappedValue {
+            sessionEditId = String(session.id)
+            selectedOption = (session.type == .nap) ? "Nap" : "Sleep"
+            _startTime = State(wrappedValue: session.startTime)
+            _endTime = State(wrappedValue: session.endTime)
+        } else {
+            _startTime = State(wrappedValue: date)
+            _endTime = State(wrappedValue: Calendar.current.date(byAdding: .minute, value: 60, to: date) ?? .now)
+        }
+        _session = session
     }
     
     var body: some View {
@@ -37,6 +47,7 @@ struct AddSleepView: View {
                     HStack {
                         Button {
                             presentationMode.wrappedValue.dismiss()
+                            session = nil
                         } label: {
                             Text("Cancel")
                                 .font(.sfText16())
@@ -45,8 +56,14 @@ struct AddSleepView: View {
                         Spacer()
                         Button {
                             let sleepSession = SleepSession(type: selectedOption == "Nap" ? .nap : .nighttime, startTime: startTime ?? .now, endTime: endTime ?? .now)
-                            databaseStore.add(session: sleepSession)
+                            if let sessionEditId {
+                                databaseStore.replace(id: sessionEditId, newSession: sleepSession)
+                            } else {
+                                databaseStore.add(session: sleepSession)
+                            }
+                            
                             presentationMode.wrappedValue.dismiss()
+                            session = nil
                         } label: {
                             Text("Save")
                                 .font(.sfText16())
@@ -55,7 +72,7 @@ struct AddSleepView: View {
                     }
                     
                     HStack(alignment: .center) {
-                        Text("Add Sleep")
+                        Text(sessionEditId == nil ? "Add Sleep" : "Edit Sleep")
                             .font(.sfText20())
                             .foregroundStyle(.white)
                     }
@@ -94,6 +111,10 @@ struct AddSleepView: View {
 
 struct AddSleepView_Previews: PreviewProvider {
     static var previews: some View {
-        AddSleepView(date: .now, width: .init(get: { 200 }, set: { _ in }))
+        AddSleepView(
+            date: .now,
+            width: .init(get: { 200 }, set: { _ in }),
+            session: .init(get: { .init(type: .nap, startTime: .now, endTime: .now) }, set: { _ in })
+        )
     }
 }

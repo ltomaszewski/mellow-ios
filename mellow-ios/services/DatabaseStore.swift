@@ -10,17 +10,33 @@ import Combine
 
 class DatabaseStore: ObservableObject {
     @Published var sleepSessions: [SleepSession] = []
+    private var internalIndex: [String: SleepSession] = [:]
+    
     private let accessQueue = DispatchQueue(label: "com.databasestore.queue")
     
     func add(session: SleepSession) {
         accessQueue.sync {
-            sleepSessions.append(session)
+            internalIndex[session.id] = session
+            updateSleepSessionsArray()
         }
     }
     
-    func remove() {
+    func replace(id: String, newSession: SleepSession) {
         accessQueue.sync {
-            sleepSessions.removeLast()
+            internalIndex.removeValue(forKey: id)
+            internalIndex[newSession.id] = newSession
+            updateSleepSessionsArray()
         }
+    }
+    
+    func remove(id: String) {
+        accessQueue.sync {
+            internalIndex.removeValue(forKey: id)
+            updateSleepSessionsArray()
+        }
+    }
+    
+    private func updateSleepSessionsArray() {
+        sleepSessions = Array(internalIndex.values)
     }
 }

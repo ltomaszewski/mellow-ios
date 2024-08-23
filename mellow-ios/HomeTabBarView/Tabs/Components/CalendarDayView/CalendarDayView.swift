@@ -10,9 +10,14 @@ import SwiftUI
 struct CalendarDayView: View {
     private let hourSlotHeight: CGFloat = 48
     @ObservedObject var viewModel: CalendarDayViewModel
-    
-    init(date: Binding<Date?>, databaseStore: DatabaseStore) {
+    @Binding var editSleepSession: SleepSession?
+    @Binding var showEditSleepSession: Bool
+
+
+    init(date: Binding<Date?>, editSleepSession: Binding<SleepSession?>, showEditSleepSession: Binding<Bool>, databaseStore: DatabaseStore) {
         _viewModel = ObservedObject(wrappedValue: CalendarDayViewModel(date: date, databaseStore: databaseStore))
+        _editSleepSession = editSleepSession
+        _showEditSleepSession = showEditSleepSession
     }
     
     var body: some View {
@@ -39,6 +44,10 @@ struct CalendarDayView: View {
                                 }
                                 .padding(.leading, 76)
                                 .padding(.trailing, 4)
+                                .onTapGesture {
+                                    editSleepSession = model.sleepSession
+                                    showEditSleepSession.toggle()
+                                }
                             }
                             Spacer()
                         }

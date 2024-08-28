@@ -51,7 +51,7 @@ struct AddSleepView: View {
                         } label: {
                             Text("Cancel")
                                 .font(.sfText16())
-                                .foregroundStyle(Color("softPeriwinkle"))
+                                .foregroundStyle(Color.softPeriwinkle)
                         }
                         Spacer()
                         Button {
@@ -67,7 +67,7 @@ struct AddSleepView: View {
                         } label: {
                             Text("Save")
                                 .font(.sfText16())
-                                .foregroundStyle(Color("softPeriwinkle"))
+                                .foregroundStyle(Color.softPeriwinkle)
                         }
                     }
                     
@@ -105,7 +105,7 @@ struct AddSleepView: View {
         }
         .padding(.vertical, 24)
         .padding(.horizontal, 16)
-        .background(Color("gunmetalBlue"))
+        .background(Color.gunmetalBlue)
     }
 }
 
@@ -114,7 +114,7 @@ struct AddSleepView_Previews: PreviewProvider {
         AddSleepView(
             date: .now,
             width: .init(get: { 200 }, set: { _ in }),
-            session: .init(get: { .init(type: .nap, startTime: .now, endTime: .now) }, set: { _ in })
+            session: .init(get: { nil }, set: { _ in })
         )
     }
 }

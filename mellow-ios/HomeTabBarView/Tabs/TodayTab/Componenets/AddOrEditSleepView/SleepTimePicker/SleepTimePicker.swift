@@ -38,7 +38,7 @@ struct SleepTimePicker: View {
                     .frame(maxWidth: .infinity)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(Color("slate300")))
+                            .fill(Color.slate300))
                     .onTapGesture {
                         isDatePickerVisible.toggle()
                     }

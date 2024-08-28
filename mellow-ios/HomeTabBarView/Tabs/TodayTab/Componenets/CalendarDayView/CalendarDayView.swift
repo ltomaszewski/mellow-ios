@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct CalendarDayView: View {
+    @ObservedObject private(set) var viewModel: CalendarDayViewModel
+    @Binding private var editSleepSession: SleepSession?
+    @Binding private var showEditSleepSession: Bool
+    
     private let hourSlotHeight: CGFloat = 48
-    @ObservedObject var viewModel: CalendarDayViewModel
-    @Binding var editSleepSession: SleepSession?
-    @Binding var showEditSleepSession: Bool
-
-
+    
     init(date: Binding<Date?>, editSleepSession: Binding<SleepSession?>, showEditSleepSession: Binding<Bool>, databaseStore: DatabaseStore) {
         _viewModel = ObservedObject(wrappedValue: CalendarDayViewModel(date: date, databaseStore: databaseStore))
         _editSleepSession = editSleepSession
@@ -21,43 +21,70 @@ struct CalendarDayView: View {
     }
     
     var body: some View {
-        GeometryReader { geometryProxy in // allows for offset to make scroll in center of the screen
-            ScrollViewReader { scrollViewProxy in // allows for scroll to date
+        GeometryReader { geometry in
+            ScrollViewReader { scrollProxy in
                 ScrollView(.vertical) {
                     ZStack {
-                        VStack(spacing: 0) {
-                            // TODO: Current tiem indicator
-                            ForEach(viewModel.hours, id: \.self) { date in
-                                DayHourSlotView(date: date)
-                                    .frame(height:hourSlotHeight)
-                                    .id(date)
-                            }
-                        }
-                        VStack(spacing: 0) {
-                            ForEach(viewModel.sleepSessionsEntries, id: \.self) { model in
-                                Rectangle()
-                                    .frame(height: model.topOffset)
-                                    .foregroundColor(.clear)
-                                HStack {
-                                    SleepSessionEntryView(model: model)
-                                        .frame(height: model.height)
-                                }
-                                .padding(.leading, 76)
-                                .padding(.trailing, 4)
-                                .onTapGesture {
-                                    editSleepSession = model.sleepSession
-                                    showEditSleepSession.toggle()
-                                }
-                            }
-                            Spacer()
-                        }
+                        currentTimeSeparator
+                        hourSlots
+                        sleepSessionEntries
                     }
-                }.onAppear(perform: {
-                    let capacity = geometryProxy.frame(in: .local).height/48
-                    let midScreenOffset = Int(capacity/2)
-                    scrollViewProxy.scrollTo(viewModel.midDayDate.adding(hours: midScreenOffset))
-                })
+                }
+                .onAppear { scrollToMidDay(geometry: geometry, proxy: scrollProxy) }
             }
         }
+    }
+    
+    private var currentTimeSeparator: some View {
+        VStack {
+            CurrentTimeSeparatorView(hourSlotHeight: hourSlotHeight,
+                                 numberHours: CGFloat(viewModel.hours.count),
+                                 firstDate: viewModel.hours.first ?? .now)
+            .padding(.leading, 64)
+            Spacer()
+        }
+    }
+    
+    private var hourSlots: some View {
+        VStack(spacing: 0) {
+            ForEach(viewModel.hours, id: \.self) { date in
+                DayHourSlotView(date: date)
+                    .frame(height: hourSlotHeight)
+                    .id(date)
+            }
+        }
+    }
+    
+    private var sleepSessionEntries: some View {
+        VStack(spacing: 0) {
+            ForEach(viewModel.sleepSessionsEntries, id: \.self) { model in
+                sleepSessionEntry(for: model)
+            }
+            Spacer()
+        }
+    }
+    
+    private func sleepSessionEntry(for model: SleepSessionViewModel) -> some View {
+        VStack {
+            Rectangle()
+                .frame(height: model.topOffset)
+                .foregroundColor(.clear)
+            HStack {
+                SleepSessionEntryView(model: model)
+                    .frame(height: model.height)
+            }
+            .padding(.horizontal, 4)
+            .padding(.leading, 72)
+            .onTapGesture {
+                editSleepSession = model.sleepSession
+                showEditSleepSession.toggle()
+            }
+        }
+    }
+    
+    private func scrollToMidDay(geometry: GeometryProxy, proxy: ScrollViewProxy) {
+        let visibleHours = Int(geometry.size.height / hourSlotHeight)
+        let midScreenOffset = visibleHours / 2
+        proxy.scrollTo(viewModel.midDayDate.addingTimeInterval(TimeInterval(midScreenOffset * 3600)))
     }
 }

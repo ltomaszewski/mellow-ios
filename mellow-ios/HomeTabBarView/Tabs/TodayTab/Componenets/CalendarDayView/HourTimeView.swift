@@ -26,11 +26,11 @@ struct HourTimeView: View {
         HStack(alignment: .lastTextBaseline, spacing: 0) {
             Spacer()
             Text(hourAndMinute)
-                .foregroundColor(Color("slate100"))
+                .foregroundColor(Color.slate100)
                 .font(.sfText12())
                 .opacity(0.8)
             Text(amPm)
-                .foregroundColor(Color("slate100"))
+                .foregroundColor(Color.slate100)
                 .font(.sfText10())
                 .opacity(0.5)
         }

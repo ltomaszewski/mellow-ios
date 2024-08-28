@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 // A SwiftUI view that creates and manages a UIPageViewController
 struct PageViewContent<V: View, I: Hashable & Comparable>: UIViewControllerRepresentable {
     @Binding var index: I
@@ -37,7 +36,6 @@ struct PageViewContent<V: View, I: Hashable & Comparable>: UIViewControllerRepre
         
         return pageViewController
     }
-
     
     // Update the UIPageViewController in response to state changes
     func updateUIViewController(_ uiViewController: UIPageViewController, context: Context) {

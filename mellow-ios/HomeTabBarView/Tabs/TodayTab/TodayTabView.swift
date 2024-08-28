@@ -27,6 +27,7 @@ struct TodayTabView: View {
                                          showEditSleepSession: $showEditSleepSession)
                 Spacer()
             }
+            .background(Color.gunmetalBlue)
             
             VStack(alignment: .trailing) {
                 Spacer()
@@ -66,7 +67,6 @@ struct TodayTabView: View {
             .modifier(GetDimensionsModifier(height: $sheetHeight, width: $sheetWidth))
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })
-        .background(Color("gunmetalBlue"))
         .onChange(of: date) { _, _ in /* For unknown reason the date change do not invoke updateUIView inside DayPickerBarViewRepresentable without it */}
     }
 }

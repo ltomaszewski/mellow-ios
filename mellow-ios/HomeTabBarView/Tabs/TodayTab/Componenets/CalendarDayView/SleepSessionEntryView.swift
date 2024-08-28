@@ -13,7 +13,7 @@ struct SleepSessionEntryView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(model.sleepSession.type == .nap ? Color("slate300") : Color("darkIndigo"))
+                .fill(model.sleepSession.type == .nap ? Color.slate300 : Color.darkIndigo)
                 .cornerRadius(12)
             HStack {
                 VStack(alignment: .leading) {
@@ -22,7 +22,7 @@ struct SleepSessionEntryView: View {
                         .foregroundStyle(.white)
                     Text(model.subText)
                         .font(.sfText14())
-                        .foregroundColor(Color("slate100"))
+                        .foregroundColor(Color.slate100)
                     Spacer()
                 }
                 .padding(.top, 16)

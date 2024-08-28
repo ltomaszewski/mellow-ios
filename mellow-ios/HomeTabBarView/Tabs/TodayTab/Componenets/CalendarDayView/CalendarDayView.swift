@@ -37,7 +37,7 @@ struct CalendarDayView: View {
     
     private var currentTimeSeparator: some View {
         VStack {
-            CurrentTimeSeparator(hourSlotHeight: hourSlotHeight,
+            CurrentTimeSeparatorView(hourSlotHeight: hourSlotHeight,
                                  numberHours: CGFloat(viewModel.hours.count),
                                  firstDate: viewModel.hours.first ?? .now)
             .padding(.leading, 64)
@@ -86,38 +86,5 @@ struct CalendarDayView: View {
         let visibleHours = Int(geometry.size.height / hourSlotHeight)
         let midScreenOffset = visibleHours / 2
         proxy.scrollTo(viewModel.midDayDate.addingTimeInterval(TimeInterval(midScreenOffset * 3600)))
-    }
-}
-
-struct CurrentTimeSeparator: View {
-    private let hourSlotHeight: CGFloat
-    private let numberHours: CGFloat
-    private let topOffset: CGFloat
-    private let circleDiameter: CGFloat = 8
-    
-    init(hourSlotHeight: CGFloat, numberHours: CGFloat, firstDate: Date) {
-        self.hourSlotHeight = hourSlotHeight
-        self.numberHours = numberHours
-        
-        let now = Date()
-        let hourDifference = Calendar.current.dateComponents([.hour, .minute], from: firstDate, to: now)
-        let hourOffset = CGFloat(hourDifference.hour ?? 0)
-        let minuteOffset = CGFloat(hourDifference.minute ?? 0) / 60.0
-        
-        self.topOffset = (hourOffset + minuteOffset) * hourSlotHeight
-    }
-    
-    var body: some View {
-        if topOffset < numberHours * hourSlotHeight {
-            HStack(spacing: 0) {
-                Circle()
-                    .fill(Color.stateError)
-                    .frame(width: circleDiameter, height: circleDiameter)
-                Rectangle()
-                    .fill(Color.stateError)
-                    .frame(height: 2)
-            }
-            .padding(.top, topOffset)
-        }
     }
 }

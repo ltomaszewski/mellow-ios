@@ -66,13 +66,11 @@ struct CalendarDayView: View {
     
     private func sleepSessionEntry(for model: SleepSessionViewModel) -> some View {
         VStack {
-            Rectangle()
-                .frame(height: model.topOffset)
-                .foregroundColor(.clear)
             HStack {
                 SleepSessionEntryView(model: model)
                     .frame(height: model.height)
             }
+            .padding(.top, model.topOffset)
             .padding(.horizontal, 4)
             .padding(.leading, 72)
             .onTapGesture {

@@ -22,7 +22,7 @@ final class RootViewModel: ObservableObject {
                                imageName: "today_home",
                                tag: 2)
     
-    let settingsTabItem = TabItem(name: "Settings",
-                                  imageName: "single_tab",
+    let scheduleTabItem = TabItem(name: "Schedule",
+                                  imageName: "moon_tab",
                                   tag: 3)
 }

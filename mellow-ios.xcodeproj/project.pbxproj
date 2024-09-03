@@ -36,7 +36,7 @@
 		6D77DF0B2C6C9DD9001A7B93 /* CalendarDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D77DF0A2C6C9DD9001A7B93 /* CalendarDayView.swift */; };
 		6D77DF0D2C6C9DF2001A7B93 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D77DF0C2C6C9DF2001A7B93 /* Date+Extensions.swift */; };
 		6DB9EDAB2C7F0DCB00B817DF /* ProfileTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EDAA2C7F0DCB00B817DF /* ProfileTabView.swift */; };
-		6DB9EDB02C7F0EC700B817DF /* SettingsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EDAF2C7F0EC700B817DF /* SettingsTabView.swift */; };
+		6DB9EDB02C7F0EC700B817DF /* ScheduleTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EDAF2C7F0EC700B817DF /* ScheduleTabView.swift */; };
 		6DB9EDB42C7F18C500B817DF /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EDB32C7F18C500B817DF /* RootViewModel.swift */; };
 		6DC513432C7F9FB500793FEA /* CurrentTimeSeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC513422C7F9FB500793FEA /* CurrentTimeSeparatorView.swift */; };
 /* End PBXBuildFile section */
@@ -92,7 +92,7 @@
 		6D77DF0A2C6C9DD9001A7B93 /* CalendarDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDayView.swift; sourceTree = "<group>"; };
 		6D77DF0C2C6C9DF2001A7B93 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		6DB9EDAA2C7F0DCB00B817DF /* ProfileTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTabView.swift; sourceTree = "<group>"; };
-		6DB9EDAF2C7F0EC700B817DF /* SettingsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTabView.swift; sourceTree = "<group>"; };
+		6DB9EDAF2C7F0EC700B817DF /* ScheduleTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTabView.swift; sourceTree = "<group>"; };
 		6DB9EDB32C7F18C500B817DF /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
 		6DC513422C7F9FB500793FEA /* CurrentTimeSeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentTimeSeparatorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -187,7 +187,7 @@
 				6D183CB82C6BBBDC00E41F93 /* Componenets */,
 				6DB9EDA72C7F0CD300B817DF /* ProfileTab */,
 				6DB9EDA82C7F0D1800B817DF /* TodayTab */,
-				6DB9EDAD2C7F0EAF00B817DF /* SettingsTab */,
+				6DB9EDAD2C7F0EAF00B817DF /* ScheduleTab */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -316,13 +316,13 @@
 			path = Componenets;
 			sourceTree = "<group>";
 		};
-		6DB9EDAD2C7F0EAF00B817DF /* SettingsTab */ = {
+		6DB9EDAD2C7F0EAF00B817DF /* ScheduleTab */ = {
 			isa = PBXGroup;
 			children = (
 				6DB9EDAE2C7F0EBF00B817DF /* Componenets */,
-				6DB9EDAF2C7F0EC700B817DF /* SettingsTabView.swift */,
+				6DB9EDAF2C7F0EC700B817DF /* ScheduleTabView.swift */,
 			);
-			path = SettingsTab;
+			path = ScheduleTab;
 			sourceTree = "<group>";
 		};
 		6DB9EDAE2C7F0EBF00B817DF /* Componenets */ = {
@@ -478,7 +478,7 @@
 				6D70912C2C6E1FE200007689 /* AddSleepView.swift in Sources */,
 				6D183CBA2C6BBBE800E41F93 /* DayPickerBarView.swift in Sources */,
 				6D77DF062C6C93FA001A7B93 /* SleepSession.swift in Sources */,
-				6DB9EDB02C7F0EC700B817DF /* SettingsTabView.swift in Sources */,
+				6DB9EDB02C7F0EC700B817DF /* ScheduleTabView.swift in Sources */,
 				6D53F1BD2C70B48F00FE25E1 /* SleepTimePicker.swift in Sources */,
 				6D77DF0D2C6C9DF2001A7B93 /* Date+Extensions.swift in Sources */,
 				6DB9EDB42C7F18C500B817DF /* RootViewModel.swift in Sources */,

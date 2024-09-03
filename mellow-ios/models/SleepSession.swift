@@ -45,7 +45,7 @@ struct SleepSession: Identifiable, Hashable {
     }
 }
 
-enum SleepSessionType: String {
+enum SleepSessionType: String, CaseIterable {
     case nighttime = "Nighttime Sleep"
     case nap = "Nap"
 }

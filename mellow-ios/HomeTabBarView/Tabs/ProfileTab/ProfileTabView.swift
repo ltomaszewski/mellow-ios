@@ -8,14 +8,28 @@
 import SwiftUI
 
 struct ProfileTabView: View {
+    @State private var navigateToSettings = false
+    
     var body: some View {
-        VStack {
-            Spacer()
-            Text("Profile view")
-                .foregroundStyle(.white)
-            Spacer()
+        NavigationStack {
+            ProfileView()
+            .navigationTitle(Text("Profile"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Profile")
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: ProfileSettingsView()) {
+                        Image(.settings)
+                    }
+                }
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity) // Making VStack full screen
-        .background(.gunmetalBlue)
+        .foregroundColor(.white)
     }
+}
+
+#Preview {
+    ProfileTabView()
 }

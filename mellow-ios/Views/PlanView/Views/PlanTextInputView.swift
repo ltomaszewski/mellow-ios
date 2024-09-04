@@ -1,0 +1,59 @@
+//
+//  PlanTextInputView.swift
+//  mellow-ios
+//
+//  Created by Lukasz Tomaszewski on 04/09/2024.
+//
+
+import SwiftUI
+
+struct PlanTextInputView: View {
+    enum FocusField: Hashable {
+        case field
+    }
+    
+    @Binding var value: String
+    
+    @FocusState private var focusedField: FocusField?
+    
+    let headlineText: String
+    let placeholderText: String
+    let submitText: String
+    @State private var inputText = ""
+    
+    var body: some View {
+        VStack {
+            Spacer()
+            Text(headlineText)
+                .font(.sfTitle())
+                .multilineTextAlignment(.center)
+                .padding()
+            TextField(placeholderText, text: $inputText)
+                .focused($focusedField, equals: .field)
+                .multilineTextAlignment(.center)
+                .font(.sfTextInput())
+                .padding()
+                .tint(.black)
+                .onAppear {
+                    self.focusedField = .field
+                }
+            Spacer()
+            BlackButton(title: submitText) {
+                focusedField = nil
+                withAnimation {
+                    value = inputText
+                }
+            }
+            .opacity(inputText.isEmpty ? 0.0 : 1.0)
+            .animation(.easeInOut(duration: 0.3), value: inputText.isEmpty)
+            .padding(.bottom)
+        }
+    }
+}
+
+#Preview {
+    PlanTextInputView(value: .init(get: { "" }, set: { _ in }),
+                      headlineText: "Text Headline",
+                      placeholderText: "name",
+                      submitText: "continue")
+}

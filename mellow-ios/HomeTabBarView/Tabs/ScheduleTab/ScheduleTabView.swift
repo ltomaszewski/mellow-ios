@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct SettingsTabView: View {
+struct ScheduleTabView: View {
     var body: some View {
         VStack {
             Spacer()
-            Text("Settings view")
+            Text("Schedule view")
                 .foregroundStyle(.white)
             Spacer()
         }

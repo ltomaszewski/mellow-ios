@@ -9,21 +9,21 @@ import SwiftUI
 
 struct SleepTimePicker: View {
     let text: String
-    
-    @ObservedObject private var viewModel: SleepTimePicker.ViewModel
 
     @Binding var date: Date?
-    @Binding private var isDatePickerVisible: Bool // State to manage date picker visibility
+    @Binding var isDatePickerVisible: Bool
     @Binding var width: CGFloat
-    
+
+    @ObservedObject private var viewModel: ViewModel
+
     init(text: String, date: Binding<Date?>, isDatePickerVisible: Binding<Bool>, width: Binding<CGFloat>) {
         self.text = text
-        _date = date
-        _viewModel = ObservedObject(wrappedValue: ViewModel(date: date.wrappedValue))
-        _isDatePickerVisible = isDatePickerVisible
-        _width = width
+        self._date = date
+        self._isDatePickerVisible = isDatePickerVisible
+        self._width = width
+        self._viewModel = ObservedObject(wrappedValue: ViewModel(date: date.wrappedValue))
     }
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -31,19 +31,18 @@ struct SleepTimePicker: View {
                     .font(.sfText16())
                     .padding(.trailing, 24)
                     .frame(width: width * 0.3)
+
                 Text(viewModel.formattedDate)
                     .foregroundColor(.white)
                     .font(.sfText16())
                     .padding(.vertical, 16)
                     .frame(maxWidth: .infinity)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.slate300))
+                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.slate300))
                     .onTapGesture {
                         isDatePickerVisible.toggle()
                     }
             }
-            
+
             if isDatePickerVisible {
                 DatePicker(
                     "",
@@ -62,14 +61,11 @@ struct SleepTimePicker: View {
                 .colorMultiply(.white)
             }
         }
-        .onChange(of: date) { oldDate, newDate in
-            if oldDate != newDate {
-                viewModel.date = newDate
-            }
+        .onChange(of: date) { newDate in
+            viewModel.date = newDate
         }
     }
 }
-
 #Preview {
     SleepTimePicker(text: "Start Time",
                     date: .init(get: { .now }, set: { date in print("New Test Date \(date)") }),

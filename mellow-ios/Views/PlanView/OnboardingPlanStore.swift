@@ -56,4 +56,24 @@ class OnboardingPlanStore: ObservableObject {
     func isOnboardingCompleted() -> Bool {
         return userDefaults.bool(forKey: onboardingCompleteKey)
     }
+    
+    // Progress calculation
+    var progress: Float {
+        var completedSteps = 0
+        let totalSteps = 3
+        
+        if welcomeMessageShown {
+            completedSteps += 1
+        }
+        
+        if !kidAge.isEmpty {
+            completedSteps += 1
+        }
+        
+        if !childName.isEmpty {
+            completedSteps += 1
+        }
+        
+        return Float(completedSteps) / Float(totalSteps)
+    }
 }

@@ -13,14 +13,22 @@ struct OnboardingView: View {
     
     var body: some View {
         VStack {
+            ProgressBar(value: store.progress)
+                .frame(height: 5)
+                .padding(.top, 36)
+                .padding(.horizontal, 16)
             if !store.welcomeMessageShown {
-                welcomeView.transition(.slide)
+                welcomeView
+                    .transition(.push(from: .trailing))
             } else if store.kidAge.isEmpty {
-                questionView.transition(.opacity)
+                questionView
+                    .transition(.push(from: .trailing))
             } else if store.childName.isEmpty {
-                textInputView.transition(.opacity)
+                textInputView
+                    .transition(.push(from: .trailing))
             }
         }
+        .background(.gunmetalBlue)
         .onChange(of: store.welcomeMessageShown) { store.markOnboardingComplete() }
         .onChange(of: store.kidAge) { store.markOnboardingComplete() }
         .onChange(of: store.childName) { store.markOnboardingComplete() }
@@ -69,4 +77,8 @@ struct OnboardingView: View {
         .foregroundStyle(.white)
         .background(.gunmetalBlue)
     }
+}
+
+#Preview {
+    OnboardingView(onboardingCompleted: .init(get: { false }, set: { _ in }))
 }

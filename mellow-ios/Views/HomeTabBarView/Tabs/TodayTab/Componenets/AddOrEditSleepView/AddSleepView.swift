@@ -10,6 +10,7 @@ import SwiftUI
 struct AddSleepView: View {
     let date: Date
     
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
     @EnvironmentObject private var databaseStore: DatabaseStore
     
@@ -22,17 +23,17 @@ struct AddSleepView: View {
     @State private var startTimePickerVisible = false
     @State private var endTimePickerVisible = false
     
-    private var sessionEditId: String?
+    private var sessionEditId: UUID?
     
     init(date: Date, width: Binding<CGFloat>, session: Binding<SleepSession?>) {
         self.date = date
         _width = width
         
         if let existingSession = session.wrappedValue {
-            self.sessionEditId = String(existingSession.id)
-            self._selectedOption = State(initialValue: existingSession.type)
-            self._startTime = State(initialValue: existingSession.startTime)
-            self._endTime = State(initialValue: existingSession.endTime)
+            self.sessionEditId = existingSession.id
+            self._selectedOption = State(initialValue: .init(rawValue: existingSession.type)!)
+            self._startTime = State(initialValue: existingSession.startDate)
+            self._endTime = State(initialValue: existingSession.endDate)
         } else {
             self._selectedOption = State(initialValue: .nap)
             self._startTime = State(initialValue: date)
@@ -116,16 +117,16 @@ struct AddSleepView: View {
     }
     
     private func saveSession() {
-        let newSession = SleepSession(
-            type: selectedOption,
-            startTime: startTime!,
-            endTime: endTime!
-        )
-        
         if let sessionEditId = sessionEditId {
-            databaseStore.replace(id: sessionEditId, newSession: newSession)
+            let newSession = SleepSession(id: sessionEditId, startDate: startTime!, endDate: endTime!, type: selectedOption.rawValue)
+
+            databaseStore.replaceSleepSession(sessionId: sessionEditId,
+                                              newSession: newSession,
+                                              context: modelContext)
         } else {
-            databaseStore.add(session: newSession)
+            let newSession = SleepSession(startDate: startTime!, endDate: endTime!, type: selectedOption.rawValue)
+            databaseStore.addSleepSession(session: newSession,
+                                          context: modelContext)
         }
         
         presentationMode.wrappedValue.dismiss()

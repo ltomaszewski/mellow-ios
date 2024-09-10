@@ -13,7 +13,7 @@ struct SleepSessionEntryView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(model.sleepSession.type == .nap ? Color.slate300 : Color.darkIndigo)
+                .fill(model.sleepSession.type == SleepSessionType.nap.rawValue ? Color.slate300 : Color.darkIndigo)
                 .cornerRadius(12)
             HStack {
                 VStack(alignment: .leading) {

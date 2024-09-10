@@ -8,7 +8,12 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @EnvironmentObject private var databaseStore: DatabaseStore
     @State private var currentDate: Date = Date()
+    @State private var hoursTracked: Int = 0
+    @State private var dayStreak: Int = 0
+    @State private var name: String = ""
+    @State private var imageResource: ImageResource = .kidoHim
     
     var body: some View {
         VStack(spacing: 24) {
@@ -17,12 +22,12 @@ struct ProfileView: View {
                 .frame(height: 1)
             
             // Profile Picture and Name
-            ProfileHeaderView(name: "Greg",
-                              imageResource: .profileAvatar)
+            ProfileHeaderView(name: $name,
+                              imageResource: $imageResource)
             
             // Stats (Hours tracked and Day streak)
-            ProfileStatsView(hoursTracked: 13535, 
-                             dayStreak: 3)
+            ProfileStatsView(hoursTracked: hoursTracked,
+                             dayStreak: dayStreak)
             
             // Calendar with Date and Highlighted Days
             ProfileCalendarView(currentDate: $currentDate,
@@ -32,6 +37,17 @@ struct ProfileView: View {
         }
         .background(Color.gunmetalBlue)
         .foregroundColor(.white)
+        .onReceive(databaseStore.$dayStreak) { newValue in
+            dayStreak = newValue
+        }
+        .onReceive(databaseStore.$hoursTracked) { newValue in
+            hoursTracked = newValue
+        }
+        .onReceive(databaseStore.$kids) { newValue in
+            guard let firstKid = newValue.first else { return }
+            name = firstKid.name
+            imageResource = .kidoHim
+        }
     }
     
     func daysInMonth(date: Date) -> Int {

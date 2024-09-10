@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CalendarDayView: View {
+    @EnvironmentObject private var databaseStore: DatabaseStore
     @ObservedObject private(set) var viewModel: CalendarDayViewModel
     @Binding private var editSleepSession: SleepSession?
     @Binding private var showEditSleepSession: Bool
@@ -32,14 +34,19 @@ struct CalendarDayView: View {
                 }
                 .onAppear { scrollToMidDay(geometry: geometry, proxy: scrollProxy) }
             }
+        }.onReceive(databaseStore.$sleepSession,
+                    perform: { sessions in
+            viewModel.updateSleepSessionEntries(with: sessions)
+        }).onAppear {
+            viewModel.updateSleepSessionEntries(with: databaseStore.sleepSession)
         }
     }
     
     private var currentTimeSeparator: some View {
         VStack {
             CurrentTimeSeparatorView(hourSlotHeight: hourSlotHeight,
-                                 numberHours: CGFloat(viewModel.hours.count),
-                                 firstDate: viewModel.hours.first ?? .now)
+                                     numberHours: CGFloat(viewModel.hours.count),
+                                     firstDate: viewModel.hours.first ?? .now)
             .padding(.leading, 64)
             Spacer()
         }

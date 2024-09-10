@@ -41,31 +41,14 @@ class CalendarDayViewModel: ObservableObject {
         self.hours = range.compactMap { [midDayDate] offset in
             calendar.date(byAdding: .hour, value: offset, to: midDayDate)
         }
-        observeSleepSessions(in: databaseStore)
-    }
-    
-    private func observeSleepSessions(in databaseStore: DatabaseStore) {
-        databaseStore
-            .$sleepSessions
-            .compactMap({ [weak self] sessions -> [SleepSession] in
-                guard
-                    let startDate = self?.startDate,
-                    let endDate = self?.endDate else {
-                        fatalError("Cannot access start or end date in sleepSessions observable. This is likely an internal issue.")
-                }
-                return sessions.filter { $0.startTime > startDate && $0.endTime < endDate }.sorted(by: { $0.startTime < $1.startTime})
-            })
-            .sink { [weak self] sleepSessions in
-                self?.updateSleepSessionEntries(with: sleepSessions)
-            }
-            .store(in: &cancellables)
     }
 
-    private func updateSleepSessionEntries(with sleepSessions: [SleepSession]) {
+    func updateSleepSessionEntries(with sleepSessions: [SleepSession]) {
         guard !sleepSessions.isEmpty else {
             sleepSessionsEntries = []
             return
         }
+        
         let numberOfHourSlots = hours.count
         guard
             let firstDate = hours.first,
@@ -73,19 +56,21 @@ class CalendarDayViewModel: ObservableObject {
             fatalError("Hours data is invalid")
         }
         
+        let filtredSleepSessions = sleepSessions.filter { $0.startDate > firstDate && $0.endDate < lastDate }
         let listHeight = calculateListHeight(hourSlotHeight: hourSlotHeight, numberOfHourSlots: numberOfHourSlots)
         let listMinutesHeight = calculateListMinutesHeight(firstDate: firstDate, lastDate: lastDate, hourSlotHeight: hourSlotHeight)
         
         var result: [SleepSessionViewModel] = []
         
-        for (index, session) in sleepSessions.enumerated() {
+        for (index, session) in filtredSleepSessions.enumerated() {
+
             let topOffset: Float
             let height = calculateHeight(for: session, listMinutesHeight: listMinutesHeight, listHeight: listHeight)
             
             if index == 0 {
-                topOffset = calculateOffset(from: firstDate, to: session.startTime, listMinutesHeight: listMinutesHeight, listHeight: listHeight)
+                topOffset = calculateOffset(from: firstDate, to: session.startDate, listMinutesHeight: listMinutesHeight, listHeight: listHeight)
             } else if let lastSessionView = result.last {
-                topOffset = calculateOffset(from: lastSessionView.sleepSession.endTime, to: session.startTime, listMinutesHeight: listMinutesHeight, listHeight: listHeight)
+                topOffset = calculateOffset(from: lastSessionView.sleepSession.endDate, to: session.startDate, listMinutesHeight: listMinutesHeight, listHeight: listHeight)
             } else {
                 fatalError("There is an issue processing the sleep sessions.")
             }
@@ -93,7 +78,7 @@ class CalendarDayViewModel: ObservableObject {
             let sleepSessionView = SleepSessionViewModel(
                 topOffset: topOffset,
                 height: height,
-                text: session.name,
+                text: session.type,
                 subText: session.formattedTimeRange,
                 sleepSession: session
             )
@@ -113,7 +98,7 @@ class CalendarDayViewModel: ObservableObject {
     }
 
     private func calculateHeight(for session: SleepSession, listMinutesHeight: Float, listHeight: Float) -> Float {
-        let heightInMinutes = Float(session.startTime.minutes(from: session.endTime))
+        let heightInMinutes = Float(session.startDate.minutes(from: session.endDate))
         let heightFactor = heightInMinutes / listMinutesHeight
         return heightFactor * listHeight
     }

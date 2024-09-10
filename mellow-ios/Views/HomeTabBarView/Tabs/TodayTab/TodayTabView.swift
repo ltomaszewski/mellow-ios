@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TodayTabView: View {
+    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var databaseStore: DatabaseStore
     @State var date: Date = Date.now.adjustToMidday()
     @State private var showAddSleepSession = false

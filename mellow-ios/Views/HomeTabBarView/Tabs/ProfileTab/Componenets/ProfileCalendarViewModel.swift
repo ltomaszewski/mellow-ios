@@ -11,7 +11,6 @@ import Combine
 
 final class ProfileCalendarViewModel: ObservableObject {
     @Published var monthDate: Date
-    @Published var highlightedDates: [Int]
 
     private let calendar = Calendar.current
     private let dateFormatter: DateFormatter
@@ -37,9 +36,8 @@ final class ProfileCalendarViewModel: ObservableObject {
     var onPreviousMonthTap: (() -> Void)?
     var onNextMonthTap: (() -> Void)?
 
-    init(monthDate: Date = Date(), highlightedDates: [Int] = [], onPreviousMonthTap: (() -> Void)? = nil, onNextMonthTap: (() -> Void)? = nil) {
+    init(monthDate: Date = Date(), onPreviousMonthTap: (() -> Void)? = nil, onNextMonthTap: (() -> Void)? = nil) {
         self.monthDate = monthDate
-        self.highlightedDates = highlightedDates
         self.onPreviousMonthTap = onPreviousMonthTap
         self.onNextMonthTap = onNextMonthTap
         

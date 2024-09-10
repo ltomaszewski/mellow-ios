@@ -18,8 +18,7 @@ struct ProfileCalendarView: View {
         _currentDate = currentDate
         _viewModel = StateObject(wrappedValue:
                                     ProfileCalendarViewModel(
-                                        monthDate: currentDate.wrappedValue,
-                                        highlightedDates: highlightedDates)
+                                        monthDate: currentDate.wrappedValue)
         )
     }
     

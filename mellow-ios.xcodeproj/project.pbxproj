@@ -20,6 +20,8 @@
 		6D183CC32C6BBE2700E41F93 /* DayPickerBarCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC22C6BBE2700E41F93 /* DayPickerBarCollectionView.swift */; };
 		6D183CC52C6BC65600E41F93 /* SFFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC42C6BC65600E41F93 /* SFFont.swift */; };
 		6D183CC72C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC62C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift */; };
+		6D3977F42C907086004CB093 /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = 6D3977F32C907086004CB093 /* ci_post_clone.sh */; };
+		6D3977F62C9070B0004CB093 /* macros.json in Resources */ = {isa = PBXBuildFile; fileRef = 6D3977F52C9070B0004CB093 /* macros.json */; };
 		6D3E0EBE2C8832FD00639940 /* ProfileCalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D3E0EBD2C8832FD00639940 /* ProfileCalendarViewModel.swift */; };
 		6D53F1BD2C70B48F00FE25E1 /* SleepTimePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D53F1BC2C70B48F00FE25E1 /* SleepTimePicker.swift */; };
 		6D53F1C02C70C4A000FE25E1 /* SleepTimePicker+ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D53F1BF2C70C4A000FE25E1 /* SleepTimePicker+ViewModel.swift */; };
@@ -93,6 +95,8 @@
 		6D183CC22C6BBE2700E41F93 /* DayPickerBarCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPickerBarCollectionView.swift; sourceTree = "<group>"; };
 		6D183CC42C6BC65600E41F93 /* SFFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SFFont.swift; sourceTree = "<group>"; };
 		6D183CC62C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DayPickerBarCollectionView+Cell.swift"; sourceTree = "<group>"; };
+		6D3977F32C907086004CB093 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
+		6D3977F52C9070B0004CB093 /* macros.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = macros.json; sourceTree = "<group>"; };
 		6D3E0EBD2C8832FD00639940 /* ProfileCalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCalendarViewModel.swift; sourceTree = "<group>"; };
 		6D53F1BC2C70B48F00FE25E1 /* SleepTimePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepTimePicker.swift; sourceTree = "<group>"; };
 		6D53F1BF2C70C4A000FE25E1 /* SleepTimePicker+ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepTimePicker+ViewModel.swift"; sourceTree = "<group>"; };
@@ -161,6 +165,7 @@
 		6D183C7A2C6BB95C00E41F93 = {
 			isa = PBXGroup;
 			children = (
+				6D3977F22C907066004CB093 /* ci_scripts */,
 				6D183C852C6BB95C00E41F93 /* mellow-ios */,
 				6D183C982C6BB95D00E41F93 /* mellow-iosTests */,
 				6D183CA22C6BB95D00E41F93 /* mellow-iosUITests */,
@@ -257,6 +262,15 @@
 				6D77DF0C2C6C9DF2001A7B93 /* Date+Extensions.swift */,
 			);
 			path = DayPickerBarView;
+			sourceTree = "<group>";
+		};
+		6D3977F22C907066004CB093 /* ci_scripts */ = {
+			isa = PBXGroup;
+			children = (
+				6D3977F32C907086004CB093 /* ci_post_clone.sh */,
+				6D3977F52C9070B0004CB093 /* macros.json */,
+			);
+			path = ci_scripts;
 			sourceTree = "<group>";
 		};
 		6D53F1BB2C70B45000FE25E1 /* AddOrEditSleepView */ = {
@@ -559,7 +573,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D3977F62C9070B0004CB093 /* macros.json in Resources */,
 				6D183C902C6BB95D00E41F93 /* Preview Assets.xcassets in Resources */,
+				6D3977F42C907086004CB093 /* ci_post_clone.sh in Resources */,
 				6D183C8D2C6BB95D00E41F93 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 import Combine
 
 final class ProfileCalendarViewModel: ObservableObject {
@@ -56,7 +57,24 @@ final class ProfileCalendarViewModel: ObservableObject {
         onNextMonthTap?()
     }
 
-    func isDateHighlighted(_ day: Int) -> Bool {
-        highlightedDates.contains(day)
+    func isDateHighlighted(_ day: Int, databaseStore: DatabaseStore, context: ModelContext) -> Bool {
+        guard let dayDate = createDayDate(for: monthDate, to: day) else {
+            fatalError("Day creation for isDateHighlighted has failed")
+        }
+        return databaseStore.hasSession(on: dayDate, context: context)
+    }
+    
+    private func createDayDate(for monthDate: Date, to day: Int) -> Date? {
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone.current
+        
+        // Extract the year and month from the given date
+        var components = calendar.dateComponents([.year, .month], from: monthDate)
+        
+        // Set the new day value
+        components.day = day
+        
+        // Return the new date with the updated day
+        return calendar.date(from: components)
     }
 }

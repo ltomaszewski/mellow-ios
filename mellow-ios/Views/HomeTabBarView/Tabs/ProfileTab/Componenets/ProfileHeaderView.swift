@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ProfileHeaderView: View {
-    var name: String
-    var imageResource: ImageResource
+    @Binding var name: String
+    @Binding var imageResource: ImageResource
     
     var body: some View {
         VStack(spacing: 8) {
@@ -28,6 +28,6 @@ struct ProfileHeaderView: View {
 }
 
 #Preview {
-    ProfileHeaderView(name: "Lucas",
-                      imageResource: .profileAvatar)
+    ProfileHeaderView(name: .init(get: { "Lucas" }, set: { _ in } ),
+                      imageResource: .init(get: { .profileAvatar }, set: { _ in }))
 }

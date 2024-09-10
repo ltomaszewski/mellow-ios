@@ -19,5 +19,6 @@ struct mellow_iosApp: App {
                 .environmentObject(appState)
                 .environmentObject(databaseStore)
         }
+        .modelContainer(for: [Kid.self, SleepSession.self])
     }
 }

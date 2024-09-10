@@ -10,6 +10,8 @@ import SwiftUI
 struct OnboardingView: View {
     @Binding var onboardingCompleted: Bool
     @ObservedObject var store = OnboardingPlanStore.shared
+    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var databaseStore: DatabaseStore
     
     var body: some View {
         VStack {
@@ -33,6 +35,9 @@ struct OnboardingView: View {
         .onChange(of: store.kidAge) { store.markOnboardingComplete() }
         .onChange(of: store.childName) { store.markOnboardingComplete() }
         .onChange(of: store.completed, {
+            databaseStore.addKid(name: store.childName,
+                                 age: store.kidAge,
+                                 context: modelContext)
             withAnimation {
                 onboardingCompleted = true
             }

@@ -191,7 +191,6 @@
 				6D183C8C2C6BB95D00E41F93 /* Assets.xcassets */,
 				6D183C8E2C6BB95D00E41F93 /* Preview Content */,
 				6D77DF042C6C93E1001A7B93 /* Services */,
-				6D77DF032C6C93D8001A7B93 /* Models */,
 				6DB92D102C884E08005E48E9 /* Views */,
 			);
 			path = "mellow-ios";
@@ -298,13 +297,6 @@
 				6D7091292C6DF3B600007689 /* SleepSessionViewModel.swift */,
 			);
 			path = models;
-			sourceTree = "<group>";
-		};
-		6D77DF032C6C93D8001A7B93 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		6D77DF042C6C93E1001A7B93 /* Services */ = {

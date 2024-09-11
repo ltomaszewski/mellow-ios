@@ -2,12 +2,12 @@
   "originHash" : "6f65feedf2afadaf566199ab3f100bbdb5768f9b038a1b84707e709fa7fe9eb7",
   "pins" : [
     {
-      "identity" : "swift-syntax",
+      "identity" : "swift-syntax-xcframeworks",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
+      "location" : "https://github.com/sjavora/swift-syntax-xcframeworks.git",
       "state" : {
-        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
-        "version" : "509.1.1"
+        "revision" : "7501c18dfe20e637818d838df961072176d6296e",
+        "version" : "510.0.1"
       }
     },
     {
@@ -16,7 +16,7 @@
       "location" : "https://github.com/ltomaszewski/SwiftlyBeautiful",
       "state" : {
         "branch" : "master",
-        "revision" : "3a8b9d15df377e6d340afd69811e5a1af34cb933"
+        "revision" : "9e52c15470eba40f202862a83b9bd08bba5f18be"
       }
     }
   ],

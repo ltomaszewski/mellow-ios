@@ -4,5 +4,11 @@
 <dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>gothamrnd_light.otf</string>
+		<string>gothamrnd_medium.otf</string>
+		<string>gothamrnd_bold.otf</string>
+	</array>
 </dict>
 </plist>

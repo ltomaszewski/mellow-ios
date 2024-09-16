@@ -27,11 +27,11 @@ struct HourTimeView: View {
             Spacer()
             Text(hourAndMinute)
                 .foregroundColor(Color.slate100)
-                .font(.sfText12())
+                .font(.main12)
                 .opacity(0.8)
             Text(amPm)
                 .foregroundColor(Color.slate100)
-                .font(.sfText10())
+                .font(.main10)
                 .opacity(0.5)
         }
     }

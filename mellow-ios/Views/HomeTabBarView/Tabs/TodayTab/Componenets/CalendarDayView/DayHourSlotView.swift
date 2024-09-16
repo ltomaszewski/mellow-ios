@@ -17,7 +17,7 @@ struct DayHourSlotView: View {
                     HourTimeView(date: date)
                     Spacer()
                 }
-                .frame(width: 56)
+                .frame(width: 64)
                 Spacer(minLength: 16)
                 ZStack {
                     VStack {

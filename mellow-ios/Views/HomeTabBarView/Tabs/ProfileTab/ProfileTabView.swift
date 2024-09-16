@@ -13,11 +13,12 @@ struct ProfileTabView: View {
     var body: some View {
         NavigationStack {
             ProfileView()
-            .navigationTitle(Text("Profile"))
+                .navigationTitle(Text("Profile"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("Profile")
+                        .font(.main18)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination: ProfileSettingsView()) {
@@ -27,6 +28,7 @@ struct ProfileTabView: View {
             }
         }
         .foregroundColor(.white)
+        .font(.main18)
     }
 }
 

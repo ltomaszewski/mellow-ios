@@ -25,14 +25,14 @@ struct PlanTextInputView: View {
         VStack {
             Spacer()
             Text(headlineText)
-                .font(.sfTitle())
+                .font(.main24)
                 .multilineTextAlignment(.center)
                 .padding()
             TextField(placeholderText, text: $inputText)
                 .focused($focusedField, equals: .field)
                 .autocorrectionDisabled()
                 .multilineTextAlignment(.center)
-                .font(.sfTextInput())
+                .font(.main64)
                 .padding()
                 .tint(.black)
                 .onAppear {

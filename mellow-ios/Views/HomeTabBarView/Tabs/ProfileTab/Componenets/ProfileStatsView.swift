@@ -15,16 +15,16 @@ struct ProfileStatsView: View {
         HStack(spacing: 40) {
             VStack {
                 Text("\(hoursTracked)")
-                    .fontWeight(.semibold)
+                    .font(.main20)
                 Text("Hours tracked")
-                    .font(.caption)
+                    .font(.main16)
                     .foregroundStyle(.slateGray)
             }
             VStack {
                 Text("\(dayStreak)")
-                    .fontWeight(.semibold)
+                    .font(.main20)
                 Text("Day streak")
-                    .font(.caption)
+                    .font(.main16)
                     .foregroundStyle(.slateGray)
             }
         }

@@ -31,7 +31,6 @@ struct ContentView: View {
         .background(.gunmetalBlue)
         .onAppear(perform: {
             databaseStore.loadKids(context: modelContext)
-            
         })
     }
 }

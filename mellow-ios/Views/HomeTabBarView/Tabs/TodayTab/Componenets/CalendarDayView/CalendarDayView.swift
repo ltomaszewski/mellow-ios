@@ -32,7 +32,9 @@ struct CalendarDayView: View {
                         sleepSessionEntries
                     }
                 }
-                .onAppear { scrollToMidDay(geometry: geometry, proxy: scrollProxy) }
+                .onAppear {
+                    scrollToMidDay(geometry: geometry, proxy: scrollProxy)
+                }
             }
         }.onReceive(databaseStore.$sleepSession,
                     perform: { sessions in
@@ -54,7 +56,8 @@ struct CalendarDayView: View {
     
     private var hourSlots: some View {
         VStack(spacing: 0) {
-            ForEach(viewModel.hours, id: \.self) { date in
+            ForEach(viewModel.hours,
+                    id: \.self) { date in
                 DayHourSlotView(date: date)
                     .frame(height: hourSlotHeight)
                     .id(date)
@@ -64,7 +67,8 @@ struct CalendarDayView: View {
     
     private var sleepSessionEntries: some View {
         VStack(spacing: 0) {
-            ForEach(viewModel.sleepSessionsEntries, id: \.self) { model in
+            ForEach(viewModel.sleepSessionsEntries,
+                    id: \.self) { model in
                 sleepSessionEntry(for: model)
             }
             Spacer()

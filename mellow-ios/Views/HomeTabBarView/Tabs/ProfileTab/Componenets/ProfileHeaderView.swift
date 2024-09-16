@@ -21,7 +21,7 @@ struct ProfileHeaderView: View {
             
             // Name
             Text(name)
-                .font(.title2)
+                .font(.main18)
                 .fontWeight(.semibold)
         }
     }

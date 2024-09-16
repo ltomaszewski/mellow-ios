@@ -8,45 +8,45 @@
 import SwiftUI
 
 extension Font {
-    public static func sfBottomDescription() -> Font {
-        .custom("SF Pro Display", fixedSize: 16)
-    }
-    public static func sfButton() -> Font {
-        .custom("SF Pro Display", fixedSize: 18)
-    }
-    public static func sfPoint() -> Font {
-        .custom("SF Pro Display", fixedSize: 20)
-    }
-    public static func sfTitle() -> Font {
-        .custom("SF Pro Display", fixedSize: 24)
-    }
-    public static func sfTitleBigger() -> Font {
-        .custom("SF Pro Display", fixedSize: 36)
-    }
-    public static func sfTextInput() -> Font {
-        .custom("SF Pro Display", fixedSize: 64)
+    private static let fontName = "Gotham Rounded"
+    public static var main10: Font {
+        .custom(fontName, fixedSize: 10)
     }
     
-    public static func sfText10() -> Font {
-        .custom("SF Pro Display", fixedSize: 10)
+    public static var main12: Font {
+        .custom(fontName, fixedSize: 12)
     }
-    public static func sfText12() -> Font {
-        .custom("SF Pro Display", fixedSize: 12)
+    
+    public static var main14: Font {
+        .custom(fontName, fixedSize: 14)
     }
-    public static func sfText14() -> Font {
-        .custom("SF Pro Display", fixedSize: 14)
+    
+    public static var main16: Font {
+        .custom(fontName, fixedSize: 16)
     }
-    public static func sfText16() -> Font {
-        .custom("SF Pro Display", fixedSize: 16)
+    
+    public static var main18: Font {
+        .custom(fontName, fixedSize: 18)
     }
-    public static func sfText18() -> Font {
-        .custom("SF Pro Display", fixedSize: 18)
+    
+    public static var main20: Font {
+        .custom(fontName, fixedSize: 20)
     }
-    public static func sfText20() -> Font {
-        .custom("SF Pro Display", fixedSize: 20)
+    
+    public static var main22: Font {
+        .custom(fontName, fixedSize: 22)
     }
-    public static func sfText26() -> Font {
-        .custom("SF Pro Display", fixedSize: 26)
+    
+    public static var main24: Font {
+        .custom(fontName, fixedSize: 24)
+    }
+    
+    public static var main26: Font {
+        .custom(fontName, fixedSize: 26)
+    }
+    
+    public static var main64: Font {
+        .custom(fontName, fixedSize: 64)
     }
 }
 

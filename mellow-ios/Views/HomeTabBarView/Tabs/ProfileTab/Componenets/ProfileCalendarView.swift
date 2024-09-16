@@ -31,6 +31,7 @@ struct ProfileCalendarView: View {
                 }
                 Spacer()
                 Text(viewModel.monthName)
+                    .font(.main16)
                 Spacer()
                 Button(action: viewModel.nextMonth) {
                     Image(.arrowRight)
@@ -47,7 +48,7 @@ struct ProfileCalendarView: View {
                 ForEach(0..<7, id: \.self) { column in
                     VStack(alignment: .center) {
                         Text(viewModel.daysOfWeek[column])
-                            .font(.caption)
+                            .font(.main14)
                         ForEach(0..<6) { row in
                             let position = column + row * 7
                             let date = position - viewModel.startDayOffset + 1
@@ -91,6 +92,7 @@ struct CalendarDateView: View {
     
     var body: some View {
         Text("\(day)")
+            .font(.main14)
             .fontWeight(isSelected ? .bold : .regular)
             .frame(width: 32, height: 32)
             .background(isSelected ? Color.blue : Color.clear)

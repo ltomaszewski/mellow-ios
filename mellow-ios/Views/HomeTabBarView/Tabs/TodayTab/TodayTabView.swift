@@ -73,7 +73,7 @@ struct TodayTabView: View {
 }
 
 #Preview {
-    TodayTabView()
+    TodayTabView().environmentObject(DatabaseStore())
 }
 
 struct GetDimensionsModifier: ViewModifier {

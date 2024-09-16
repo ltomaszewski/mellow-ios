@@ -59,6 +59,9 @@
 		6DB9EDB02C7F0EC700B817DF /* ScheduleTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EDAF2C7F0EC700B817DF /* ScheduleTabView.swift */; };
 		6DB9EDB42C7F18C500B817DF /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EDB32C7F18C500B817DF /* RootViewModel.swift */; };
 		6DC513432C7F9FB500793FEA /* CurrentTimeSeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC513422C7F9FB500793FEA /* CurrentTimeSeparatorView.swift */; };
+		6DDD4CA62C98355100E3853E /* gothamrnd_medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6DDD4CA52C98355100E3853E /* gothamrnd_medium.otf */; };
+		6DDD4CA82C98355A00E3853E /* gothamrnd_bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6DDD4CA72C98355A00E3853E /* gothamrnd_bold.otf */; };
+		6DDD4CAA2C98356100E3853E /* gothamrnd_light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6DDD4CA92C98356100E3853E /* gothamrnd_light.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -134,6 +137,9 @@
 		6DB9EDAF2C7F0EC700B817DF /* ScheduleTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTabView.swift; sourceTree = "<group>"; };
 		6DB9EDB32C7F18C500B817DF /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
 		6DC513422C7F9FB500793FEA /* CurrentTimeSeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentTimeSeparatorView.swift; sourceTree = "<group>"; };
+		6DDD4CA52C98355100E3853E /* gothamrnd_medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gothamrnd_medium.otf; sourceTree = "<group>"; };
+		6DDD4CA72C98355A00E3853E /* gothamrnd_bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gothamrnd_bold.otf; sourceTree = "<group>"; };
+		6DDD4CA92C98356100E3853E /* gothamrnd_light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gothamrnd_light.otf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +192,7 @@
 		6D183C852C6BB95C00E41F93 /* mellow-ios */ = {
 			isa = PBXGroup;
 			children = (
+				6DDD4CA32C98353D00E3853E /* Resources */,
 				6D76C88D2C7325870092C34E /* Info.plist */,
 				6D183C862C6BB95C00E41F93 /* mellow_iosApp.swift */,
 				6D183C8C2C6BB95D00E41F93 /* Assets.xcassets */,
@@ -455,6 +462,24 @@
 			path = Componenets;
 			sourceTree = "<group>";
 		};
+		6DDD4CA32C98353D00E3853E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6DDD4CA42C98354300E3853E /* Fonts */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		6DDD4CA42C98354300E3853E /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				6DDD4CA92C98356100E3853E /* gothamrnd_light.otf */,
+				6DDD4CA52C98355100E3853E /* gothamrnd_medium.otf */,
+				6DDD4CA72C98355A00E3853E /* gothamrnd_bold.otf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -568,7 +593,10 @@
 				6D3977F62C9070B0004CB093 /* macros.json in Resources */,
 				6D183C902C6BB95D00E41F93 /* Preview Assets.xcassets in Resources */,
 				6D3977F42C907086004CB093 /* ci_post_clone.sh in Resources */,
+				6DDD4CA82C98355A00E3853E /* gothamrnd_bold.otf in Resources */,
 				6D183C8D2C6BB95D00E41F93 /* Assets.xcassets in Resources */,
+				6DDD4CA62C98355100E3853E /* gothamrnd_medium.otf in Resources */,
+				6DDD4CAA2C98356100E3853E /* gothamrnd_light.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

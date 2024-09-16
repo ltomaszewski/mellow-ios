@@ -74,8 +74,8 @@ struct AddSleepView: View {
         .padding(.vertical, 24)
         .foregroundStyle(.white)
         .background(Color.gunmetalBlue)
-        .onChange(of: startTime) { newStartTime in
-            guard let startTime = newStartTime else { return }
+        .onChange(of: startTime) { oldValue, newValue in
+            guard let startTime = newValue else { return }
             if endTime == nil || endTime! <= startTime {
                 endTime = startTime.adding(hours: 1)
             }
@@ -84,8 +84,8 @@ struct AddSleepView: View {
                 endTime = maxEndTime
             }
         }
-        .onChange(of: endTime) { newEndTime in
-            guard let endTime = newEndTime, let startTime = startTime else { return }
+        .onChange(of: endTime) { oldValue, newValue in
+            guard let endTime = newValue, let startTime = startTime else { return }
             if endTime <= startTime {
                 self.endTime = startTime.adding(hours: 1)!
             }
@@ -101,7 +101,7 @@ struct AddSleepView: View {
             Button("Cancel") {
                 cancel()
             }
-            .font(.sfText16())
+            .font(.main16)
             .foregroundStyle(Color.softPeriwinkle)
             
             Spacer()
@@ -109,7 +109,7 @@ struct AddSleepView: View {
             Button("Save") {
                 saveSession()
             }
-            .font(.sfText16())
+            .font(.main16)
             .foregroundStyle(Color.softPeriwinkle)
         }
     }
@@ -117,14 +117,14 @@ struct AddSleepView: View {
     private var sleepTypePicker: some View {
         VStack(spacing: 0) {
             Text(sessionEditId == nil ? "Add Sleep" : "Edit Sleep")
-                .font(.sfText20())
+                .font(.main20)
                 .foregroundStyle(.white)
                 .padding(.bottom, 8)
             
             Picker("Nap or Sleep", selection: $selectedOption) {
                 ForEach(SleepSessionType.allCases, id: \.self) { type in
                     Text(type.rawValue.capitalized)
-                        .font(.sfText16())
+                        .font(.main16)
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
@@ -160,7 +160,16 @@ struct AddSleepView: View {
                 width: $width
             )
             .padding(.horizontal, 16)
-            
+        }
+        .onChange(of: startTimePickerVisible) { oldValue, newValue in
+            if endTimePickerVisible, !oldValue, newValue {
+                endTimePickerVisible = false
+            }
+        }
+        .onChange(of: endTimePickerVisible) { oldValue, newValue in
+            if startTimePickerVisible, !oldValue, newValue {
+                startTimePickerVisible = false
+            }
         }
     }
     
@@ -169,12 +178,11 @@ struct AddSleepView: View {
             CalendarSeparator()
             HStack {
                 Text("Delete")
-                    .font(.sfText16())
+                    .font(.main16)
                     .multilineTextAlignment(.leading)
                 Spacer()
                 Button {
                     databaseStore.deleteSleepSession(id: session!.id, context: modelContext)
-                    
                     presentationMode.wrappedValue.dismiss()
                     session = nil
                 } label: {

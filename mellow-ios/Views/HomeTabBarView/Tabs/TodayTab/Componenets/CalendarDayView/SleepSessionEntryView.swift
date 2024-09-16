@@ -18,10 +18,10 @@ struct SleepSessionEntryView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text(model.text)
-                        .font(.sfText18())
+                        .font(.main18)
                         .foregroundStyle(.white)
                     Text(model.subText)
-                        .font(.sfText14())
+                        .font(.main14)
                         .foregroundColor(Color.slate100)
                     Spacer()
                 }

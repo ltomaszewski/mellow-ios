@@ -13,7 +13,7 @@ extension DayPickerBarCollectionView {
             let label = UILabel()
             label.translatesAutoresizingMaskIntoConstraints = false
             label.textAlignment = .center
-            label.font = UIFont(name: "SF Pro Display", size: 14)
+            label.font = UIFont(name: "Gotham Rounded", size: 14)
             label.textColor = .white
             return label
         }()

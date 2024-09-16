@@ -22,18 +22,18 @@ struct PlanPromptView: View {
             VStack {
                 if !headlineTopText.isEmpty {
                     Text(headlineTopText)
-                        .font(.sfBottomDescription())
+                        .font(.main16)
                         .foregroundColor(KidsyColors.mediumGray)
                         .padding(.bottom)
                 }
                 
                 Text(headlineText)
-                    .font(.sfTitle())
+                    .font(.main24)
                     .multilineTextAlignment(.center)
                 
                 if !headlineBottomText.isEmpty {
                     Text(headlineBottomText)
-                        .font(.sfBottomDescription())
+                        .font(.main16)
                         .foregroundColor(KidsyColors.mediumGray)
                         .padding(.top)
                 }
@@ -47,7 +47,7 @@ struct PlanPromptView: View {
             Spacer()
             if !bottomText.isEmpty {
                 Text(bottomText)
-                    .font(.sfBottomDescription())
+                    .font(.main16)
                     .foregroundColor(KidsyColors.mediumGray)
             }
         }

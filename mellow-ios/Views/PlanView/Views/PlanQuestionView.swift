@@ -18,7 +18,7 @@ struct PlanQuestionView: View {
         VStack(spacing: 0) {
             Spacer()
             Text(question)
-                .font(.sfTitle())
+                .font(.main24)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 54)
                 .padding(.bottom, 32)

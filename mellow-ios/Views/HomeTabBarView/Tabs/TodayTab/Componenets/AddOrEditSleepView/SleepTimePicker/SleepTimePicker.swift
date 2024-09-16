@@ -37,14 +37,14 @@ struct SleepTimePicker: View {
         VStack(alignment: .leading) {
             HStack {
                 Text(text)
-                    .font(.sfText16())
+                    .font(.main16)
                     .frame(alignment: .leading)
                 
                 Spacer()
                 
                 Text(viewModel.formattedDate)
                     .foregroundColor(.white)
-                    .font(.sfText16())
+                    .font(.main16)
                     .padding(.vertical, 16)
                     .frame(maxWidth: width * 0.6)
                     .background(RoundedRectangle(cornerRadius: 12).fill(Color.slate300))

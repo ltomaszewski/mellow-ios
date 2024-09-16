@@ -19,18 +19,21 @@ struct RootView: View {
                     .tabItem {
                         Label(viewModel.todayTabItem.name,
                               image: viewModel.todayTabItem.imageName)
+                        .font(.main12)
                     }
                     .tag(viewModel.todayTabItem.tag)
                 ScheduleTabView()
                     .tabItem {
                         Label(viewModel.scheduleTabItem.name,
                               image: viewModel.scheduleTabItem.imageName)
+                        .font(.main12)
                     }
                     .tag(viewModel.scheduleTabItem.tag)
                 ProfileTabView()
                     .tabItem {
                         Label(viewModel.profileTabItem.name,
                               image: viewModel.profileTabItem.imageName)
+                        .font(.main12)
                     }
                     .tag(viewModel.profileTabItem.tag)
             }

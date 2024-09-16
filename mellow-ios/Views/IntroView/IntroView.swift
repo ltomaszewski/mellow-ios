@@ -21,7 +21,7 @@ struct IntroView: View {
                 .frame(width: 200, height: 200)
             
             Text(text)
-                .font(.sfTitle())
+                .font(.main24)
                 .lineSpacing(10)
                 .multilineTextAlignment(.center)
                 .padding(.minimum(64, 48))

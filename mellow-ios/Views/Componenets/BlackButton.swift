@@ -15,7 +15,7 @@ struct BlackButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.sfButton())
+                .font(.main18)
                 .foregroundColor(isInverted ? .white : .white) // Choose color based on isInverted
                 .padding()
                 .frame(maxWidth: .infinity) // Ensures the button takes the full width

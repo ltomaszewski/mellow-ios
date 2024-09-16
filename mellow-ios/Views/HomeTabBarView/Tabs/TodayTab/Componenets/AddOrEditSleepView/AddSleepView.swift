@@ -43,13 +43,17 @@ struct AddSleepView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 16) {
             header
+                .padding(.horizontal, 16)
             sleepTypePicker
             sleepTimePickers
+            if sessionEditId != nil {
+                sleepSessionDelete
+            }
         }
         .padding(.vertical, 24)
-        .padding(.horizontal, 16)
+        .foregroundStyle(.white)
         .background(Color.gunmetalBlue)
     }
     
@@ -72,10 +76,11 @@ struct AddSleepView: View {
     }
     
     private var sleepTypePicker: some View {
-        VStack {
+        VStack(spacing: 0) {
             Text(sessionEditId == nil ? "Add Sleep" : "Edit Sleep")
                 .font(.sfText20())
                 .foregroundStyle(.white)
+                .padding(.bottom, 8)
             
             Picker("Nap or Sleep", selection: $selectedOption) {
                 ForEach(SleepSessionType.allCases, id: \.self) { type in
@@ -85,21 +90,26 @@ struct AddSleepView: View {
             }
             .pickerStyle(SegmentedPickerStyle())
             .tint(.white)
-            .padding()
+            .padding(.vertical)
             .colorInvert()
             .colorMultiply(.white)
+            .padding(.horizontal, 16)
+
         }
     }
     
     private var sleepTimePickers: some View {
-        VStack {
+        VStack(spacing: 16) {
+            CalendarSeparator()
             SleepTimePicker(
                 text: "Start Time",
                 date: $startTime,
                 isDatePickerVisible: $startTimePickerVisible,
                 width: $width
             )
-            .foregroundStyle(.white)
+            .padding(.horizontal, 16)
+            
+            CalendarSeparator()
             
             SleepTimePicker(
                 text: "End Time",
@@ -107,7 +117,29 @@ struct AddSleepView: View {
                 isDatePickerVisible: $endTimePickerVisible,
                 width: $width
             )
-            .foregroundStyle(.white)
+            .padding(.horizontal, 16)
+            
+        }
+    }
+    
+    private var sleepSessionDelete: some View {
+        VStack (spacing: 16) {
+            CalendarSeparator()
+            HStack {
+                Text("Delete")
+                    .font(.sfText16())
+                    .multilineTextAlignment(.leading)
+                Spacer()
+                Button {
+                    databaseStore.deleteSleepSession(id: session!.id, context: modelContext)
+                    
+                    presentationMode.wrappedValue.dismiss()
+                    session = nil
+                } label: {
+                    Image(.trash)
+                }
+            }
+            .padding(.horizontal, 16)
         }
     }
     
@@ -138,8 +170,8 @@ struct AddSleepView_Previews: PreviewProvider {
     static var previews: some View {
         AddSleepView(
             date: .now,
-            width: .init(get: { 200 }, set: { _ in }),
-            session: .init(get: { nil }, set: { _ in })
+            width: .init(get: { 768 }, set: { _ in }),
+            session: .init(get: { .init(startDate: .now, endDate: .now, type: SleepSessionType.nap.rawValue) }, set: { _ in })
         )
     }
 }

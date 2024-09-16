@@ -29,14 +29,15 @@ struct SleepTimePicker: View {
             HStack {
                 Text(text)
                     .font(.sfText16())
-                    .padding(.trailing, 24)
-                    .frame(width: width * 0.3)
-
+                    .frame(alignment: .leading)
+                
+                Spacer()
+                
                 Text(viewModel.formattedDate)
                     .foregroundColor(.white)
                     .font(.sfText16())
                     .padding(.vertical, 16)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: width * 0.6)
                     .background(RoundedRectangle(cornerRadius: 12).fill(Color.slate300))
                     .onTapGesture {
                         isDatePickerVisible.toggle()

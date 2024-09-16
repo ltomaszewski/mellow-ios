@@ -37,9 +37,10 @@ class DatabaseStore: ObservableObject {
     
     func addSleepSession(session: SleepSession, context: ModelContext) {
         guard let kid = kids.first else { fatalError("Kid has to be created at this point") }
-        kid.addSleepSession(session)
-        context.insert(session)
-        saveContext(context: context)
+        try! SleepSession.save(session, context: context)
+        try! Kid.update(id: kid.id,
+                        updateClosure: { $0.addSleepSession(session) },
+                        context: context)
         updateProperties(context: context)
     }
     
@@ -55,13 +56,10 @@ class DatabaseStore: ObservableObject {
         updateProperties(context: context)
     }
     
-    func removeSleepSession(from kid: Kid, session: SleepSession, context: ModelContext) {
-        if let index = kids.firstIndex(where: { $0.id == kid.id }) {
-            kids[index].removeSleepSession(session)
-            context.delete(session)
-            saveContext(context: context)
-            updateProperties(context: context)
-        }
+    func deleteSleepSession(id: UUID, context: ModelContext) {
+        let session = try! SleepSession.query(predicate: #Predicate { $0.id == id }, sortBy: [], context: context).first!
+        try! SleepSession.delete(session, context: context)
+        updateProperties(context: context)
     }
     
     func hasSession(on date: Date, context: ModelContext) -> Bool {

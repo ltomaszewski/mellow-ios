@@ -12,6 +12,7 @@ struct CalendarSeparator: View {
         Rectangle()
             .fill(Color.slate100)
             .frame(height: 1)
-            .opacity(0.4)
+            .opacity(0.2)
     }
 }
+

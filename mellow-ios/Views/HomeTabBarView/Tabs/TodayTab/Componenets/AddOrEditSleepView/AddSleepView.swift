@@ -18,7 +18,13 @@ struct AddSleepView: View {
     @Binding var session: SleepSession?
     
     @State private var startTime: Date?
+    @State private var startTimeMin: Date
+    @State private var startTimeMax: Date
+
     @State private var endTime: Date?
+    @State private var endTimeMin: Date
+    @State private var endTimeMax: Date
+    
     @State private var selectedOption: SleepSessionType
     @State private var startTimePickerVisible = false
     @State private var endTimePickerVisible = false
@@ -34,10 +40,23 @@ struct AddSleepView: View {
             self._selectedOption = State(initialValue: .init(rawValue: existingSession.type)!)
             self._startTime = State(initialValue: existingSession.startDate)
             self._endTime = State(initialValue: existingSession.endDate)
+            
+            self._startTimeMin = .init(initialValue: Date.distantPast)
+            self._startTimeMax = .init(initialValue: existingSession.endDate.adding(hours: -1)!)
+            
+            self._endTimeMin = .init(initialValue: existingSession.startDate.adding(hours: 1)!)
+            self._endTimeMax = .init(initialValue: existingSession.startDate.adding(hours: 12)!)
+            
         } else {
             self._selectedOption = State(initialValue: .nap)
             self._startTime = State(initialValue: date)
             self._endTime = State(initialValue: Calendar.current.date(byAdding: .minute, value: 60, to: date) ?? date)
+            
+            self._startTimeMin = .init(initialValue: Date.distantPast)
+            self._startTimeMax = .init(initialValue: Date.distantFuture)
+            
+            self._endTimeMin = .init(initialValue: Date.distantPast)
+            self._endTimeMax = .init(initialValue: Date.distantFuture)
         }
         _session = session
     }
@@ -55,6 +74,26 @@ struct AddSleepView: View {
         .padding(.vertical, 24)
         .foregroundStyle(.white)
         .background(Color.gunmetalBlue)
+        .onChange(of: startTime) { newStartTime in
+            guard let startTime = newStartTime else { return }
+            if endTime == nil || endTime! <= startTime {
+                endTime = startTime.adding(hours: 1)
+            }
+            let maxEndTime = startTime.adding(hours: 12)!
+            if endTime! > maxEndTime {
+                endTime = maxEndTime
+            }
+        }
+        .onChange(of: endTime) { newEndTime in
+            guard let endTime = newEndTime, let startTime = startTime else { return }
+            if endTime <= startTime {
+                self.endTime = startTime.adding(hours: 1)!
+            }
+            let maxEndTime = startTime.adding(hours: 12)!
+            if endTime > maxEndTime {
+                self.endTime = maxEndTime
+            }
+        }
     }
     
     private var header: some View {
@@ -94,7 +133,6 @@ struct AddSleepView: View {
             .colorInvert()
             .colorMultiply(.white)
             .padding(.horizontal, 16)
-
         }
     }
     
@@ -104,6 +142,8 @@ struct AddSleepView: View {
             SleepTimePicker(
                 text: "Start Time",
                 date: $startTime,
+                minDate: $startTimeMin,
+                maxDate: $startTimeMax,
                 isDatePickerVisible: $startTimePickerVisible,
                 width: $width
             )
@@ -114,6 +154,8 @@ struct AddSleepView: View {
             SleepTimePicker(
                 text: "End Time",
                 date: $endTime,
+                minDate: $endTimeMin,
+                maxDate: $endTimeMax,
                 isDatePickerVisible: $endTimePickerVisible,
                 width: $width
             )

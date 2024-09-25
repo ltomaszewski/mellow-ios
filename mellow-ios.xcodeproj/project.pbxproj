@@ -14,7 +14,7 @@
 		6D183CA42C6BB95D00E41F93 /* mellow_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CA32C6BB95D00E41F93 /* mellow_iosUITests.swift */; };
 		6D183CA62C6BB95D00E41F93 /* mellow_iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CA52C6BB95D00E41F93 /* mellow_iosUITestsLaunchTests.swift */; };
 		6D183CB32C6BBB6B00E41F93 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CB22C6BBB6B00E41F93 /* RootView.swift */; };
-		6D183CB72C6BBBAD00E41F93 /* TodayTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CB62C6BBBAD00E41F93 /* TodayTabView.swift */; };
+		6D183CB72C6BBBAD00E41F93 /* ScheduleTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CB62C6BBBAD00E41F93 /* ScheduleTabView.swift */; };
 		6D183CBA2C6BBBE800E41F93 /* DayPickerBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CB92C6BBBE800E41F93 /* DayPickerBarView.swift */; };
 		6D183CC12C6BBE1100E41F93 /* DayPickerBarViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC02C6BBE1100E41F93 /* DayPickerBarViewRepresentable.swift */; };
 		6D183CC32C6BBE2700E41F93 /* DayPickerBarCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC22C6BBE2700E41F93 /* DayPickerBarCollectionView.swift */; };
@@ -56,9 +56,10 @@
 		6DB92D2E2C899649005E48E9 /* SleepSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB92D2D2C899649005E48E9 /* SleepSession.swift */; };
 		6DB92D312C89DD0D005E48E9 /* SwiftlyBeautiful in Frameworks */ = {isa = PBXBuildFile; productRef = 6DB92D302C89DD0D005E48E9 /* SwiftlyBeautiful */; };
 		6DB9EDAB2C7F0DCB00B817DF /* ProfileTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EDAA2C7F0DCB00B817DF /* ProfileTabView.swift */; };
-		6DB9EDB02C7F0EC700B817DF /* ScheduleTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EDAF2C7F0EC700B817DF /* ScheduleTabView.swift */; };
+		6DB9EDB02C7F0EC700B817DF /* TodayTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EDAF2C7F0EC700B817DF /* TodayTabView.swift */; };
 		6DB9EDB42C7F18C500B817DF /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EDB32C7F18C500B817DF /* RootViewModel.swift */; };
 		6DC513432C7F9FB500793FEA /* CurrentTimeSeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC513422C7F9FB500793FEA /* CurrentTimeSeparatorView.swift */; };
+		6DD04A832CA412420061F4F6 /* GetDimensionsModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD04A822CA412420061F4F6 /* GetDimensionsModifier.swift */; };
 		6DDD4CA62C98355100E3853E /* gothamrnd_medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6DDD4CA52C98355100E3853E /* gothamrnd_medium.otf */; };
 		6DDD4CA82C98355A00E3853E /* gothamrnd_bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6DDD4CA72C98355A00E3853E /* gothamrnd_bold.otf */; };
 		6DDD4CAA2C98356100E3853E /* gothamrnd_light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6DDD4CA92C98356100E3853E /* gothamrnd_light.otf */; };
@@ -92,7 +93,7 @@
 		6D183CA32C6BB95D00E41F93 /* mellow_iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mellow_iosUITests.swift; sourceTree = "<group>"; };
 		6D183CA52C6BB95D00E41F93 /* mellow_iosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mellow_iosUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		6D183CB22C6BBB6B00E41F93 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		6D183CB62C6BBBAD00E41F93 /* TodayTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTabView.swift; sourceTree = "<group>"; };
+		6D183CB62C6BBBAD00E41F93 /* ScheduleTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTabView.swift; sourceTree = "<group>"; };
 		6D183CB92C6BBBE800E41F93 /* DayPickerBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPickerBarView.swift; sourceTree = "<group>"; };
 		6D183CC02C6BBE1100E41F93 /* DayPickerBarViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPickerBarViewRepresentable.swift; sourceTree = "<group>"; };
 		6D183CC22C6BBE2700E41F93 /* DayPickerBarCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPickerBarCollectionView.swift; sourceTree = "<group>"; };
@@ -134,9 +135,10 @@
 		6DB92D2B2C899640005E48E9 /* Kid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kid.swift; sourceTree = "<group>"; };
 		6DB92D2D2C899649005E48E9 /* SleepSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepSession.swift; sourceTree = "<group>"; };
 		6DB9EDAA2C7F0DCB00B817DF /* ProfileTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTabView.swift; sourceTree = "<group>"; };
-		6DB9EDAF2C7F0EC700B817DF /* ScheduleTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTabView.swift; sourceTree = "<group>"; };
+		6DB9EDAF2C7F0EC700B817DF /* TodayTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTabView.swift; sourceTree = "<group>"; };
 		6DB9EDB32C7F18C500B817DF /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
 		6DC513422C7F9FB500793FEA /* CurrentTimeSeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentTimeSeparatorView.swift; sourceTree = "<group>"; };
+		6DD04A822CA412420061F4F6 /* GetDimensionsModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDimensionsModifier.swift; sourceTree = "<group>"; };
 		6DDD4CA52C98355100E3853E /* gothamrnd_medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gothamrnd_medium.otf; sourceTree = "<group>"; };
 		6DDD4CA72C98355A00E3853E /* gothamrnd_bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gothamrnd_bold.otf; sourceTree = "<group>"; };
 		6DDD4CA92C98356100E3853E /* gothamrnd_light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gothamrnd_light.otf; sourceTree = "<group>"; };
@@ -233,8 +235,8 @@
 			children = (
 				6D183CB82C6BBBDC00E41F93 /* Componenets */,
 				6DB9EDA72C7F0CD300B817DF /* ProfileTab */,
-				6DB9EDA82C7F0D1800B817DF /* TodayTab */,
-				6DB9EDAD2C7F0EAF00B817DF /* ScheduleTab */,
+				6DB9EDA82C7F0D1800B817DF /* ScheduleTab */,
+				6DB9EDAD2C7F0EAF00B817DF /* TodayTab */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -362,6 +364,7 @@
 		6DB92D142C8850E0005E48E9 /* Componenets */ = {
 			isa = PBXGroup;
 			children = (
+				6DD04A812CA412350061F4F6 /* ViewModifiers */,
 				6DB92D152C8850F2005E48E9 /* BlackButton.swift */,
 				6DB92D272C898B0D005E48E9 /* ProgressBar.swift */,
 			);
@@ -416,13 +419,13 @@
 			path = ProfileTab;
 			sourceTree = "<group>";
 		};
-		6DB9EDA82C7F0D1800B817DF /* TodayTab */ = {
+		6DB9EDA82C7F0D1800B817DF /* ScheduleTab */ = {
 			isa = PBXGroup;
 			children = (
 				6DB9EDA92C7F0D2400B817DF /* Componenets */,
-				6D183CB62C6BBBAD00E41F93 /* TodayTabView.swift */,
+				6D183CB62C6BBBAD00E41F93 /* ScheduleTabView.swift */,
 			);
-			path = TodayTab;
+			path = ScheduleTab;
 			sourceTree = "<group>";
 		};
 		6DB9EDA92C7F0D2400B817DF /* Componenets */ = {
@@ -446,13 +449,13 @@
 			path = Componenets;
 			sourceTree = "<group>";
 		};
-		6DB9EDAD2C7F0EAF00B817DF /* ScheduleTab */ = {
+		6DB9EDAD2C7F0EAF00B817DF /* TodayTab */ = {
 			isa = PBXGroup;
 			children = (
 				6DB9EDAE2C7F0EBF00B817DF /* Componenets */,
-				6DB9EDAF2C7F0EC700B817DF /* ScheduleTabView.swift */,
+				6DB9EDAF2C7F0EC700B817DF /* TodayTabView.swift */,
 			);
-			path = ScheduleTab;
+			path = TodayTab;
 			sourceTree = "<group>";
 		};
 		6DB9EDAE2C7F0EBF00B817DF /* Componenets */ = {
@@ -460,6 +463,14 @@
 			children = (
 			);
 			path = Componenets;
+			sourceTree = "<group>";
+		};
+		6DD04A812CA412350061F4F6 /* ViewModifiers */ = {
+			isa = PBXGroup;
+			children = (
+				6DD04A822CA412420061F4F6 /* GetDimensionsModifier.swift */,
+			);
+			path = ViewModifiers;
 			sourceTree = "<group>";
 		};
 		6DDD4CA32C98353D00E3853E /* Resources */ = {
@@ -626,6 +637,7 @@
 				6DB92D262C88AC42005E48E9 /* ContentView.swift in Sources */,
 				6D77DF0B2C6C9DD9001A7B93 /* CalendarDayView.swift in Sources */,
 				6D70911F2C6CA32F00007689 /* CalendarSeparator.swift in Sources */,
+				6DD04A832CA412420061F4F6 /* GetDimensionsModifier.swift in Sources */,
 				6D77DF082C6C9407001A7B93 /* DatabaseStore.swift in Sources */,
 				6DB92D1E2C88A33E005E48E9 /* PlanTextInputView.swift in Sources */,
 				6DB92D242C88AC2A005E48E9 /* AppState.swift in Sources */,
@@ -640,7 +652,7 @@
 				6DB92D202C88A56C005E48E9 /* OnboardingPlanStore.swift in Sources */,
 				6D7091212C6CA34000007689 /* HourTimeView.swift in Sources */,
 				6D53F1C02C70C4A000FE25E1 /* SleepTimePicker+ViewModel.swift in Sources */,
-				6D183CB72C6BBBAD00E41F93 /* TodayTabView.swift in Sources */,
+				6D183CB72C6BBBAD00E41F93 /* ScheduleTabView.swift in Sources */,
 				6DB92D132C8850B4005E48E9 /* IntroView.swift in Sources */,
 				6D183CC52C6BC65600E41F93 /* SFFont.swift in Sources */,
 				6DA85F632C8726820025988E /* ProfileStatsView.swift in Sources */,
@@ -650,7 +662,7 @@
 				6D70912C2C6E1FE200007689 /* AddSleepView.swift in Sources */,
 				6D183CBA2C6BBBE800E41F93 /* DayPickerBarView.swift in Sources */,
 				6DB92D282C898B0D005E48E9 /* ProgressBar.swift in Sources */,
-				6DB9EDB02C7F0EC700B817DF /* ScheduleTabView.swift in Sources */,
+				6DB9EDB02C7F0EC700B817DF /* TodayTabView.swift in Sources */,
 				6D53F1BD2C70B48F00FE25E1 /* SleepTimePicker.swift in Sources */,
 				6D77DF0D2C6C9DF2001A7B93 /* Date+Extensions.swift in Sources */,
 				6DB92D222C88A809005E48E9 /* OnboardingPlanView.swift in Sources */,
@@ -827,7 +839,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 36;
 				DEVELOPMENT_ASSET_PATHS = "\"mellow-ios/Preview Content\"";
 				DEVELOPMENT_TEAM = DRU4XTX272;
 				ENABLE_PREVIEWS = YES;
@@ -860,7 +872,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 36;
 				DEVELOPMENT_ASSET_PATHS = "\"mellow-ios/Preview Content\"";
 				DEVELOPMENT_TEAM = DRU4XTX272;
 				ENABLE_PREVIEWS = YES;

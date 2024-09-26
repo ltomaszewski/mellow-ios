@@ -9,7 +9,8 @@ import SwiftUI
 
 struct AddSleepView: View {
     let date: Date
-    
+    @Binding var isPresented: Bool
+
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
     @EnvironmentObject private var databaseStore: DatabaseStore
@@ -31,9 +32,10 @@ struct AddSleepView: View {
     
     private var sessionEditId: UUID?
     
-    init(date: Date, width: Binding<CGFloat>, session: Binding<SleepSession?>) {
+    init(date: Date, width: Binding<CGFloat>, session: Binding<SleepSession?>, isPresented: Binding<Bool>) {
         self.date = date
         _width = width
+        _isPresented = isPresented
         
         if let existingSession = session.wrappedValue {
             self.sessionEditId = existingSession.id
@@ -108,6 +110,8 @@ struct AddSleepView: View {
             
             Button("Save") {
                 saveSession()
+                isPresented = false
+                presentationMode.wrappedValue.dismiss()
             }
             .font(.main16)
             .foregroundStyle(Color.softPeriwinkle)
@@ -183,8 +187,9 @@ struct AddSleepView: View {
                 Spacer()
                 Button {
                     databaseStore.deleteSleepSession(id: session!.id, context: modelContext)
-                    presentationMode.wrappedValue.dismiss()
                     session = nil
+                    isPresented = false
+                    presentationMode.wrappedValue.dismiss()
                 } label: {
                     Image(.trash)
                 }
@@ -194,8 +199,9 @@ struct AddSleepView: View {
     }
     
     private func cancel() {
-        presentationMode.wrappedValue.dismiss()
         session = nil
+        isPresented = false
+        presentationMode.wrappedValue.dismiss()
     }
     
     private func saveSession() {
@@ -211,7 +217,6 @@ struct AddSleepView: View {
                                           context: modelContext)
         }
         
-        presentationMode.wrappedValue.dismiss()
         session = nil
     }
 }
@@ -221,7 +226,8 @@ struct AddSleepView_Previews: PreviewProvider {
         AddSleepView(
             date: .now,
             width: .init(get: { 768 }, set: { _ in }),
-            session: .init(get: { .init(startDate: .now, endDate: .now, type: SleepSessionType.nap.rawValue) }, set: { _ in })
+            session: .init(get: { .init(startDate: .now, endDate: .now, type: SleepSessionType.nap.rawValue) }, set: { _ in }),
+            isPresented: .init(get: { true }, set: { _ in })
         )
     }
 }

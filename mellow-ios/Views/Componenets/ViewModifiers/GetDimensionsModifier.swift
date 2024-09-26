@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct GetDimensionsModifier: ViewModifier {
-    @Binding var height: CGFloat
     @Binding var width: CGFloat
+    @Binding var height: CGFloat
     
     func body(content: Content) -> some View {
         content.background(
@@ -19,5 +19,11 @@ struct GetDimensionsModifier: ViewModifier {
                 return Color.clear
             }
         )
+    }
+}
+
+extension View {
+    func getSize(_ width: Binding<CGFloat>, _ height: Binding<CGFloat>) -> some View {
+        self.modifier(GetDimensionsModifier(width: width, height: height))
     }
 }

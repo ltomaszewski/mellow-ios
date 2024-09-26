@@ -29,6 +29,9 @@ struct ScheduleTabView: View {
                 Spacer()
             }
             .background(Color.gunmetalBlue)
+            .dimmedBackground(isPresented: $showAddSleepSession)
+            .dimmedBackground(isPresented: $showEditSleepSession)
+
             
             VStack(alignment: .trailing) {
                 Spacer()
@@ -54,18 +57,20 @@ struct ScheduleTabView: View {
                content: {
             AddSleepView(date: date,
                          width: $sheetWidth,
-                         session: $editSleepSession)
+                         session: $editSleepSession,
+                         isPresented: $showAddSleepSession)
             .fixedSize(horizontal: false, vertical: true)
-            .modifier(GetDimensionsModifier(height: $sheetHeight, width: $sheetWidth))
+            .getSize($sheetWidth, $sheetHeight)
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })
         .sheet(isPresented: $showEditSleepSession,
                content: {
             AddSleepView(date: date,
                          width: $sheetWidth,
-                         session: $editSleepSession)
+                         session: $editSleepSession,
+                         isPresented: $showAddSleepSession)
             .fixedSize(horizontal: false, vertical: true)
-            .modifier(GetDimensionsModifier(height: $sheetHeight, width: $sheetWidth))
+            .getSize($sheetWidth, $sheetHeight)
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })
         .onChange(of: date) { _, _ in /* For unknown reason the date change do not invoke updateUIView inside DayPickerBarViewRepresentable without it */}

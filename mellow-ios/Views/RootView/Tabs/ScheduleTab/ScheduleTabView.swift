@@ -78,5 +78,5 @@ struct ScheduleTabView: View {
 }
 
 #Preview {
-    TodayTabView().environmentObject(DatabaseStore())
+    ScheduleTabView().environmentObject(DatabaseStore())
 }

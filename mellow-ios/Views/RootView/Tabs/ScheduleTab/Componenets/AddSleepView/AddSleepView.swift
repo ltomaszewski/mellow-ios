@@ -124,14 +124,14 @@ struct AddSleepView: View {
             let newSession = SleepSession(id: sessionEditId,
                                           startDate: startTime!,
                                           endDate: endTime!,
-                                          type: selectedOption.rawValue)
+                                          type: startTime!.isTimeDifferenceMoreThan(hours: 3, comparedTo: endTime!) ? SleepSessionType.nighttime.rawValue : SleepSessionType.nap.rawValue)
             databaseStore.replaceSleepSession(sessionId: sessionEditId,
                                               newSession: newSession,
                                               context: modelContext)
         } else {
             let newSession = SleepSession(startDate: startTime!,
                                           endDate: endTime!,
-                                          type: selectedOption.rawValue)
+                                          type: startTime!.isTimeDifferenceMoreThan(hours: 3, comparedTo: endTime!) ? SleepSessionType.nighttime.rawValue : SleepSessionType.nap.rawValue)
             databaseStore.addSleepSession(session: newSession,
                                           context: modelContext)
         }

@@ -16,10 +16,14 @@ struct CalendarDayView: View {
     
     private let hourSlotHeight: CGFloat = 48
     
-    init(date: Binding<Date?>, editSleepSession: Binding<SleepSession?>, showEditSleepSession: Binding<Bool>, databaseStore: DatabaseStore) {
+    // Binding to trigger scrolling action from the parent view
+    @Binding private var shouldScrollToCurrentTime: Bool
+    
+    init(date: Binding<Date?>, editSleepSession: Binding<SleepSession?>, showEditSleepSession: Binding<Bool>, shouldScrollToCurrentTime: Binding<Bool>, databaseStore: DatabaseStore) {
         _viewModel = ObservedObject(wrappedValue: CalendarDayViewModel(date: date, databaseStore: databaseStore))
         _editSleepSession = editSleepSession
         _showEditSleepSession = showEditSleepSession
+        _shouldScrollToCurrentTime = shouldScrollToCurrentTime
     }
     
     var body: some View {
@@ -33,13 +37,24 @@ struct CalendarDayView: View {
                     }
                 }
                 .onAppear {
-                    scrollToMidDay(geometry: geometry, proxy: scrollProxy)
+                    if viewModel.date!.isToday() {
+                        scrollToCurrentTimeIfNeeded(geometry: geometry, proxy: scrollProxy)
+                    } else {
+                        scrollToMidDay(geometry: geometry, proxy: scrollProxy)
+                    }
+                }
+                .onChange(of: shouldScrollToCurrentTime) { _, newValue in
+                    if newValue {
+                        scrollToCurrentTimeIfNeeded(geometry: geometry, proxy: scrollProxy)
+                        shouldScrollToCurrentTime = false // Reset the trigger after scrolling
+                    }
                 }
             }
-        }.onReceive(databaseStore.$sleepSession,
-                    perform: { sessions in
+        }
+        .onReceive(databaseStore.$sleepSession, perform: { sessions in
             viewModel.updateSleepSessionEntries(with: sessions)
-        }).onAppear {
+        })
+        .onAppear {
             viewModel.updateSleepSessionEntries(with: databaseStore.sleepSession)
         }
     }
@@ -56,8 +71,7 @@ struct CalendarDayView: View {
     
     private var hourSlots: some View {
         VStack(spacing: 0) {
-            ForEach(viewModel.hours,
-                    id: \.self) { date in
+            ForEach(viewModel.hours, id: \.self) { date in
                 DayHourSlotView(date: date)
                     .frame(height: hourSlotHeight)
                     .id(date)
@@ -67,8 +81,7 @@ struct CalendarDayView: View {
     
     private var sleepSessionEntries: some View {
         VStack(spacing: 0) {
-            ForEach(viewModel.sleepSessionsEntries,
-                    id: \.self) { model in
+            ForEach(viewModel.sleepSessionsEntries, id: \.self) { model in
                 sleepSessionEntry(for: model)
             }
             Spacer()
@@ -95,5 +108,12 @@ struct CalendarDayView: View {
         let visibleHours = Int(geometry.size.height / hourSlotHeight)
         let midScreenOffset = visibleHours / 2
         proxy.scrollTo(viewModel.midDayDate.addingTimeInterval(TimeInterval(midScreenOffset * 3600)))
+    }
+    
+    private func scrollToCurrentTimeIfNeeded(geometry: GeometryProxy, proxy: ScrollViewProxy) {
+        guard Calendar.current.isDateInToday(viewModel.date!) else { return }
+        let visibleHours = Int(geometry.size.height / hourSlotHeight)
+        let midScreenOffset = visibleHours / 2
+        proxy.scrollTo(Date().dateWithoutMinutes().addingTimeInterval(TimeInterval(midScreenOffset * 3600)))
     }
 }

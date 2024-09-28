@@ -16,6 +16,7 @@ struct ScheduleTabView: View {
     @State private var editSleepSession: SleepSession?
     @State private var sheetHeight: CGFloat = 300
     @State private var sheetWidth: CGFloat = 300
+    @State private var shouldScrollToCurrentTime = false
     
     var body: some View {
         ZStack {
@@ -25,10 +26,14 @@ struct ScheduleTabView: View {
                 CalendarDayViewWithPager(databaseStore: databaseStore,
                                          date: $date,
                                          editSleepSession: $editSleepSession,
-                                         showEditSleepSession: $showEditSleepSession)
+                                         showEditSleepSession: $showEditSleepSession,
+                                         shouldScrollToCurrentTime: $shouldScrollToCurrentTime)
                 Spacer()
             }
             .background(Color.gunmetalBlue)
+            .dimmedBackground(isPresented: $showAddSleepSession)
+            .dimmedBackground(isPresented: $showEditSleepSession)
+
             
             VStack(alignment: .trailing) {
                 Spacer()
@@ -54,18 +59,20 @@ struct ScheduleTabView: View {
                content: {
             AddSleepView(date: date,
                          width: $sheetWidth,
-                         session: $editSleepSession)
+                         session: $editSleepSession,
+                         isPresented: $showAddSleepSession)
             .fixedSize(horizontal: false, vertical: true)
-            .modifier(GetDimensionsModifier(height: $sheetHeight, width: $sheetWidth))
+            .getSize($sheetWidth, $sheetHeight)
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })
         .sheet(isPresented: $showEditSleepSession,
                content: {
             AddSleepView(date: date,
                          width: $sheetWidth,
-                         session: $editSleepSession)
+                         session: $editSleepSession,
+                         isPresented: $showAddSleepSession)
             .fixedSize(horizontal: false, vertical: true)
-            .modifier(GetDimensionsModifier(height: $sheetHeight, width: $sheetWidth))
+            .getSize($sheetWidth, $sheetHeight)
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })
         .onChange(of: date) { _, _ in /* For unknown reason the date change do not invoke updateUIView inside DayPickerBarViewRepresentable without it */}
@@ -73,5 +80,5 @@ struct ScheduleTabView: View {
 }
 
 #Preview {
-    TodayTabView().environmentObject(DatabaseStore())
+    ScheduleTabView().environmentObject(DatabaseStore())
 }

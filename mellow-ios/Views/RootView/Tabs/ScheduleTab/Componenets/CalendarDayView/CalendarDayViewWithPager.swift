@@ -12,7 +12,7 @@ struct CalendarDayViewWithPager: View {
     @Binding var date: Date
     @Binding var editSleepSession: SleepSession?
     @Binding var showEditSleepSession: Bool
-
+    @Binding var shouldScrollToCurrentTime: Bool
     
     var body: some View {
         PageViewContent(index: $date,
@@ -22,6 +22,7 @@ struct CalendarDayViewWithPager: View {
                         viewBuilder: { CalendarDayView(date: .constant($0),
                                                        editSleepSession: $editSleepSession,
                                                        showEditSleepSession: $showEditSleepSession,
+                                                       shouldScrollToCurrentTime: $shouldScrollToCurrentTime,
                                                        databaseStore: databaseStore) },
                         hasNextPage: { true },
                         hasPreviousPage: { true },

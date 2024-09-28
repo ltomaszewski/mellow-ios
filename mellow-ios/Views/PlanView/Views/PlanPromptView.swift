@@ -23,7 +23,7 @@ struct PlanPromptView: View {
                 if !headlineTopText.isEmpty {
                     Text(headlineTopText)
                         .font(.main16)
-                        .foregroundColor(KidsyColors.mediumGray)
+                        .foregroundColor(.slateGray)
                         .padding(.bottom)
                 }
                 
@@ -34,7 +34,7 @@ struct PlanPromptView: View {
                 if !headlineBottomText.isEmpty {
                     Text(headlineBottomText)
                         .font(.main16)
-                        .foregroundColor(KidsyColors.mediumGray)
+                        .foregroundColor(.slateGray)
                         .padding(.top)
                 }
                 
@@ -48,7 +48,7 @@ struct PlanPromptView: View {
             if !bottomText.isEmpty {
                 Text(bottomText)
                     .font(.main16)
-                    .foregroundColor(KidsyColors.mediumGray)
+                    .foregroundColor(.slateGray)
             }
         }
         .padding(.bottom)

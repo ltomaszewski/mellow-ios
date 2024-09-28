@@ -43,11 +43,11 @@ struct SleepTimePicker: View {
                 Spacer()
                 
                 Text(viewModel.formattedDate)
-                    .foregroundColor(.white)
+                    .foregroundColor(.softPeriwinkle)
                     .font(.main16)
                     .padding(.vertical, 16)
                     .frame(maxWidth: width * 0.6)
-                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.slate300))
+                    .background(RoundedRectangle(cornerRadius: 6).fill(Color.charcoalBlue))
                     .onTapGesture {
                         isDatePickerVisible.toggle()
                     }

@@ -76,4 +76,32 @@ extension Date {
         let difference = Calendar.current.dateComponents([.minute], from: self, to: toDate)
         return difference.minute ?? 0
     }
+    
+    /// Checks if the time difference between this date and another date is more than the specified number of hours.
+    /// - Parameters:
+    ///   - otherDate: The date to compare with.
+    ///   - hours: The number of hours to check against.
+    /// - Returns: A Boolean value indicating whether the time difference is more than the specified number of hours.
+    func isTimeDifferenceMoreThan(hours: Int, comparedTo otherDate: Date) -> Bool {
+        // Calculate the time difference in seconds
+        let timeDifference = self.timeIntervalSince(otherDate)
+        
+        // Convert the specified hours into seconds
+        let hoursInSeconds = Double(hours) * 60 * 60
+        
+        // Check if the time difference is greater than the specified hours
+        return abs(timeDifference) > hoursInSeconds
+    }
+    
+    /// Checks if the date is today, considering only the year, month, and day.
+    /// - Returns: A Boolean value indicating whether the date is today.
+    func isToday() -> Bool {
+        let calendar = Calendar.current
+        // Extract the year, month, and day components of the current date and the date to compare
+        let todayComponents = calendar.dateComponents([.year, .month, .day], from: Date())
+        let selfComponents = calendar.dateComponents([.year, .month, .day], from: self)
+        
+        // Compare year, month, and day components
+        return todayComponents == selfComponents
+    }
 }

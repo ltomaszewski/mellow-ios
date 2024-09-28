@@ -8,21 +8,31 @@
 import Foundation
 
 final class RootViewModel: ObservableObject {
-    struct TabItem {
-        let name: String
-        let imageName: String
-        let tag: Int
+    enum TabItem: Hashable {
+        case profile
+        case today
+        case schedule
+        
+        var name: String {
+            switch self {
+            case .profile:
+                return "Profile"
+            case .today:
+                return "Today"
+            case .schedule:
+                return "Schedule"
+            }
+        }
+        
+        var imageName: String {
+            switch self {
+            case .profile:
+                return "profile_tab"
+            case .today:
+                return "today_home"
+            case .schedule:
+                return "moon_tab"
+            }
+        }
     }
-    
-    let profileTabItem = TabItem(name: "Profile",
-                                 imageName: "profile_tab",
-                                 tag: 1)
-    
-    let todayTabItem = TabItem(name: "Today",
-                               imageName: "today_home",
-                               tag: 2)
-    
-    let scheduleTabItem = TabItem(name: "Schedule",
-                                  imageName: "moon_tab",
-                                  tag: 3)
 }

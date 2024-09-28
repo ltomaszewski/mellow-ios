@@ -16,6 +16,7 @@ struct ScheduleTabView: View {
     @State private var editSleepSession: SleepSession?
     @State private var sheetHeight: CGFloat = 300
     @State private var sheetWidth: CGFloat = 300
+    @State private var shouldScrollToCurrentTime = false
     
     var body: some View {
         ZStack {
@@ -25,7 +26,8 @@ struct ScheduleTabView: View {
                 CalendarDayViewWithPager(databaseStore: databaseStore,
                                          date: $date,
                                          editSleepSession: $editSleepSession,
-                                         showEditSleepSession: $showEditSleepSession)
+                                         showEditSleepSession: $showEditSleepSession,
+                                         shouldScrollToCurrentTime: $shouldScrollToCurrentTime)
                 Spacer()
             }
             .background(Color.gunmetalBlue)

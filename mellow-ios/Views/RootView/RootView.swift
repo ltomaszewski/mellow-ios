@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RootView: View {
     @StateObject var viewModel = RootViewModel()
-    @State private var selectedItem = 2
+    @State private var selectedItem: RootViewModel.TabItem = .schedule
 
     var body: some View {
         TabView(selection: $selectedItem,
@@ -17,25 +17,25 @@ struct RootView: View {
             Group {
                 TodayTabView()
                     .tabItem {
-                        Label(viewModel.todayTabItem.name,
-                              image: viewModel.todayTabItem.imageName)
+                        Label(RootViewModel.TabItem.today.name,
+                              image: RootViewModel.TabItem.today.imageName)
                         .font(.main12)
                     }
-                    .tag(viewModel.todayTabItem.tag)
+                    .tag(RootViewModel.TabItem.today)
                 ScheduleTabView()
                     .tabItem {
-                        Label(viewModel.scheduleTabItem.name,
-                              image: viewModel.scheduleTabItem.imageName)
+                        Label(RootViewModel.TabItem.schedule.name,
+                              image: RootViewModel.TabItem.schedule.imageName)
                         .font(.main12)
                     }
-                    .tag(viewModel.scheduleTabItem.tag)
+                    .tag(RootViewModel.TabItem.schedule)
                 ProfileTabView()
                     .tabItem {
-                        Label(viewModel.profileTabItem.name,
-                              image: viewModel.profileTabItem.imageName)
+                        Label(RootViewModel.TabItem.profile.name,
+                              image: RootViewModel.TabItem.profile.imageName)
                         .font(.main12)
                     }
-                    .tag(viewModel.profileTabItem.tag)
+                    .tag(RootViewModel.TabItem.profile)
             }
             .toolbarBackground(.gunmetalBlue, for: .tabBar)
             .toolbarBackground(.visible, for: .tabBar)

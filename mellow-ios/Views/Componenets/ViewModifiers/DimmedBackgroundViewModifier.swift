@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 struct DimmedBackgroundViewModifier: ViewModifier {
     @Binding var isPresented: Bool
     @State private var showDimmedBackground = false

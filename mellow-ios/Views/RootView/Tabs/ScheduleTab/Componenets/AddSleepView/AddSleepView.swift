@@ -10,7 +10,7 @@ import SwiftUI
 struct AddSleepView: View {
     let date: Date
     @Binding var isPresented: Bool
-
+    
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
     @EnvironmentObject private var databaseStore: DatabaseStore
@@ -21,7 +21,7 @@ struct AddSleepView: View {
     @State private var startTime: Date?
     @State private var startTimeMin: Date
     @State private var startTimeMax: Date
-
+    
     @State private var endTime: Date?
     @State private var endTimeMin: Date
     @State private var endTimeMax: Date
@@ -65,12 +65,27 @@ struct AddSleepView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            header
-                .padding(.horizontal, 16)
-            sleepTypePicker
-            sleepTimePickers
+            HeaderView(isPresented: $isPresented,
+                       presentationMode: presentationMode,
+                       saveAction: saveSession)
+            .padding(.horizontal, 16)
+            Text(sessionEditId == nil ? "Add Sleep" : "Edit Sleep")
+                .font(.main20)
+                .foregroundStyle(.white)
+                .padding(.bottom, 8)
+            TimePickers(startTime: $startTime,
+                        startTimeMin: $startTimeMin,
+                        startTimeMax: $startTimeMax,
+                        endTime: $endTime,
+                        endTimeMin: $endTimeMin,
+                        endTimeMax: $endTimeMax,
+                        startTimePickerVisible: $startTimePickerVisible,
+                        endTimePickerVisible: $endTimePickerVisible,
+                        width: $width)
             if sessionEditId != nil {
-                sleepSessionDelete
+                SessionDelete(session: $session,
+                              isPresented: $isPresented,
+                              presentationMode: presentationMode)
             }
         }
         .padding(.vertical, 24)
@@ -98,106 +113,6 @@ struct AddSleepView: View {
         }
     }
     
-    private var header: some View {
-        HStack {
-            Button("Cancel") {
-                cancel()
-            }
-            .font(.main16)
-            .foregroundStyle(Color.softPeriwinkle)
-            
-            Spacer()
-            
-            Button("Save") {
-                saveSession()
-                isPresented = false
-                presentationMode.wrappedValue.dismiss()
-            }
-            .font(.main16)
-            .foregroundStyle(Color.softPeriwinkle)
-        }
-    }
-    
-    private var sleepTypePicker: some View {
-        VStack(spacing: 0) {
-            Text(sessionEditId == nil ? "Add Sleep" : "Edit Sleep")
-                .font(.main20)
-                .foregroundStyle(.white)
-                .padding(.bottom, 8)
-            
-            Picker("Nap or Sleep", selection: $selectedOption) {
-                ForEach(SleepSessionType.allCases, id: \.self) { type in
-                    Text(type.rawValue.capitalized)
-                        .font(.main16)
-                }
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .tint(.white)
-            .padding(.vertical)
-            .colorInvert()
-            .colorMultiply(.white)
-            .padding(.horizontal, 16)
-        }
-    }
-    
-    private var sleepTimePickers: some View {
-        VStack(spacing: 16) {
-            CalendarSeparator()
-            SleepTimePicker(
-                text: "Start Time",
-                date: $startTime,
-                minDate: $startTimeMin,
-                maxDate: $startTimeMax,
-                isDatePickerVisible: $startTimePickerVisible,
-                width: $width
-            )
-            .padding(.horizontal, 16)
-            
-            CalendarSeparator()
-            
-            SleepTimePicker(
-                text: "End Time",
-                date: $endTime,
-                minDate: $endTimeMin,
-                maxDate: $endTimeMax,
-                isDatePickerVisible: $endTimePickerVisible,
-                width: $width
-            )
-            .padding(.horizontal, 16)
-        }
-        .onChange(of: startTimePickerVisible) { oldValue, newValue in
-            if endTimePickerVisible, !oldValue, newValue {
-                endTimePickerVisible = false
-            }
-        }
-        .onChange(of: endTimePickerVisible) { oldValue, newValue in
-            if startTimePickerVisible, !oldValue, newValue {
-                startTimePickerVisible = false
-            }
-        }
-    }
-    
-    private var sleepSessionDelete: some View {
-        VStack (spacing: 16) {
-            CalendarSeparator()
-            HStack {
-                Text("Delete")
-                    .font(.main16)
-                    .multilineTextAlignment(.leading)
-                Spacer()
-                Button {
-                    databaseStore.deleteSleepSession(id: session!.id, context: modelContext)
-                    session = nil
-                    isPresented = false
-                    presentationMode.wrappedValue.dismiss()
-                } label: {
-                    Image(.trash)
-                }
-            }
-            .padding(.horizontal, 16)
-        }
-    }
-    
     private func cancel() {
         session = nil
         isPresented = false
@@ -206,13 +121,17 @@ struct AddSleepView: View {
     
     private func saveSession() {
         if let sessionEditId = sessionEditId {
-            let newSession = SleepSession(id: sessionEditId, startDate: startTime!, endDate: endTime!, type: selectedOption.rawValue)
-
+            let newSession = SleepSession(id: sessionEditId,
+                                          startDate: startTime!,
+                                          endDate: endTime!,
+                                          type: selectedOption.rawValue)
             databaseStore.replaceSleepSession(sessionId: sessionEditId,
                                               newSession: newSession,
                                               context: modelContext)
         } else {
-            let newSession = SleepSession(startDate: startTime!, endDate: endTime!, type: selectedOption.rawValue)
+            let newSession = SleepSession(startDate: startTime!,
+                                          endDate: endTime!,
+                                          type: selectedOption.rawValue)
             databaseStore.addSleepSession(session: newSession,
                                           context: modelContext)
         }
@@ -225,9 +144,9 @@ struct AddSleepView_Previews: PreviewProvider {
     static var previews: some View {
         AddSleepView(
             date: .now,
-            width: .init(get: { 768 }, set: { _ in }),
+            width: .init(get: { 768 }, set: { _ in } ),
             session: .init(get: { .init(startDate: .now, endDate: .now, type: SleepSessionType.nap.rawValue) }, set: { _ in }),
-            isPresented: .init(get: { true }, set: { _ in })
+            isPresented: .init(get: { true }, set: { _ in } )
         )
     }
 }

@@ -27,7 +27,7 @@ struct AddSleepView: View {
     @State private var endTimeMax: Date
     
     @State private var selectedOption: SleepSessionType
-    @State private var startTimePickerVisible = false
+    @State private var startTimePickerVisible = true
     @State private var endTimePickerVisible = false
     
     private var sessionEditId: UUID?

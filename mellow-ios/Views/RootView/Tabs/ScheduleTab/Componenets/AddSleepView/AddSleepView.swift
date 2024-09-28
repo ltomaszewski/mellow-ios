@@ -51,7 +51,7 @@ struct AddSleepView: View {
             
         } else {
             self._selectedOption = State(initialValue: .nap)
-            self._startTime = State(initialValue: date)
+            self._startTime = State(initialValue: date.isToday() ? Date().dateWithoutMinutes() : date)
             self._endTime = State(initialValue: Calendar.current.date(byAdding: .minute, value: 60, to: date) ?? date)
             
             self._startTimeMin = .init(initialValue: Date.distantPast)

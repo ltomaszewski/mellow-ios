@@ -92,4 +92,16 @@ extension Date {
         // Check if the time difference is greater than the specified hours
         return abs(timeDifference) > hoursInSeconds
     }
+    
+    /// Checks if the date is today, considering only the year, month, and day.
+    /// - Returns: A Boolean value indicating whether the date is today.
+    func isToday() -> Bool {
+        let calendar = Calendar.current
+        // Extract the year, month, and day components of the current date and the date to compare
+        let todayComponents = calendar.dateComponents([.year, .month, .day], from: Date())
+        let selfComponents = calendar.dateComponents([.year, .month, .day], from: self)
+        
+        // Compare year, month, and day components
+        return todayComponents == selfComponents
+    }
 }

@@ -45,6 +45,10 @@ extension Font {
         .custom(fontName, fixedSize: 26)
     }
     
+    public static var main32: Font {
+        .custom(fontName, fixedSize: 32)
+    }
+    
     public static var main64: Font {
         .custom(fontName, fixedSize: 64)
     }

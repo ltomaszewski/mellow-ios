@@ -15,7 +15,16 @@ struct RootView: View {
         TabView(selection: $selectedItem,
                 content:  {
             Group {
-                TodayTabView()
+                TodayTabView(progress: 0.3,
+                             totalAsleep: 4.5,
+                             sleepgoal: 11,
+                             nextSleep: 30,
+                             scoreSleep: 86,
+                             scoreSleepMark: "Great",
+                             napTimeScore: 86,
+                             sleepDurationScore: 86,
+                             wakeupTimeScore: 86,
+                             treeDayConsistencyScore: 86)
                     .tabItem {
                         Label(RootViewModel.TabItem.today.name,
                               image: RootViewModel.TabItem.today.imageName)

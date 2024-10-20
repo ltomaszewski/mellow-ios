@@ -10,58 +10,30 @@ import SwiftUI
 struct TodayTabView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var databaseStore: DatabaseStore
-    
-    var progress: Float
-    var totalAsleep: Float
-    var sleepgoal: Float
-    var nextSleep: Int
-    var scoreSleep: Int
-    var scoreSleepMark: String
-    var napTimeScore: Int
-    var sleepDurationScore: Int
-    var wakeupTimeScore: Int
-    var treeDayConsistencyScore: Int
+
+    @StateObject var viewModel: TodayTabViewModel = .init()
+    var onNextSessionButtonTapped: () -> Void
 
     var body: some View {
         ScrollView {
             VStack {
                 headerView
-                SleepProgressBarView(progress: progress)
-                    .frame(height: 90)
+                sleepProgressBarView
                 sleepInfoView
-                SessionInfoView(infoType: .nextSession,
-                                scoreText: "Nap in \(nextSleep)m",
-                                buttonImage: .buttonStartnow) {
-                    print("Not implemented")
-                }
-                .padding(.top, 24)
-                
-                VStack(alignment: .leading) {
-                    Text("Sleep score")
-                        .font(.main14)
-                        .foregroundStyle(.slateGray)
-                        .padding(.bottom, 8)
-                    VStack {
-                        SessionInfoView(infoType: .score,
-                                        score: scoreSleep,
-                                        rightText: scoreSleepMark)
-                        SessionInfoView(infoType: .napTimes,
-                                        rightScore: napTimeScore)
-                        SessionInfoView(infoType: .sleepDuration, rightScore: sleepDurationScore)
-                        SessionInfoView(infoType: .wakeupTime, rightScore: wakeupTimeScore)
-                        SessionInfoView(infoType: .consistency, rightScore: treeDayConsistencyScore)
-                    }
-                }
-                .padding(.top, 24)
+                nextSessionView
+                    .padding(.top, 24)
+                sleepScoreSection
+                    .padding(.top, 24)
             }
             .padding(.horizontal, 24)
             .padding(.top, 32)
         }
-
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.gunmetalBlue)
+        .background(Color.gunmetalBlue)
     }
-    
+
+    // MARK: - Subviews
+
     private var headerView: some View {
         HStack {
             Text("Today")
@@ -70,35 +42,98 @@ struct TodayTabView: View {
             Spacer()
         }
     }
-    
+
+    private var sleepProgressBarView: some View {
+        SleepProgressBarView(progress: viewModel.progress)
+            .frame(height: 90)
+    }
+
     private var sleepInfoView: some View {
         HStack {
-            sleepDetailView(title: "Total asleep", value: totalAsleep, alignment: .leading)
+            sleepDetailView(
+                title: "Total asleep",
+                value: viewModel.formattedTotalAsleep,
+                alignment: .leading
+            )
             Spacer()
-            sleepDetailView(title: "Sleep goal", value: sleepgoal, alignment: .trailing)
+            sleepDetailView(
+                title: "Sleep goal",
+                value: viewModel.formattedSleepGoal,
+                alignment: .trailing
+            )
         }
     }
-    
-    private func sleepDetailView(title: String, value: Float, alignment: HorizontalAlignment) -> some View {
+
+    private var nextSessionView: some View {
+        SessionInfoView(
+            infoType: .nextSession,
+            scoreText: viewModel.nextSleepText,
+            buttonImage: .buttonStartnow,
+            buttonAction: onNextSessionButtonTapped)
+    }
+
+    private var sleepScoreSection: some View {
+        VStack(alignment: .leading) {
+            Text("Sleep score")
+                .font(.main14)
+                .foregroundStyle(.slateGray)
+                .padding(.bottom, 8)
+            VStack {
+                scoreDetailView(
+                    infoType: .score,
+                    score: viewModel.scoreSleep,
+                    rightText: viewModel.scoreSleepMark
+                )
+                scoreDetailView(
+                    infoType: .napTimes,
+                    rightScore: viewModel.napTimeScore
+                )
+                scoreDetailView(
+                    infoType: .sleepDuration,
+                    rightScore: viewModel.sleepDurationScore
+                )
+                scoreDetailView(
+                    infoType: .wakeupTime,
+                    rightScore: viewModel.wakeupTimeScore
+                )
+                scoreDetailView(
+                    infoType: .consistency,
+                    rightScore: viewModel.threeDayConsistencyScore
+                )
+            }
+        }
+    }
+
+    // MARK: - Helper Views
+
+    private func sleepDetailView(title: String, value: String, alignment: HorizontalAlignment) -> some View {
         VStack(alignment: alignment) {
             Text(title)
                 .font(.main14)
                 .foregroundStyle(.slateGray)
-            Text(value.truncatingRemainder(dividingBy: 1) == 0 ? "\(Int(value))h" : "\(value, specifier: "%.1f")h")
+            Text(value)
                 .font(.main18)
                 .foregroundStyle(.white)
         }
     }
+
+    private func scoreDetailView(
+        infoType: SessionInfoView.InfoType,
+        score: Int? = nil,
+        rightText: String? = nil,
+        rightScore: Int? = nil
+    ) -> some View {
+        SessionInfoView(
+            infoType: infoType,
+            score: score,
+            rightText: rightText,
+            rightScore: rightScore
+        )
+    }
 }
+
 #Preview {
-    TodayTabView(progress: 0.3,
-                 totalAsleep: 4.5,
-                 sleepgoal: 11,
-                 nextSleep: 30,
-                 scoreSleep: 86,
-                 scoreSleepMark: "Great",
-                 napTimeScore: 86,
-                 sleepDurationScore: 86,
-                 wakeupTimeScore: 86,
-                 treeDayConsistencyScore: 86)
+    TodayTabView {
+        print("Start next session now")
+    }
 }

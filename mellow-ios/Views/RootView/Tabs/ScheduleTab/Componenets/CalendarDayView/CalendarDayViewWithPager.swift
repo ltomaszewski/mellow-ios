@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct CalendarDayViewWithPager: View {
-    var databaseStore: DatabaseStore
     @Binding var date: Date
     @Binding var editSleepSession: SleepSession?
     @Binding var showEditSleepSession: Bool
@@ -22,8 +21,7 @@ struct CalendarDayViewWithPager: View {
                         viewBuilder: { CalendarDayView(date: .constant($0),
                                                        editSleepSession: $editSleepSession,
                                                        showEditSleepSession: $showEditSleepSession,
-                                                       shouldScrollToCurrentTime: $shouldScrollToCurrentTime,
-                                                       databaseStore: databaseStore) },
+                                                       shouldScrollToCurrentTime: $shouldScrollToCurrentTime) },
                         hasNextPage: { true },
                         hasPreviousPage: { true },
                         indexHasChanged: { date = $0 })

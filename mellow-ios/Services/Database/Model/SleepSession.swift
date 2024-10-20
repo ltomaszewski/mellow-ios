@@ -13,12 +13,12 @@ import SwiftlyBeautiful
 @Printable
 @SwiftDataCRUD
 class SleepSession {
-    @Attribute(.unique) var id: UUID
+    @Attribute(.unique) var id: String // UUID has probelms with SwiftData, funny fact
     var startDate: Date
     var endDate: Date
     var type: String
 
-    init(id: UUID = UUID(), startDate: Date, endDate: Date, type: String) {
+    init(id: String = UUID().uuidString, startDate: Date, endDate: Date, type: String) {
         self.id = id
         self.startDate = startDate
         self.endDate = endDate

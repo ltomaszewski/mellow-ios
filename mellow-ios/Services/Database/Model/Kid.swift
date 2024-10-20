@@ -13,14 +13,14 @@ import SwiftlyBeautiful
 @Printable
 @SwiftDataCRUD
 class Kid {
-    @Attribute(.unique) var id: UUID
+    @Attribute(.unique) var id: String
     var name: String
     var age: String
     var isHim: Bool
     var sleepSessions: [SleepSession] = []
     
     init(name: String, age: String) {
-        self.id = UUID()
+        self.id = UUID().uuidString
         self.name = name
         self.age = age
         self.isHim = true
@@ -36,7 +36,7 @@ class Kid {
         }
     }
 
-    func replaceSleepSession(id: UUID, with newSession: SleepSession) {
+    func replaceSleepSession(id: String, with newSession: SleepSession) {
         if let index = sleepSessions.firstIndex(where: { $0.id == id }) {
             let oldSession = sleepSessions[index]
             oldSession.type = newSession.type

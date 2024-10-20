@@ -20,7 +20,7 @@ class CalendarDayViewModel: ObservableObject {
     
     @Binding var date: Date?
     
-    init(date: Binding<Date?>, databaseStore: DatabaseStore) {
+    init(date: Binding<Date?>) {
         self._date = date
         
         let midDayDate = (date.wrappedValue ?? .now).adjustToMidday()

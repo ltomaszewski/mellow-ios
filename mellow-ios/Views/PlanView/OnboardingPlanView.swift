@@ -8,36 +8,36 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @Binding var onboardingCompleted: Bool
-    @ObservedObject var store = OnboardingPlanStore.shared
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject private var databaseStore: DatabaseStore
+    @EnvironmentObject private var appState: AppState
+    
+    @Binding var onboardingCompleted: Bool
     
     var body: some View {
         VStack {
-            ProgressBar(value: store.progress)
+            ProgressBar(value: appState.onboardingStore.progress)
                 .frame(height: 5)
                 .padding(.top, 36)
                 .padding(.horizontal, 16)
-            if !store.welcomeMessageShown {
+            if !appState.onboardingStore.welcomeMessageShown {
                 welcomeView
                     .transition(.push(from: .trailing))
-            } else if store.kidAge.isEmpty {
+            } else if appState.onboardingStore.kidAge.isEmpty {
                 questionView
                     .transition(.push(from: .trailing))
-            } else if store.childName.isEmpty {
+            } else if appState.onboardingStore.childName.isEmpty {
                 textInputView
                     .transition(.push(from: .trailing))
             }
         }
         .background(.gunmetalBlue)
-        .onChange(of: store.welcomeMessageShown) { store.markOnboardingComplete() }
-        .onChange(of: store.kidAge) { store.markOnboardingComplete() }
-        .onChange(of: store.childName) { store.markOnboardingComplete() }
-        .onChange(of: store.completed, {
-            databaseStore.addKid(name: store.childName,
-                                 age: store.kidAge,
-                                 context: modelContext)
+        .onChange(of: appState.onboardingStore.welcomeMessageShown) { appState.onboardingStore.markOnboardingComplete() }
+        .onChange(of: appState.onboardingStore.kidAge) { appState.onboardingStore.markOnboardingComplete() }
+        .onChange(of: appState.onboardingStore.childName) { appState.onboardingStore.markOnboardingComplete() }
+        .onChange(of: appState.onboardingStore.completed, {
+            appState.databaseService.addKid(name: appState.onboardingStore.childName,
+                                            age: appState.onboardingStore.kidAge,
+                                            context: modelContext)
             withAnimation {
                 onboardingCompleted = true
             }
@@ -45,7 +45,7 @@ struct OnboardingView: View {
     }
     
     var welcomeView: some View {
-        PlanPromptView(screenTapped: $store.welcomeMessageShown,
+        PlanPromptView(screenTapped: $appState.onboardingStore.welcomeMessageShown, // TODO: Research why onboardingStore has to be var to be able to provide value for this class
                        headlineTopText: "",
                        headlineText: "Answer a few questions\nto start personalizing your\nexperience.",
                        headlineBottomText: "",
@@ -57,7 +57,7 @@ struct OnboardingView: View {
     }
     
     var questionView: some View {
-        PlanQuestionView(selectedOption: $store.kidAge,
+        PlanQuestionView(selectedOption: $appState.onboardingStore.kidAge,
                          question: "What best describe your kid’s age?",
                          options: [
                             "Newborn (0-3mo)",
@@ -74,7 +74,7 @@ struct OnboardingView: View {
     }
     
     var textInputView: some View {
-        PlanTextInputView(value: $store.childName,
+        PlanTextInputView(value: $appState.onboardingStore.childName,
                           headlineText: "What's your child's name?",
                           placeholderText: "Enter name here",
                           submitText: "Continue")

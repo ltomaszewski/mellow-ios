@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ScheduleTabView: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject var databaseStore: DatabaseStore
     @State var date: Date = Date.now.adjustToMidday()
     @State private var showAddSleepSession = false
     @State private var showEditSleepSession = false
@@ -23,8 +22,7 @@ struct ScheduleTabView: View {
             VStack {
                 DayPickerBarView(date: $date)
                     .frame(height: 64)
-                CalendarDayViewWithPager(databaseStore: databaseStore,
-                                         date: $date,
+                CalendarDayViewWithPager(date: $date,
                                          editSleepSession: $editSleepSession,
                                          showEditSleepSession: $showEditSleepSession,
                                          shouldScrollToCurrentTime: $shouldScrollToCurrentTime)
@@ -80,5 +78,5 @@ struct ScheduleTabView: View {
 }
 
 #Preview {
-    ScheduleTabView().environmentObject(DatabaseStore())
+    ScheduleTabView().environmentObject(AppState())
 }

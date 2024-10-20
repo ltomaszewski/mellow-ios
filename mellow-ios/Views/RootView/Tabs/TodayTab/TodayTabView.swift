@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TodayTabView: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject var databaseStore: DatabaseStore
+    @EnvironmentObject var appState: AppState
 
     @StateObject var viewModel: TodayTabViewModel = .init()
     var onNextSessionButtonTapped: () -> Void

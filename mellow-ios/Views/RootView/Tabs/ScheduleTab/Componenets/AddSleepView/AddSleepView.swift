@@ -13,7 +13,7 @@ struct AddSleepView: View {
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
-    @EnvironmentObject private var databaseStore: DatabaseStore
+    @EnvironmentObject private var appState: AppState
     
     @Binding var width: CGFloat
     @Binding var session: SleepSession?
@@ -30,7 +30,7 @@ struct AddSleepView: View {
     @State private var startTimePickerVisible = true
     @State private var endTimePickerVisible = false
     
-    private var sessionEditId: UUID?
+    private var sessionEditId: String?
     
     init(date: Date, width: Binding<CGFloat>, session: Binding<SleepSession?>, isPresented: Binding<Bool>) {
         self.date = date
@@ -125,15 +125,15 @@ struct AddSleepView: View {
                                           startDate: startTime!,
                                           endDate: endTime!,
                                           type: startTime!.isTimeDifferenceMoreThan(hours: 3, comparedTo: endTime!) ? SleepSessionType.nighttime.rawValue : SleepSessionType.nap.rawValue)
-            databaseStore.replaceSleepSession(sessionId: sessionEditId,
-                                              newSession: newSession,
-                                              context: modelContext)
+            appState.databaseService.replaceSleepSession(sessionId: sessionEditId,
+                                                         with: newSession,
+                                                         context: modelContext)
         } else {
             let newSession = SleepSession(startDate: startTime!,
                                           endDate: endTime!,
                                           type: startTime!.isTimeDifferenceMoreThan(hours: 3, comparedTo: endTime!) ? SleepSessionType.nighttime.rawValue : SleepSessionType.nap.rawValue)
-            databaseStore.addSleepSession(session: newSession,
-                                          context: modelContext)
+            appState.databaseService.addSleepSession(session: newSession,
+                                                     context: modelContext)
         }
         
         session = nil

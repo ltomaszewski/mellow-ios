@@ -10,7 +10,6 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var appState: AppState
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject private var databaseStore: DatabaseStore
     
     var body: some View {
         VStack {
@@ -30,7 +29,7 @@ struct ContentView: View {
         }
         .background(.gunmetalBlue)
         .onAppear(perform: {
-            databaseStore.loadKids(context: modelContext)
+            appState.databaseService.loadKids(context: modelContext)
         })
     }
 }

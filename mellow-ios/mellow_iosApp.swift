@@ -10,14 +10,12 @@ import SwiftData
 
 @main
 struct mellow_iosApp: App {
-    @StateObject var databaseStore = DatabaseStore()
-    @StateObject var appState = AppState.shared
+    @StateObject var appState = AppState()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(appState)
-                .environmentObject(databaseStore)
         }
         .modelContainer(for: [Kid.self, SleepSession.self])
     }

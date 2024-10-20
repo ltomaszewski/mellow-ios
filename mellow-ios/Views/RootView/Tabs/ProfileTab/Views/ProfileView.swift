@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @EnvironmentObject private var databaseStore: DatabaseStore
+    @EnvironmentObject private var appState: AppState
     @State private var currentDate: Date = Date()
     @State private var hoursTracked: Int = 0
     @State private var dayStreak: Int = 0
@@ -37,13 +37,13 @@ struct ProfileView: View {
         }
         .background(Color.gunmetalBlue)
         .foregroundColor(.white)
-        .onReceive(databaseStore.$dayStreak) { newValue in
+        .onReceive(appState.databaseService.$dayStreak) { newValue in
             dayStreak = newValue
         }
-        .onReceive(databaseStore.$hoursTracked) { newValue in
+        .onReceive(appState.databaseService.$hoursTracked) { newValue in
             hoursTracked = newValue
         }
-        .onReceive(databaseStore.$kids) { newValue in
+        .onReceive(appState.databaseService.$kids) { newValue in
             guard let firstKid = newValue.first else { return }
             name = firstKid.name
             imageResource = .kidoHim

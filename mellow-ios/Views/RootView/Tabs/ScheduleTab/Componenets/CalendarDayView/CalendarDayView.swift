@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct CalendarDayView: View {
-    @EnvironmentObject private var databaseStore: DatabaseStore
+    @EnvironmentObject var appState: AppState
     @ObservedObject private(set) var viewModel: CalendarDayViewModel
     @Binding private var editSleepSession: SleepSession?
     @Binding private var showEditSleepSession: Bool
@@ -19,8 +19,8 @@ struct CalendarDayView: View {
     // Binding to trigger scrolling action from the parent view
     @Binding private var shouldScrollToCurrentTime: Bool
     
-    init(date: Binding<Date?>, editSleepSession: Binding<SleepSession?>, showEditSleepSession: Binding<Bool>, shouldScrollToCurrentTime: Binding<Bool>, databaseStore: DatabaseStore) {
-        _viewModel = ObservedObject(wrappedValue: CalendarDayViewModel(date: date, databaseStore: databaseStore))
+    init(date: Binding<Date?>, editSleepSession: Binding<SleepSession?>, showEditSleepSession: Binding<Bool>, shouldScrollToCurrentTime: Binding<Bool>) {
+        _viewModel = ObservedObject(wrappedValue: CalendarDayViewModel(date: date))
         _editSleepSession = editSleepSession
         _showEditSleepSession = showEditSleepSession
         _shouldScrollToCurrentTime = shouldScrollToCurrentTime
@@ -51,11 +51,11 @@ struct CalendarDayView: View {
                 }
             }
         }
-        .onReceive(databaseStore.$sleepSession, perform: { sessions in
+        .onReceive(appState.databaseService.$sleepSessions, perform: { sessions in
             viewModel.updateSleepSessionEntries(with: sessions)
         })
         .onAppear {
-            viewModel.updateSleepSessionEntries(with: databaseStore.sleepSession)
+            viewModel.updateSleepSessionEntries(with: appState.databaseService.sleepSessions)
         }
     }
     

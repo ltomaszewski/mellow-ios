@@ -26,8 +26,6 @@ extension AddSleepView {
 
                 Button("Save") {
                     saveAction()
-                    isPresented = false
-                    presentationMode.wrappedValue.dismiss()
                 }
                 .font(.main16)
                 .foregroundStyle(Color.softPeriwinkle)

@@ -120,6 +120,12 @@ struct AddSleepView: View {
     }
     
     private func saveSession() {
+        // Check if endTime is nil
+        if endTime == nil {
+            endTimePickerVisible = true
+            return
+        }
+        
         if let sessionEditId = sessionEditId {
             let newSession = SleepSession(id: sessionEditId,
                                           startDate: startTime!,
@@ -137,6 +143,8 @@ struct AddSleepView: View {
         }
         
         session = nil
+        isPresented = false
+        presentationMode.wrappedValue.dismiss()
     }
 }
 

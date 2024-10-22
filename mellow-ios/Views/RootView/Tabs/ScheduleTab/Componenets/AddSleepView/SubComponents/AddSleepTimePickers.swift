@@ -55,6 +55,10 @@ extension AddSleepView {
                 if startTimePickerVisible, !oldValue, newValue {
                     startTimePickerVisible = false
                 }
+                // Set endTime to 1 hour after startTime if endTime is nil
+                if newValue, endTime == nil, let validStartTime = startTime {
+                    endTime = validStartTime.adding(hours: 1)
+                }
             }
         }
     }

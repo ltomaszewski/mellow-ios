@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 import Combine
 
-struct KidsStore {
+struct KidsStore: KidsStoreProtocol {
     let kids: CurrentValueSubject<[Kid], Never> = .init([])
 
     func addKid(name: String, age: String, context: ModelContext) throws -> Kid {

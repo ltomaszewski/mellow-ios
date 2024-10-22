@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 import Combine
 
-struct SleepSessionStore {
+struct SleepSessionStore: SleepSessionStoreProtocol {
     let sleepSessions = CurrentValueSubject<[SleepSession], Never>([])
     let hoursTracked = CurrentValueSubject<Int, Never>(0)
     let dayStreak = CurrentValueSubject<Int, Never>(0)

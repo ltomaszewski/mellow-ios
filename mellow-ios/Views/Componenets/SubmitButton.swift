@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BlackButton: View {
+struct SubmitButton: View {
     let title: String
     var isInverted: Bool = false // Default is false, so it uses the original style by default
     let action: () -> Void
@@ -26,5 +26,5 @@ struct BlackButton: View {
 }
 
 #Preview {
-    BlackButton(title: "Test", isInverted: false, action: { print("Lubie pączki")})
+    SubmitButton(title: "Test", isInverted: false, action: { print("Lubie pączki")})
 }

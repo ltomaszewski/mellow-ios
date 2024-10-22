@@ -29,7 +29,7 @@ struct IntroView: View {
             Spacer()
 
             // Start for free button
-            BlackButton(title: "Start for free",
+            SubmitButton(title: "Start for free",
                         action: onStartForFree)
             .padding(.bottom)
             .padding(.horizontal)

@@ -12,8 +12,8 @@ import Combine
 struct KidsStore: KidsStoreProtocol {
     let kids: CurrentValueSubject<[Kid], Never> = .init([])
 
-    func addKid(name: String, age: String, context: ModelContext) throws -> Kid {
-        let newKid = Kid(name: name, age: age)
+    func addKid(name: String, dateOfBirth: Date, context: ModelContext) throws -> Kid {
+        let newKid = Kid(name: name, dateOfBirth: dateOfBirth)
         try Kid.save(newKid, context: context)
         var updatedKids = kids.value
         updatedKids.append(newKid)

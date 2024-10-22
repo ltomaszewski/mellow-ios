@@ -22,21 +22,21 @@ struct OnboardingView: View {
             if !appState.onboardingStore.welcomeMessageShown {
                 welcomeView
                     .transition(.push(from: .trailing))
-            } else if appState.onboardingStore.kidAge.isEmpty {
-                questionView
-                    .transition(.push(from: .trailing))
             } else if appState.onboardingStore.childName.isEmpty {
                 textInputView
+                    .transition(.push(from: .trailing))
+            }else if appState.onboardingStore.kidDateOfBirth == nil {
+                dateInputView
                     .transition(.push(from: .trailing))
             }
         }
         .background(.gunmetalBlue)
         .onChange(of: appState.onboardingStore.welcomeMessageShown) { appState.onboardingStore.markOnboardingComplete() }
-        .onChange(of: appState.onboardingStore.kidAge) { appState.onboardingStore.markOnboardingComplete() }
         .onChange(of: appState.onboardingStore.childName) { appState.onboardingStore.markOnboardingComplete() }
+        .onChange(of: appState.onboardingStore.kidDateOfBirth, { appState.onboardingStore.markOnboardingComplete() })
         .onChange(of: appState.onboardingStore.completed, {
             appState.databaseService.addKid(name: appState.onboardingStore.childName,
-                                            age: appState.onboardingStore.kidAge,
+                                            dateOfBirth: appState.onboardingStore.kidDateOfBirth!,
                                             context: modelContext)
             withAnimation {
                 onboardingCompleted = true
@@ -56,27 +56,19 @@ struct OnboardingView: View {
         .background(.gunmetalBlue)
     }
     
-    var questionView: some View {
-        PlanQuestionView(selectedOption: $appState.onboardingStore.kidAge,
-                         question: "What best describe your kid’s age?",
-                         options: [
-                            "Newborn (0-3mo)",
-                            "Baby (3-12mo)",
-                            "Toddler (1-3 year)",
-                            "Preschool (3-5 year)",
-                            "School (5-11 year)",
-                            "Teen (11+ year)"
-                         ],
-                         dontKnow: "Don't know")
+    var textInputView: some View {
+        PlanTextInputView(value: $appState.onboardingStore.childName,
+                          headlineText: "What's your child's name?",
+                          placeholderText: "Enter name here",
+                          submitText: "Continue")
         .frame(maxWidth: .infinity)
         .foregroundStyle(.white)
         .background(.gunmetalBlue)
     }
     
-    var textInputView: some View {
-        PlanTextInputView(value: $appState.onboardingStore.childName,
-                          headlineText: "What's your child's name?",
-                          placeholderText: "Enter name here",
+    var dateInputView: some View {
+        PlanDateInputView(value: $appState.onboardingStore.kidDateOfBirth,
+                          headlineText: "When \(appState.onboardingStore.childName) was born?",
                           submitText: "Continue")
         .frame(maxWidth: .infinity)
         .foregroundStyle(.white)

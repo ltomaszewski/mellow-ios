@@ -39,7 +39,7 @@ struct PlanTextInputView: View {
                     self.focusedField = .field
                 }
             Spacer()
-            BlackButton(title: submitText) {
+            SubmitButton(title: submitText) {
                 focusedField = nil
                 withAnimation {
                     value = inputText

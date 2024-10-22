@@ -65,9 +65,9 @@ class DatabaseService: ObservableObject {
         }
     }
 
-    func addKid(name: String, age: String, context: ModelContext) {
+    func addKid(name: String, dateOfBirth: Date, context: ModelContext) {
         do {
-            let newKid = try kidsStore.addKid(name: name, age: age, context: context)
+            let newKid = try kidsStore.addKid(name: name, dateOfBirth: dateOfBirth, context: context)
             selectKid(newKid, context: context)
         } catch {
             print("Failed to add kid: \(error)")

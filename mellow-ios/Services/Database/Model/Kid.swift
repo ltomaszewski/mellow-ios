@@ -15,14 +15,14 @@ import SwiftlyBeautiful
 class Kid {
     @Attribute(.unique) var id: String
     var name: String
-    var age: String
+    var dateOfBirth: Date?
     var isHim: Bool
     var sleepSessions: [SleepSession] = []
     
-    init(name: String, age: String) {
+    init(name: String, dateOfBirth: Date? = nil) {
         self.id = UUID().uuidString
         self.name = name
-        self.age = age
+        self.dateOfBirth = dateOfBirth
         self.isHim = true
     }
     

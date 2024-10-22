@@ -21,9 +21,6 @@ class OnboardingPlanStore: ObservableObject {
     /// Indicates whether the welcome message has been shown.
     @Published var welcomeMessageShown: Bool = false
     
-    /// Stores the age of the child as a `String`.
-    @Published var kidAge: String = ""
-    
     /// Stores the name of the child.
     @Published var childName: String = ""
     
@@ -40,16 +37,21 @@ class OnboardingPlanStore: ObservableObject {
     
     /// Keys used for storing data in `UserDefaults`.
     private let onboardingCompleteKey = "OnboardingComplete"
-    private let kidAgeKey = "KidAge"
     private let childNameKey = "ChildName"
     private let kidDateOfBirthKey = "KidDateOfBirth"
     
     /// Loads data from `UserDefaults` to initialize the properties.
     private func loadData() {
         welcomeMessageShown = userDefaults.bool(forKey: onboardingCompleteKey)
-        kidAge = userDefaults.string(forKey: kidAgeKey) ?? ""
         childName = userDefaults.string(forKey: childNameKey) ?? ""
-        kidDateOfBirth = .now
+        
+        // Load the date of birth from UserDefaults, converting from TimeInterval if it exists.
+        if let dateOfBirthInterval = userDefaults.object(forKey: kidDateOfBirthKey) as? TimeInterval {
+            kidDateOfBirth = Date(timeIntervalSince1970: dateOfBirthInterval)
+        } else {
+            kidDateOfBirth = nil
+        }
+        resetOnboarding()
     }
     
     // MARK: - Onboarding Control Methods
@@ -58,13 +60,11 @@ class OnboardingPlanStore: ObservableObject {
     func markOnboardingComplete() {
         // Ensure all required fields are filled before marking as complete.
         guard welcomeMessageShown,
-              !kidAge.isEmpty,
               !childName.isEmpty,
               kidDateOfBirth != nil else { return }
         
         // Save the data to `UserDefaults`.
         userDefaults.set(true, forKey: onboardingCompleteKey)
-        userDefaults.set(kidAge, forKey: kidAgeKey)
         userDefaults.set(childName, forKey: childNameKey)
         userDefaults.set(kidDateOfBirth, forKey: kidDateOfBirthKey)
         
@@ -77,13 +77,11 @@ class OnboardingPlanStore: ObservableObject {
     func resetOnboarding() {
         // Remove stored data from `UserDefaults`.
         userDefaults.removeObject(forKey: onboardingCompleteKey)
-        userDefaults.removeObject(forKey: kidAgeKey)
         userDefaults.removeObject(forKey: childNameKey)
         userDefaults.removeObject(forKey: kidDateOfBirthKey)
         
         // Reset the properties to their default values.
         welcomeMessageShown = false
-        kidAge = ""
         childName = ""
         kidDateOfBirth = nil
     }
@@ -100,13 +98,10 @@ class OnboardingPlanStore: ObservableObject {
     /// - Returns: A `Float` value between 0.0 and 1.0 representing the completion percentage.
     var progress: Float {
         var completedSteps = 0
-        let totalSteps = 4 // Updated to include the new `kidDateOfBirth` step.
+        let totalSteps = 3 // Updated to remove the `kidAge` step.
         
         // Increment `completedSteps` for each completed onboarding step.
         if welcomeMessageShown {
-            completedSteps += 1
-        }
-        if !kidAge.isEmpty {
             completedSteps += 1
         }
         if !childName.isEmpty {

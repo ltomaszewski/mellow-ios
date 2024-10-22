@@ -26,7 +26,7 @@ struct PlanQuestionView: View {
             VStack {
                 // Create a BlackButton for each option
                 ForEach(options, id: \.self) { option in
-                    BlackButton(title: option, isInverted: true) {
+                    SubmitButton(title: option, isInverted: true) {
                         withAnimation {
                             selectedOption = option
                         }

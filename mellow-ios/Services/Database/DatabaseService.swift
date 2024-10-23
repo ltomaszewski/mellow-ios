@@ -11,16 +11,17 @@ import Combine
 
 class DatabaseService: ObservableObject {
     @Published var kids: [Kid] = []
-    @Published var sleepSessions: [SleepSession] = []
     @Published var hoursTracked: Int = 0
     @Published var dayStreak: Int = 0
+    
+    let currentKid = CurrentValueSubject<Kid?, Never>(nil)
+    var sleepSessions: AnyPublisher<[SleepSession], Never> {
+        sleepSessionStore.sleepSessions.eraseToAnyPublisher()
+    }
 
     private let kidsStore = KidsStore()
     private let sleepSessionStore = SleepSessionStore()
     private var cancellables = Set<AnyCancellable>()
-
-    // Keeps track of the currently selected kid
-    private var currentKid: Kid?
 
     init() {
         setupSubscriptions()
@@ -32,12 +33,6 @@ class DatabaseService: ObservableObject {
         kidsStore.kids
             .receive(on: DispatchQueue.main)
             .assign(to: \.kids, on: self)
-            .store(in: &cancellables)
-
-        // Subscribe to sleepSessionStore's published properties
-        sleepSessionStore.sleepSessions
-            .receive(on: DispatchQueue.main)
-            .assign(to: \.sleepSessions, on: self)
             .store(in: &cancellables)
 
         sleepSessionStore.hoursTracked
@@ -77,16 +72,13 @@ class DatabaseService: ObservableObject {
     func removeKid(_ kid: Kid, context: ModelContext) {
         do {
             try kidsStore.removeKid(kid, context: context)
-            if currentKid?.id == kid.id {
+            if currentKid.value?.id == kid.id {
                 // If the removed kid was selected, select another kid or clear selection
                 if let firstKid = kids.first {
                     selectKid(firstKid, context: context)
                 } else {
-                    currentKid = nil
-                    // Clear sleep sessions
-                    sleepSessions = []
-                    hoursTracked = 0
-                    dayStreak = 0
+                    currentKid.send(nil)
+                    sleepSessionStore.reset()
                 }
             }
         } catch {
@@ -95,7 +87,7 @@ class DatabaseService: ObservableObject {
     }
 
     func selectKid(_ kid: Kid, context: ModelContext) {
-        currentKid = kid
+        currentKid.send(kid)
         loadSleepSessions(for: kid, context: context)
     }
 
@@ -110,7 +102,7 @@ class DatabaseService: ObservableObject {
     }
 
     func addSleepSession(session: SleepSession, context: ModelContext) {
-        guard let kid = currentKid else {
+        guard let kid = currentKid.value else {
             print("No kid selected.")
             return
         }
@@ -122,7 +114,7 @@ class DatabaseService: ObservableObject {
     }
 
     func replaceSleepSession(sessionId: String, with newSession: SleepSession, context: ModelContext) {
-        guard let kid = currentKid else {
+        guard let kid = currentKid.value else {
             print("No kid selected.")
             return
         }
@@ -134,7 +126,7 @@ class DatabaseService: ObservableObject {
     }
 
     func deleteSleepSession(sessionId: String, context: ModelContext) {
-        guard let kid = currentKid else {
+        guard let kid = currentKid.value else {
             print("No kid selected.")
             return
         }

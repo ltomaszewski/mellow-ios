@@ -12,7 +12,7 @@ extension AddSleepView {
         @Environment(\.modelContext) var modelContext
         @EnvironmentObject var appState: AppState
 
-        @Binding var session: SleepSession?
+        @Binding var session: SleepSessionViewRepresentation?
         @Binding var isPresented: Bool
         var presentationMode: Binding<PresentationMode>
 

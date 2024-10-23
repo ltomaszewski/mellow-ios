@@ -84,4 +84,10 @@ struct SleepSessionStore: SleepSessionStoreProtocol {
         let streak = sessions.numberOfDaysWithAtLeastOneSession()
         dayStreak.send(streak)
     }
+    
+    func reset() {
+        hoursTracked.send(0)
+        dayStreak.send(0)
+        sleepSessions.send([])
+    }
 }

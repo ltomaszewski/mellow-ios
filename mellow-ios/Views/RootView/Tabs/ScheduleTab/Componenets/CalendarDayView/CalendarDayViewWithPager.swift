@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CalendarDayViewWithPager: View {
     @Binding var date: Date
-    @Binding var editSleepSession: SleepSession?
+    @Binding var editSleepSession: SleepSessionViewRepresentation?
     @Binding var showEditSleepSession: Bool
     @Binding var shouldScrollToCurrentTime: Bool
     

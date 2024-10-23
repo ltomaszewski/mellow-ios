@@ -13,9 +13,9 @@ struct SleepSessionViewModel: Hashable {
 
     let text: String
     let subText: String
-    let sleepSession: SleepSession
+    let sleepSession: SleepSessionViewRepresentation
     
-    init(topOffset: Float, height: Float, text: String, subText: String, sleepSession: SleepSession) {
+    init(topOffset: Float, height: Float, text: String, subText: String, sleepSession: SleepSessionViewRepresentation) {
         self.topOffset = CGFloat(topOffset)
         self.height = CGFloat(height)
         self.text = text

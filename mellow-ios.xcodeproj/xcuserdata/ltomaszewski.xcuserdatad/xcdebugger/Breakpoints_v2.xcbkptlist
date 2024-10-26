@@ -206,8 +206,8 @@
             filePath = "mellow-ios/Services/AppState.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
             landmarkName = "refreshSchedule()"
             landmarkType = "7">
          </BreakpointContent>
@@ -222,8 +222,8 @@
             filePath = "mellow-ios/Services/AppState.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "26"
-            endingLineNumber = "26"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
             landmarkName = "init()"
             landmarkType = "7">
          </BreakpointContent>
@@ -238,8 +238,8 @@
             filePath = "mellow-ios/Services/AppState.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
             landmarkName = "setupAppState()"
             landmarkType = "7">
          </BreakpointContent>
@@ -254,8 +254,8 @@
             filePath = "mellow-ios/Services/AppState.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
             landmarkName = "updateCurrentDate(_:force:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -270,40 +270,10 @@
             filePath = "mellow-ios/Services/AppState.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
             landmarkName = "updateCurrentDate(_:force:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "25650EFD-8114-45DB-AD6A-7F3FA9F89A68 - 53220286028dfbb7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "mellow_ios.AppState.updateCurrentDate(_: Foundation.Date, force: Swift.Bool) -&gt; ()"
-                  moduleName = "mellow-ios.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ltomaszewski/Documents/workspace/iOS/mellow-ios/mellow-ios/Services/AppState.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "123"
-                  endingLineNumber = "123">
-               </Location>
-               <Location
-                  uuid = "25650EFD-8114-45DB-AD6A-7F3FA9F89A68 - 8c4789795fab9663"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #3 (mellow_ios.SleepSessionViewRepresentation) -&gt; Swift.Bool in mellow_ios.AppState.updateCurrentDate(_: Foundation.Date, force: Swift.Bool) -&gt; ()"
-                  moduleName = "mellow-ios.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ltomaszewski/Documents/workspace/iOS/mellow-ios/mellow-ios/Services/AppState.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "123"
-                  endingLineNumber = "123">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -316,8 +286,8 @@
             filePath = "mellow-ios/Services/AppState.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
             landmarkName = "setupAppState()"
             landmarkType = "7">
          </BreakpointContent>

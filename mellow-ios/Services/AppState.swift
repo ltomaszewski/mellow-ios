@@ -17,6 +17,7 @@ class AppState: ObservableObject {
     
     var databaseService = DatabaseService()
     var onboardingStore = OnboardingPlanStore()
+    var kidAgeInMonths : Int { currentKid?.ageInMonths ?? 0 }
     private let sleepManager: SleepManager = .init()
     private var cancellables: [AnyCancellable] = []
     private var currentKid: Kid? { databaseService.currentKid.value }

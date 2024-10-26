@@ -65,7 +65,7 @@ class SleepManager {
     }
     
     /// Calculates the ideal total sleep time based on the child's age.
-    private func getIdealSleepHours(for ageInMonths: Int) -> Double {
+    func getIdealSleepHours(for ageInMonths: Int) -> Double {
         switch ageInMonths {
         case 0...1:
             return 15.5

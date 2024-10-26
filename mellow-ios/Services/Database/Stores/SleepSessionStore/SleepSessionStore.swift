@@ -14,7 +14,7 @@ struct SleepSessionStore: SleepSessionStoreProtocol {
     let hoursTracked = CurrentValueSubject<Int, Never>(0)
     let dayStreak = CurrentValueSubject<Int, Never>(0)
 
-    func loadSleepSessions(for kid: Kid, context: ModelContext) throws {
+    func load(for kid: Kid, context: ModelContext) throws {
         let kidUUID = kid.id
         if let updatedKid = try Kid.query(
             predicate: #Predicate { kidToCompare in
@@ -31,7 +31,7 @@ struct SleepSessionStore: SleepSessionStoreProtocol {
         }
     }
 
-    func addSleepSession(for kid: Kid, session: SleepSession, context: ModelContext) throws {
+    func add(for kid: Kid, session: SleepSession, context: ModelContext) throws {
         try SleepSession.save(session, context: context)
         try Kid.update(id: kid.id, updateClosure: { $0.addSleepSession(session) }, context: context)
         
@@ -41,7 +41,7 @@ struct SleepSessionStore: SleepSessionStoreProtocol {
         updateProperties(sessions: updatedSessions)
     }
 
-    func replaceSleepSession(for kid: Kid, sessionId: String, newSession: SleepSession, context: ModelContext) throws {
+    func replace(for kid: Kid, sessionId: String, newSession: SleepSession, context: ModelContext) throws {
         try SleepSession.update(id: sessionId, updateClosure: { currentSession in
             currentSession.type = newSession.type
             currentSession.startDate = newSession.startDate
@@ -58,7 +58,7 @@ struct SleepSessionStore: SleepSessionStoreProtocol {
         }
     }
 
-    func deleteSleepSession(for kid: Kid, sessionId: String, context: ModelContext) throws {
+    func delete(for kid: Kid, sessionId: String, context: ModelContext) throws {
         var updatedSessions = sleepSessions.value
         if let index = updatedSessions.firstIndex(where: { $0.id == sessionId }) {
             let session = updatedSessions[index]
@@ -77,11 +77,41 @@ struct SleepSessionStore: SleepSessionStoreProtocol {
         return sleepSessions.value.hasSession(on: date)
     }
 
+    func removeAll(for kid: Kid, context: ModelContext) throws {
+        let kidUUID = kid.id
+        if let updatedKid = try Kid.query(
+            predicate: #Predicate { kidToCompare in
+                kidToCompare.id == kidUUID
+            },
+            sortBy: [],
+            context: context
+        ).first {
+            let sessions = updatedKid.sleepSessions
+            for session in sessions {
+                try SleepSession.delete(session, context: context)
+            }
+            try Kid.update(id: kid.id, updateClosure: { $0.sleepSessions.removeAll() }, context: context)
+            
+            // Reset in-memory properties
+            sleepSessions.send([])
+            hoursTracked.send(0)
+            dayStreak.send(0)
+        } else {
+            throw NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "Kid not found"])
+        }
+    }
+
     private func updateProperties(sessions: [SleepSession]) {
         let totalHours = Int(sessions.totalHours())
         hoursTracked.send(totalHours)
 
         let streak = sessions.numberOfDaysWithAtLeastOneSession()
         dayStreak.send(streak)
+    }
+
+    func reset() {
+        hoursTracked.send(0)
+        dayStreak.send(0)
+        sleepSessions.send([])
     }
 }

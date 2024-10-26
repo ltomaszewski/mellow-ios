@@ -30,6 +30,9 @@ struct TodayTabView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.gunmetalBlue)
+        .onAppear {
+            viewModel.onAppear(appState, context: modelContext)
+        }
     }
 
     // MARK: - Subviews

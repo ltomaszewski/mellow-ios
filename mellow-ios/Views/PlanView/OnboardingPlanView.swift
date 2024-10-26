@@ -25,7 +25,7 @@ struct OnboardingView: View {
             } else if appState.onboardingStore.childName.isEmpty {
                 textInputView
                     .transition(.push(from: .trailing))
-            }else if appState.onboardingStore.kidDateOfBirth == nil {
+            } else if appState.onboardingStore.kidDateOfBirth == nil {
                 dateInputView
                     .transition(.push(from: .trailing))
             }

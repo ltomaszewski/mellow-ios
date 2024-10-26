@@ -16,7 +16,7 @@ struct AddSleepView: View {
     @EnvironmentObject private var appState: AppState
     
     @Binding var width: CGFloat
-    @Binding var session: SleepSession?
+    @Binding var session: SleepSessionViewRepresentation?
     
     @State private var startTime: Date?
     @State private var startTimeMin: Date
@@ -32,14 +32,14 @@ struct AddSleepView: View {
     
     private var sessionEditId: String?
     
-    init(date: Date, width: Binding<CGFloat>, session: Binding<SleepSession?>, isPresented: Binding<Bool>) {
+    init(date: Date, width: Binding<CGFloat>, session: Binding<SleepSessionViewRepresentation?>, isPresented: Binding<Bool>) {
         self.date = date
         _width = width
         _isPresented = isPresented
         
         if let existingSession = session.wrappedValue {
             self.sessionEditId = existingSession.id
-            self._selectedOption = State(initialValue: .init(rawValue: existingSession.type)!)
+            self._selectedOption = State(initialValue: existingSession.type)
             self._startTime = State(initialValue: existingSession.startDate)
             self._endTime = State(initialValue: existingSession.endDate)
             
@@ -153,7 +153,7 @@ struct AddSleepView_Previews: PreviewProvider {
         AddSleepView(
             date: .now,
             width: .init(get: { 768 }, set: { _ in } ),
-            session: .init(get: { .init(startDate: .now, endDate: .now, type: SleepSessionType.nap.rawValue) }, set: { _ in }),
+            session: .init(get: { .mocked() }, set: { _ in }),
             isPresented: .init(get: { true }, set: { _ in } )
         )
     }

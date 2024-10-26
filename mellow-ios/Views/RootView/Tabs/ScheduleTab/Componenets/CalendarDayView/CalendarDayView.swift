@@ -11,7 +11,7 @@ import SwiftData
 struct CalendarDayView: View {
     @EnvironmentObject var appState: AppState
     @ObservedObject private(set) var viewModel: CalendarDayViewModel
-    @Binding private var editSleepSession: SleepSession?
+    @Binding private var editSleepSession: SleepSessionViewRepresentation?
     @Binding private var showEditSleepSession: Bool
     
     private let hourSlotHeight: CGFloat = 48
@@ -19,7 +19,7 @@ struct CalendarDayView: View {
     // Binding to trigger scrolling action from the parent view
     @Binding private var shouldScrollToCurrentTime: Bool
     
-    init(date: Binding<Date?>, editSleepSession: Binding<SleepSession?>, showEditSleepSession: Binding<Bool>, shouldScrollToCurrentTime: Binding<Bool>) {
+    init(date: Binding<Date?>, editSleepSession: Binding<SleepSessionViewRepresentation?>, showEditSleepSession: Binding<Bool>, shouldScrollToCurrentTime: Binding<Bool>) {
         _viewModel = ObservedObject(wrappedValue: CalendarDayViewModel(date: date))
         _editSleepSession = editSleepSession
         _showEditSleepSession = showEditSleepSession
@@ -31,9 +31,9 @@ struct CalendarDayView: View {
             ScrollViewReader { scrollProxy in
                 ScrollView(.vertical) {
                     ZStack {
-                        currentTimeSeparator
                         hourSlots
                         sleepSessionEntries
+                        currentTimeSeparator
                     }
                 }
                 .onAppear {
@@ -51,11 +51,11 @@ struct CalendarDayView: View {
                 }
             }
         }
-        .onReceive(appState.databaseService.$sleepSessions, perform: { sessions in
+        .onReceive(appState.$sleepSessions, perform: { sessions in
             viewModel.updateSleepSessionEntries(with: sessions)
         })
         .onAppear {
-            viewModel.updateSleepSessionEntries(with: appState.databaseService.sleepSessions)
+            viewModel.updateSleepSessionEntries(with: appState.sleepSessions)
         }
     }
     

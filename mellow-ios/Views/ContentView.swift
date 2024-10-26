@@ -29,6 +29,7 @@ struct ContentView: View {
         }
         .background(.gunmetalBlue)
         .onAppear(perform: {
+//            appState.reset(context: modelContext)
             appState.databaseService.loadKids(context: modelContext)
         })
     }

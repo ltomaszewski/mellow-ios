@@ -45,3 +45,16 @@ enum SleepSessionType: String, CaseIterable {
     case nighttime = "Nighttime Sleep"
     case nap = "Nap"
 }
+
+extension SleepSession {
+    func toViewRepresentation() -> SleepSessionViewRepresentation {
+        return SleepSessionViewRepresentation(
+            id: self.id,
+            startDate: self.startDate,
+            endDate: self.endDate,
+            type: SleepSessionType(rawValue: self.type) ?? .nighttime, // Default to nighttime if type doesn't match
+            formattedTimeRange: self.formattedTimeRange,
+            isScheduled: false // Since all objects of type SleepSession are not scheduled
+        )
+    }
+}

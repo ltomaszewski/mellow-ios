@@ -43,7 +43,7 @@ class CalendarDayViewModel: ObservableObject {
         }
     }
 
-    func updateSleepSessionEntries(with sleepSessions: [SleepSession]) {
+    func updateSleepSessionEntries(with sleepSessions: [SleepSessionViewRepresentation]) {
         guard !sleepSessions.isEmpty else {
             sleepSessionsEntries = []
             return
@@ -78,7 +78,7 @@ class CalendarDayViewModel: ObservableObject {
             let sleepSessionView = SleepSessionViewModel(
                 topOffset: topOffset,
                 height: height,
-                text: session.type,
+                text: session.type.rawValue,
                 subText: session.formattedTimeRange,
                 sleepSession: session
             )
@@ -97,7 +97,7 @@ class CalendarDayViewModel: ObservableObject {
         return Float(firstDate.minutes(from: lastDate)) + hourSlotHeight
     }
 
-    private func calculateHeight(for session: SleepSession, listMinutesHeight: Float, listHeight: Float) -> Float {
+    private func calculateHeight(for session: SleepSessionViewRepresentation, listMinutesHeight: Float, listHeight: Float) -> Float {
         let heightInMinutes = Float(session.startDate.minutes(from: session.endDate))
         let heightFactor = heightInMinutes / listMinutesHeight
         return heightFactor * listHeight

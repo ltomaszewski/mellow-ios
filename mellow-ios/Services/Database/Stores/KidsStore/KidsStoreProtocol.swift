@@ -12,7 +12,8 @@ import SwiftData
 protocol KidsStoreProtocol {
     var kids: CurrentValueSubject<[Kid], Never> { get }
     
-    func addKid(name: String, dateOfBirth: Date, context: ModelContext) throws -> Kid
-    func loadKids(context: ModelContext) throws -> [Kid]
-    func removeKid(_ kid: Kid, context: ModelContext) throws
+    func add(name: String, dateOfBirth: Date, context: ModelContext) throws -> Kid
+    func load(context: ModelContext) throws -> [Kid]
+    func remove(_ kid: Kid, context: ModelContext) throws
+    func removeAll(context: ModelContext) throws // Updated for clarity
 }

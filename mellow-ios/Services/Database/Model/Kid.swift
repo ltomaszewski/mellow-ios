@@ -45,3 +45,15 @@ class Kid {
         }
     }
 }
+
+extension Kid {
+    var ageInMonths: Int {
+        guard let dateOfBirth = dateOfBirth else {
+            return 0
+        }
+        let calendar = Calendar.current
+        let now = Date()
+        let components = calendar.dateComponents([.month], from: dateOfBirth, to: now)
+        return components.month ?? 0
+    }
+}

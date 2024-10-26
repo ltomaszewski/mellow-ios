@@ -12,7 +12,7 @@ import Combine
 struct KidsStore: KidsStoreProtocol {
     let kids: CurrentValueSubject<[Kid], Never> = .init([])
 
-    func addKid(name: String, dateOfBirth: Date, context: ModelContext) throws -> Kid {
+    func add(name: String, dateOfBirth: Date, context: ModelContext) throws -> Kid {
         let newKid = Kid(name: name, dateOfBirth: dateOfBirth)
         try Kid.save(newKid, context: context)
         var updatedKids = kids.value
@@ -21,18 +21,26 @@ struct KidsStore: KidsStoreProtocol {
         return newKid
     }
 
-    func loadKids(context: ModelContext) throws -> [Kid] {
+    func load(context: ModelContext) throws -> [Kid] {
         let loadedKids = try Kid.query(predicate: nil, sortBy: [], context: context)
         kids.send(loadedKids)
         return loadedKids
     }
 
-    func removeKid(_ kid: Kid, context: ModelContext) throws {
+    func remove(_ kid: Kid, context: ModelContext) throws {
         try Kid.delete(kid, context: context)
         var updatedKids = kids.value
         if let index = updatedKids.firstIndex(where: { $0.id == kid.id }) {
             updatedKids.remove(at: index)
         }
         kids.send(updatedKids)
+    }
+
+    func removeAll(context: ModelContext) throws {
+        let allKids = try Kid.query(predicate: nil, sortBy: [], context: context)
+        for kid in allKids {
+            try Kid.delete(kid, context: context)
+        }
+        kids.send([]) // Clear the in-memory list of kids as well
     }
 }

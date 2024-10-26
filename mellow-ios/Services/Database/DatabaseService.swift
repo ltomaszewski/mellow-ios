@@ -25,11 +25,9 @@ class DatabaseService: ObservableObject {
 
     init() {
         setupSubscriptions()
-        // No context available here, so we can't load kids yet
     }
 
     private func setupSubscriptions() {
-        // Subscribe to kidsStore's kids property
         kidsStore.kids
             .receive(on: DispatchQueue.main)
             .assign(to: \.kids, on: self)
@@ -50,9 +48,8 @@ class DatabaseService: ObservableObject {
 
     func loadKids(context: ModelContext) {
         do {
-            let result = try kidsStore.loadKids(context: context)
+            let result = try kidsStore.load(context: context)
             if let kid = result.first {
-                // If this is the first kid, select it
                 selectKid(kid, context: context)
             }
         } catch {
@@ -62,7 +59,7 @@ class DatabaseService: ObservableObject {
 
     func addKid(name: String, dateOfBirth: Date, context: ModelContext) {
         do {
-            let newKid = try kidsStore.addKid(name: name, dateOfBirth: dateOfBirth, context: context)
+            let newKid = try kidsStore.add(name: name, dateOfBirth: dateOfBirth, context: context)
             selectKid(newKid, context: context)
         } catch {
             print("Failed to add kid: \(error)")
@@ -71,9 +68,8 @@ class DatabaseService: ObservableObject {
 
     func removeKid(_ kid: Kid, context: ModelContext) {
         do {
-            try kidsStore.removeKid(kid, context: context)
+            try kidsStore.remove(kid, context: context)
             if currentKid.value?.id == kid.id {
-                // If the removed kid was selected, select another kid or clear selection
                 if let firstKid = kids.first {
                     selectKid(firstKid, context: context)
                 } else {
@@ -95,7 +91,7 @@ class DatabaseService: ObservableObject {
 
     private func loadSleepSessions(for kid: Kid, context: ModelContext) {
         do {
-            try sleepSessionStore.loadSleepSessions(for: kid, context: context)
+            try sleepSessionStore.load(for: kid, context: context)
         } catch {
             print("Failed to load sleep sessions: \(error)")
         }
@@ -107,7 +103,7 @@ class DatabaseService: ObservableObject {
             return
         }
         do {
-            try sleepSessionStore.addSleepSession(for: kid, session: session, context: context)
+            try sleepSessionStore.add(for: kid, session: session, context: context)
         } catch {
             print("Failed to add sleep session: \(error)")
         }
@@ -119,7 +115,7 @@ class DatabaseService: ObservableObject {
             return
         }
         do {
-            try sleepSessionStore.replaceSleepSession(for: kid, sessionId: sessionId, newSession: newSession, context: context)
+            try sleepSessionStore.replace(for: kid, sessionId: sessionId, newSession: newSession, context: context)
         } catch {
             print("Failed to replace sleep session: \(error)")
         }
@@ -131,7 +127,7 @@ class DatabaseService: ObservableObject {
             return
         }
         do {
-            try sleepSessionStore.deleteSleepSession(for: kid, sessionId: sessionId, context: context)
+            try sleepSessionStore.delete(for: kid, sessionId: sessionId, context: context)
         } catch {
             print("Failed to delete sleep session: \(error)")
         }
@@ -139,5 +135,19 @@ class DatabaseService: ObservableObject {
 
     func hasSession(on date: Date) -> Bool {
         return sleepSessionStore.hasSession(on: date)
+    }
+
+    // MARK: - Remove All Data
+
+    func removeAllData(context: ModelContext) {
+        do {
+            try kidsStore.removeAll(context: context)
+            kids = []
+            currentKid.send(nil)
+            sleepSessionStore.reset()
+            print("All data removed successfully.")
+        } catch {
+            print("Failed to remove all data: \(error)")
+        }
     }
 }

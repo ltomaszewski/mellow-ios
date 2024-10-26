@@ -14,9 +14,10 @@ protocol SleepSessionStoreProtocol {
     var hoursTracked: CurrentValueSubject<Int, Never> { get }
     var dayStreak: CurrentValueSubject<Int, Never> { get }
 
-    func loadSleepSessions(for kid: Kid, context: ModelContext) throws
-    func addSleepSession(for kid: Kid, session: SleepSession, context: ModelContext) throws
-    func replaceSleepSession(for kid: Kid, sessionId: String, newSession: SleepSession, context: ModelContext) throws
-    func deleteSleepSession(for kid: Kid, sessionId: String, context: ModelContext) throws
+    func load(for kid: Kid, context: ModelContext) throws
+    func add(for kid: Kid, session: SleepSession, context: ModelContext) throws
+    func replace(for kid: Kid, sessionId: String, newSession: SleepSession, context: ModelContext) throws
+    func delete(for kid: Kid, sessionId: String, context: ModelContext) throws
     func hasSession(on date: Date) -> Bool
+    func removeAll(for kid: Kid, context: ModelContext) throws // New method
 }

@@ -75,7 +75,7 @@ struct ScheduleTabView: View {
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })
         .onChange(of: date) { _, newValue in
-            appState.updateCurrentDate(newValue)
+            appState.updateCurrentDate(newValue, force: false)
         }
     }
 }

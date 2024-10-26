@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct RootView: View {
+    @EnvironmentObject var appState: AppState
     @StateObject var viewModel = RootViewModel()
     @State private var selectedItem: RootViewModel.TabItem = .schedule
 

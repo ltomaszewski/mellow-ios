@@ -31,9 +31,9 @@ struct CalendarDayView: View {
             ScrollViewReader { scrollProxy in
                 ScrollView(.vertical) {
                     ZStack {
-                        currentTimeSeparator
                         hourSlots
                         sleepSessionEntries
+                        currentTimeSeparator
                     }
                 }
                 .onAppear {

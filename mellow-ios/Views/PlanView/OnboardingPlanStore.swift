@@ -51,7 +51,6 @@ class OnboardingPlanStore: ObservableObject {
         } else {
             kidDateOfBirth = nil
         }
-        resetOnboarding()
     }
     
     // MARK: - Onboarding Control Methods

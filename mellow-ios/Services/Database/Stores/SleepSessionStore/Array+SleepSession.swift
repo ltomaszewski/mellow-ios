@@ -22,7 +22,7 @@ extension Array where Element == SleepSession {
 
     func totalHours() -> Double {
         return self.reduce(0) { total, session in
-            let duration = session.endDate.timeIntervalSince(session.startDate)
+            let duration = (session.endDate ?? .now).timeIntervalSince(session.startDate)
             return total + (duration / 3600) // Convert seconds to hours
         }
     }

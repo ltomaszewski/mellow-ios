@@ -10,10 +10,13 @@ import Foundation
 struct SleepSessionViewRepresentation: Hashable {
     let id: String
     let startDate: Date
-    let endDate: Date
+    let endDate: Date?
     let type: SleepSessionType
     let formattedTimeRange: String
     let isScheduled: Bool
+    var isInProgress: Bool {
+        endDate == nil
+    }
 }
 
 extension SleepSessionViewRepresentation {

@@ -65,7 +65,7 @@ class TodayTabViewModel: ObservableObject {
         totalAsleep = sessions
             .filter { !$0.isScheduled } // Exclude scheduled sessions
             .reduce(0) { total, session in
-                let durationInHours = Float(session.endDate.timeIntervalSince(session.startDate) / 3600)
+                let durationInHours = Float(session.durationInHours)
                 return total + durationInHours
             }
     }
@@ -98,7 +98,7 @@ class TodayTabViewModel: ObservableObject {
         let actualSleepDuration = sessions
             .filter { !$0.isScheduled }
             .reduce(Float(0)) { total, session in
-                let durationInHours = Float(session.endDate.timeIntervalSince(session.startDate) / 3600)
+                let durationInHours = Float(session.durationInHours)
                 return total + durationInHours
             }
         
@@ -125,7 +125,7 @@ class TodayTabViewModel: ObservableObject {
 
         // Mock logic: check if the duration and start times are fairly consistent
         let startTimes = recentSessions.map { $0.startDate.timeIntervalSinceReferenceDate }
-        let durations = recentSessions.map { $0.endDate.timeIntervalSince($0.startDate) }
+        let durations = recentSessions.map { ($0.endDate ?? .now).timeIntervalSince($0.startDate) }
         
         // Calculate average start time and duration
         let avgStartTime = startTimes.reduce(0, +) / Double(startTimes.count)
@@ -158,5 +158,11 @@ class TodayTabViewModel: ObservableObject {
 
     var nextSleepText: String {
         "Nap in \(nextSleep)m"
+    }
+}
+
+extension SleepSessionViewRepresentation {
+    var durationInHours: Double {
+        (endDate ?? .now).timeIntervalSince(startDate) / 3600
     }
 }

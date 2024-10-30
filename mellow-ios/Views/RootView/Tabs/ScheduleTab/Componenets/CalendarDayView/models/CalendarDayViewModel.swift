@@ -56,7 +56,13 @@ class CalendarDayViewModel: ObservableObject {
             fatalError("Hours data is invalid")
         }
         
-        let filtredSleepSessions = sleepSessions.filter { $0.startDate > firstDate && $0.endDate < lastDate }
+        let filtredSleepSessions = sleepSessions.filter {
+            if let endDate = $0.endDate {
+                $0.startDate > firstDate && endDate < lastDate
+            } else {
+                $0.startDate > firstDate && $0.startDate < lastDate
+            }
+        }
         let listHeight = calculateListHeight(hourSlotHeight: hourSlotHeight, numberOfHourSlots: numberOfHourSlots)
         let listMinutesHeight = calculateListMinutesHeight(firstDate: firstDate, lastDate: lastDate, hourSlotHeight: hourSlotHeight)
         
@@ -70,7 +76,12 @@ class CalendarDayViewModel: ObservableObject {
             if index == 0 {
                 topOffset = calculateOffset(from: firstDate, to: session.startDate, listMinutesHeight: listMinutesHeight, listHeight: listHeight)
             } else if let lastSessionView = result.last {
-                topOffset = calculateOffset(from: lastSessionView.sleepSession.endDate, to: session.startDate, listMinutesHeight: listMinutesHeight, listHeight: listHeight)
+                if let endDate = lastSessionView.sleepSession.endDate {
+                    topOffset = calculateOffset(from: endDate, to: session.startDate, listMinutesHeight: listMinutesHeight, listHeight: listHeight)
+                } else {
+                    topOffset = calculateOffset(from: .now, to: session.startDate, listMinutesHeight: listMinutesHeight, listHeight: listHeight)
+                }
+                
             } else {
                 fatalError("There is an issue processing the sleep sessions.")
             }
@@ -98,7 +109,7 @@ class CalendarDayViewModel: ObservableObject {
     }
 
     private func calculateHeight(for session: SleepSessionViewRepresentation, listMinutesHeight: Float, listHeight: Float) -> Float {
-        let heightInMinutes = Float(session.startDate.minutes(from: session.endDate))
+        let heightInMinutes = Float(session.startDate.minutes(from: session.endDate ?? .now))
         let heightFactor = heightInMinutes / listMinutesHeight
         return heightFactor * listHeight
     }

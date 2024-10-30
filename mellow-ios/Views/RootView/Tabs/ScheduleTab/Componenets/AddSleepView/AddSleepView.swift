@@ -44,7 +44,7 @@ struct AddSleepView: View {
             self._endTime = State(initialValue: existingSession.endDate)
             
             self._startTimeMin = .init(initialValue: Date.distantPast)
-            self._startTimeMax = .init(initialValue: existingSession.endDate.adding(hours: -1)!)
+            self._startTimeMax = .init(initialValue: existingSession.endDate?.adding(hours: -1) ?? Date.distantFuture)
             
             self._endTimeMin = .init(initialValue: existingSession.startDate.adding(hours: 1)!)
             self._endTimeMax = .init(initialValue: existingSession.startDate.adding(hours: 12)!)
@@ -92,14 +92,14 @@ struct AddSleepView: View {
         .foregroundStyle(.white)
         .background(Color.gunmetalBlue)
         .onChange(of: startTime) { oldValue, newValue in
-            guard let startTime = newValue else { return }
-            if endTime == nil || endTime! <= startTime {
-                endTime = startTime.adding(hours: 1)
-            }
-            let maxEndTime = startTime.adding(hours: 12)!
-            if endTime! > maxEndTime {
-                endTime = maxEndTime
-            }
+//            guard let startTime = newValue else { return }
+//            if endTime == nil || endTime! <= startTime {
+//                endTime = startTime.adding(hours: 1)
+//            }
+//            let maxEndTime = startTime.adding(hours: 12)!
+//            if endTime! > maxEndTime {
+//                endTime = maxEndTime
+//            }
         }
         .onChange(of: endTime) { oldValue, newValue in
             guard let endTime = newValue, let startTime = startTime else { return }
@@ -120,11 +120,6 @@ struct AddSleepView: View {
     }
     
     private func saveSession() {
-        // Check if endTime is nil
-        if endTime == nil {
-            endTimePickerVisible = true
-            return
-        }
         
         if let sessionEditId = sessionEditId {
             let newSession = SleepSession(id: sessionEditId,
@@ -136,8 +131,8 @@ struct AddSleepView: View {
                                                          context: modelContext)
         } else {
             let newSession = SleepSession(startDate: startTime!,
-                                          endDate: endTime!,
-                                          type: startTime!.isTimeDifferenceMoreThan(hours: 3, comparedTo: endTime!) ? SleepSessionType.nighttime.rawValue : SleepSessionType.nap.rawValue)
+                                          endDate: endTime,
+                                          type: startTime!.isTimeDifferenceMoreThan(hours: 3, comparedTo: endTime ?? .now) ? SleepSessionType.nighttime.rawValue : SleepSessionType.nap.rawValue)
             appState.databaseService.addSleepSession(session: newSession,
                                                      context: modelContext)
         }

@@ -94,7 +94,12 @@ class AppState: ObservableObject {
         for dateToProcess in datesToProcess {
             // 1. Find a night sleep session that ends on dateToProcess before midday
             let nightSleepSessions = sleepSessions.filter { session in
-                return session.type == .nighttime && Calendar.current.isDate(session.endDate, equalTo: dateToProcess, toGranularity: .day) && session.endDate <= dateToProcess.adjustToMidday()
+                guard let endDate = session.endDate else { return false }
+                if let endDate = session.endDate {
+                    return session.type == .nighttime && Calendar.current.isDate(endDate, equalTo: dateToProcess, toGranularity: .day) && endDate <= dateToProcess.adjustToMidday()
+                } else {
+                    return false
+                }
             }
 
             // 2. Use wakeUpTime if found; otherwise, use baseDate

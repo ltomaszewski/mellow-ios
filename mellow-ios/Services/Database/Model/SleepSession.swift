@@ -15,10 +15,10 @@ import SwiftlyBeautiful
 class SleepSession {
     @Attribute(.unique) var id: String // UUID has probelms with SwiftData, funny fact
     var startDate: Date
-    var endDate: Date
+    var endDate: Date?
     var type: String
 
-    init(id: String = UUID().uuidString, startDate: Date, endDate: Date, type: String) {
+    init(id: String = UUID().uuidString, startDate: Date, endDate: Date?, type: String) {
         self.id = id
         self.startDate = startDate
         self.endDate = endDate
@@ -30,9 +30,13 @@ class SleepSession {
         dateFormatter.dateFormat = "h:mm a"
         
         let startString = dateFormatter.string(from: startDate)
-        let endString = dateFormatter.string(from: endDate)
         
-        return "\(startString) – \(endString)"
+        if let endDate = endDate {
+            let endString = dateFormatter.string(from: endDate)
+            return "\(startString) – \(endString)"
+        } else {
+            return "\(startString)"
+        }
     }
     
     func hash(into hasher: inout Hasher) {

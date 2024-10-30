@@ -20,6 +20,7 @@
 		6D183CC32C6BBE2700E41F93 /* DayPickerBarCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC22C6BBE2700E41F93 /* DayPickerBarCollectionView.swift */; };
 		6D183CC52C6BC65600E41F93 /* GothamFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC42C6BC65600E41F93 /* GothamFont.swift */; };
 		6D183CC72C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC62C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift */; };
+		6D1F2C8D2CD2B90500978DAF /* DiagonalLines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D1F2C8C2CD2B90400978DAF /* DiagonalLines.swift */; };
 		6D34B3292CC962820072EA5E /* SleepSessionViewRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D34B3282CC962810072EA5E /* SleepSessionViewRepresentation.swift */; };
 		6D34B32C2CC970210072EA5E /* Array+ScheduledSleepSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D34B32B2CC970210072EA5E /* Array+ScheduledSleepSession.swift */; };
 		6D3977F42C907086004CB093 /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = 6D3977F32C907086004CB093 /* ci_post_clone.sh */; };
@@ -116,6 +117,7 @@
 		6D183CC22C6BBE2700E41F93 /* DayPickerBarCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPickerBarCollectionView.swift; sourceTree = "<group>"; };
 		6D183CC42C6BC65600E41F93 /* GothamFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GothamFont.swift; sourceTree = "<group>"; };
 		6D183CC62C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DayPickerBarCollectionView+Cell.swift"; sourceTree = "<group>"; };
+		6D1F2C8C2CD2B90400978DAF /* DiagonalLines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagonalLines.swift; sourceTree = "<group>"; };
 		6D34B3282CC962810072EA5E /* SleepSessionViewRepresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepSessionViewRepresentation.swift; sourceTree = "<group>"; };
 		6D34B32B2CC970210072EA5E /* Array+ScheduledSleepSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+ScheduledSleepSession.swift"; sourceTree = "<group>"; };
 		6D3977F32C907086004CB093 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
@@ -458,6 +460,7 @@
 		6DB92D142C8850E0005E48E9 /* Componenets */ = {
 			isa = PBXGroup;
 			children = (
+				6D1F2C8C2CD2B90400978DAF /* DiagonalLines.swift */,
 				6DD04A812CA412350061F4F6 /* ViewModifiers */,
 				6DB92D152C8850F2005E48E9 /* SubmitButton.swift */,
 				6DB92D272C898B0D005E48E9 /* ProgressBar.swift */,
@@ -745,6 +748,7 @@
 				6DB92D1E2C88A33E005E48E9 /* PlanTextInputView.swift in Sources */,
 				6DB92D242C88AC2A005E48E9 /* AppState.swift in Sources */,
 				6D98B54A2CA8342500065B6C /* AddSleepTimePickers.swift in Sources */,
+				6D1F2C8D2CD2B90500978DAF /* DiagonalLines.swift in Sources */,
 				6D7091272C6D25CB00007689 /* SleepSessionEntryView.swift in Sources */,
 				6DDEC0362CC8173500D724FC /* PlanDateInputView.swift in Sources */,
 				6DB92D162C8850F2005E48E9 /* SubmitButton.swift in Sources */,

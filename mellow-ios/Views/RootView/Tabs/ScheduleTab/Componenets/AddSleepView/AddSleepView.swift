@@ -91,16 +91,6 @@ struct AddSleepView: View {
         .padding(.vertical, 24)
         .foregroundStyle(.white)
         .background(Color.gunmetalBlue)
-        .onChange(of: startTime) { oldValue, newValue in
-//            guard let startTime = newValue else { return }
-//            if endTime == nil || endTime! <= startTime {
-//                endTime = startTime.adding(hours: 1)
-//            }
-//            let maxEndTime = startTime.adding(hours: 12)!
-//            if endTime! > maxEndTime {
-//                endTime = maxEndTime
-//            }
-        }
         .onChange(of: endTime) { oldValue, newValue in
             guard let endTime = newValue, let startTime = startTime else { return }
             if endTime <= startTime {

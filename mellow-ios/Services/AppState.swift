@@ -21,7 +21,7 @@ class AppState: ObservableObject {
     private let sleepManager: SleepManager = .init()
     private var cancellables: [AnyCancellable] = []
     private var currentKid: Kid? { databaseService.currentKid.value }
-    private var currentDate: Date = .now.adjustToMidday()
+    private var selectedDate: Date = .now.adjustToMidday()
     
     init() {
         setupAppState()
@@ -49,7 +49,7 @@ class AppState: ObservableObject {
                 self.databaseSleepSessions = sleepSessions
                 
                 guard let _ = self.currentKid else { return }
-                self.updateCurrentDate(self.currentDate, force: true)
+                self.updateSelectedDate(self.selectedDate, force: true)
             }
             .store(in: &cancellables)
         
@@ -71,22 +71,24 @@ class AppState: ObservableObject {
     }
     
     func refreshSchedule() {
-        self.updateCurrentDate(self.currentDate, force: true)
+        self.updateSelectedDate(self.selectedDate, force: true)
     }
     
-    func updateCurrentDate(_ date: Date, force: Bool) {
+    func updateSelectedDate(_ date: Date, force: Bool) {
         if !force {
-            guard date != currentDate else { return }
+            guard date != selectedDate else { return }
         }
-        self.currentDate = Calendar.current.startOfDay(for: date)
+        
+        let currentDate = Date()
+        self.selectedDate = Calendar.current.startOfDay(for: date)
         guard let currentKid = currentKid else { fatalError("At this point Kid object has to be selected") }
         let ageOfCurrentKidInMonths = currentKid.ageInMonths
 
         // Dates to process: previous day, currentDate, next day
         let datesToProcess = [
-            Calendar.current.date(byAdding: .day, value: -1, to: currentDate)!,
-            currentDate,
-            Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+            Calendar.current.date(byAdding: .day, value: -1, to: selectedDate)!,
+            selectedDate,
+            Calendar.current.date(byAdding: .day, value: 1, to: selectedDate)!
         ]
 
         var allScheduledViewRepresentations: [SleepSessionViewRepresentation] = []
@@ -112,7 +114,7 @@ class AppState: ObservableObject {
             let scheduleForDate = sleepManager.getSleepSchedule(for: ageOfCurrentKidInMonths, wakeUpTime: wakeUpTime, baseDate: dateToProcess)
 
             // 4. Map scheduled sessions to SleepSessionViewRepresentation
-            let scheduledSleepSessions = scheduleForDate?.toViewRepresentations() ?? []
+            let scheduledSleepSessions = scheduleForDate?.filter { $0.startTime > currentDate }.toViewRepresentations() ?? []
 
             allScheduledViewRepresentations.append(contentsOf: scheduledSleepSessions)
         }
@@ -164,7 +166,7 @@ class AppState: ObservableObject {
         databaseSleepSessions = []
         
         // Reset current date
-        currentDate = .now.adjustToMidday()
+        selectedDate = .now.adjustToMidday()
         
         // Reinitialize app state
         cancellables.removeAll()

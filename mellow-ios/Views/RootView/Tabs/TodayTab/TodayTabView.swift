@@ -10,9 +10,12 @@ import SwiftUI
 struct TodayTabView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var appState: AppState
+    @State var endSleepTriggered: Bool = false
 
     @StateObject var viewModel: TodayTabViewModel = .init()
     var onNextSessionButtonTapped: () -> Void
+    
+    @State var inProgressViewHeight: CGFloat = 0.0
 
     var body: some View {
         ScrollView {
@@ -20,19 +23,29 @@ struct TodayTabView: View {
                 headerView
                 sleepProgressBarView
                 sleepInfoView
-                nextSessionView
-                    .padding(.top, 24)
+                if appState.sleepSessionInProgress == nil {
+                    nextSessionView
+                        .padding(.top, 24)
+                }
                 sleepScoreSection
                     .padding(.top, 24)
             }
             .padding(.horizontal, 24)
             .padding(.top, 32)
+            .padding(.bottom, inProgressViewHeight)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity)
         .background(Color.gunmetalBlue)
         .onAppear {
             viewModel.onAppear(appState, context: modelContext)
         }
+        .showInProgressBarViewIfNeeded($appState.sleepSessionInProgress,
+                                       view: SleepSessionInProgressView(sleepSessionInProgress: $appState.sleepSessionInProgress,
+                                                                        endSleepTriggered: $endSleepTriggered))
+        .onPreferenceChange(SleepSessionInProgressHeightPreferenceKey.self,
+                            perform: { newValue in
+            inProgressViewHeight = newValue.height > 0 ? newValue.height + 24 : 8
+        })
     }
 
     // MARK: - Subviews

@@ -18,6 +18,9 @@ struct ScheduleTabView: View {
     @State private var sheetWidth: CGFloat = 300
     @State private var shouldScrollToCurrentTime = false
     
+    @State var inProgressViewHeight: CGFloat = 0.0
+    @State var endSleepTriggered: Bool = false
+
     var body: some View {
         ZStack {
             VStack {
@@ -27,33 +30,42 @@ struct ScheduleTabView: View {
                                          editSleepSession: $editSleepSession,
                                          showEditSleepSession: $showEditSleepSession,
                                          shouldScrollToCurrentTime: $shouldScrollToCurrentTime)
+                .padding(.bottom, inProgressViewHeight)
                 Spacer()
             }
             .background(Color.gunmetalBlue)
             .dimmedBackground(isPresented: $showAddSleepSession)
             .dimmedBackground(isPresented: $showEditSleepSession)
 
-            
-            VStack(alignment: .trailing) {
-                Spacer()
-                HStack {
+            if appState.sleepSessionInProgress == nil {
+                VStack(alignment: .trailing) {
                     Spacer()
-                    Button(action: {
-                        withAnimation {
-                            editSleepSession = nil
-                            showAddSleepSession.toggle()
-                        }
-                    }, label: {
-                        Image("moon_blue") // Use your desired image here
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 64, height: 64) // Set the size of the image
-                    })
-                    .buttonStyle(PlainButtonStyle()) // Optional: Customize the button style
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            withAnimation {
+                                editSleepSession = nil
+                                showAddSleepSession.toggle()
+                            }
+                        }, label: {
+                            Image("moon_blue") // Use your desired image here
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 64, height: 64) // Set the size of the image
+                        })
+                        .buttonStyle(PlainButtonStyle()) // Optional: Customize the button style
+                    }
+                    .padding([.trailing,.bottom], 16)
                 }
-                .padding([.trailing,.bottom], 16)
             }
         }
+        .showInProgressBarViewIfNeeded($appState.sleepSessionInProgress,
+                                       view: SleepSessionInProgressView(sleepSessionInProgress: $appState.sleepSessionInProgress,
+                                                                        endSleepTriggered: $endSleepTriggered))
+        .onPreferenceChange(SleepSessionInProgressHeightPreferenceKey.self,
+                            perform: { newValue in
+            inProgressViewHeight = newValue.height
+        })
         .sheet(isPresented: $showAddSleepSession,
                content: {
             AddSleepView(date: date,

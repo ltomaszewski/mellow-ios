@@ -59,7 +59,6 @@ class DayPickerBarCollectionView: UIView, UICollectionViewDataSource, UICollecti
     }
     
     // MARK: - UICollectionViewDataSource
-    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         1
     }

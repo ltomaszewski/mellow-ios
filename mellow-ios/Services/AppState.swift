@@ -13,6 +13,7 @@ class AppState: ObservableObject {
     @Published var isOnboardingCompleted: Bool = false
     @Published var showIntroView: Bool = true
     @Published var sleepSessions: [SleepSessionViewRepresentation] = []
+    @Published var sleepSessionInProgress: SleepSessionViewRepresentation?
     private var databaseSleepSessions: [SleepSessionViewRepresentation] = []
     
     var databaseService = DatabaseService()
@@ -59,6 +60,18 @@ class AppState: ObservableObject {
         
         onboardingStore.objectWillChange
             .sink { [weak self] _ in self?.objectWillChange.send() }
+            .store(in: &cancellables)
+        
+        $sleepSessions
+            .sink { [weak self] sleepSessions in
+                guard let self = self else { return }
+                // Find the first session marked as inProgress
+                if let inProgressSession = sleepSessions.first(where: { $0.isInProgress }) {
+                    self.sleepSessionInProgress = inProgressSession
+                } else {
+                    self.sleepSessionInProgress = nil
+                }
+            }
             .store(in: &cancellables)
     }
     

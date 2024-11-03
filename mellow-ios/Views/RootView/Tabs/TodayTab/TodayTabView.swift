@@ -41,7 +41,7 @@ struct TodayTabView: View {
         }
         .showInProgressBarViewIfNeeded($appState.sleepSessionInProgress,
                                        view: SleepSessionInProgressView(sleepSessionInProgress: $appState.sleepSessionInProgress,
-                                                                        endSleepTriggered: $endSleepTriggered))
+                                                                        endAction: appState.endSleepSessionInProgress(context:)))
         .onPreferenceChange(SleepSessionInProgressHeightPreferenceKey.self,
                             perform: { newValue in
             inProgressViewHeight = newValue.height > 0 ? newValue.height + 24 : 8

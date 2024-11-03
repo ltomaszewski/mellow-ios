@@ -163,6 +163,25 @@ class AppState: ObservableObject {
         self.sleepSessions = updatedSleepSessions
     }
     
+    func endSleepSessionInProgress(context: ModelContext) {
+        // Check if there's a session in progress
+        guard let sessionInProgress = sleepSessionInProgress else {
+            print("No sleep session in progress.")
+            return
+        }
+        
+        // Create a new SleepSession object with the updated endDate
+        var updatedSession = sessionInProgress.toSleepSession()
+        updatedSession.endDate = Date()
+        
+        // Update the session in the database
+        databaseService.replaceSleepSession(sessionId: sessionInProgress.id,
+                                            with: updatedSession,
+                                            context: context)
+        
+        // The UI will automatically update due to Combine subscriptions
+    }
+    
     // MARK: - Reset Method
 
     func reset(context: ModelContext) {

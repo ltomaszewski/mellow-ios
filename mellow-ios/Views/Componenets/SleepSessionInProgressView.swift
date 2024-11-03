@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SleepSessionInProgressView: View {
+    @Environment(\.modelContext) private var modelContext
     @Binding var sleepSessionInProgress: SleepSessionViewRepresentation?
-    @Binding var endSleepTriggered: Bool
-    
+    var endAction: (ModelContext) -> Void
+
     @State private var timerText: String = ""
     @State private var timer: Timer?
     
@@ -27,7 +29,9 @@ struct SleepSessionInProgressView: View {
             
             Spacer()
             
-            Button(action: endSleep) {
+            Button(action: {
+                endAction(modelContext)
+            }) {
                 Text("End")
                     .font(.main14)
                     .foregroundColor(.white)
@@ -98,11 +102,6 @@ struct SleepSessionInProgressView: View {
             timerText = "\(minutes) minute\(minutes != 1 ? "s" : "")"
         }
     }
-    
-    private func endSleep() {
-        endSleepTriggered = false
-        // Additional end action logic goes here
-    }
 }
 
 struct SleepProgressView_Previews: PreviewProvider {
@@ -114,12 +113,14 @@ struct SleepProgressView_Previews: PreviewProvider {
         formattedTimeRange: "",
         isScheduled: false
     )
-    @State static var endSleepTriggered = false
     
     static var previews: some View {
         SleepSessionInProgressView(
             sleepSessionInProgress: $sleepSessionInProgress,
-            endSleepTriggered: $endSleepTriggered
+            endAction: { context in
+                // Define the action to end the session with the given context
+                print("Ending sleep session with context: \(context)")
+            }
         )
     }
 }

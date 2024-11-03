@@ -104,4 +104,11 @@ extension Date {
         // Compare year, month, and day components
         return todayComponents == selfComponents
     }
+    
+    /// Adjusts the date to the start of the day (00:00:00).
+    /// - Returns: A new date with time set to the start of the day.
+    func startOfDay() -> Date {
+        let calendar = Calendar.current
+        return calendar.startOfDay(for: self)
+    }
 }

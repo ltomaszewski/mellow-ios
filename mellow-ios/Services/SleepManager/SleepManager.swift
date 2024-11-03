@@ -5,9 +5,21 @@ struct ScheduledSleepSession {
     let startTime: Date
     let endTime: Date
     
-    enum SessionType {
+    enum SessionType: Equatable {
         case nap(number: Int)
         case nightSleep
+        
+        // Manually implement Equatable conformance for associated values
+        static func == (lhs: SessionType, rhs: SessionType) -> Bool {
+            switch (lhs, rhs) {
+            case (.nightSleep, .nightSleep):
+                return true
+            case (.nap(let lhsNumber), .nap(let rhsNumber)):
+                return lhsNumber == rhsNumber
+            default:
+                return false
+            }
+        }
     }
 }
 

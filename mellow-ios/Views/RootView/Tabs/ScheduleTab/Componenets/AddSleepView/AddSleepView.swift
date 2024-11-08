@@ -44,7 +44,7 @@ struct AddSleepView: View {
             self._endTime = State(initialValue: existingSession.endDate)
             
             self._startTimeMin = .init(initialValue: Date.distantPast)
-            self._startTimeMax = .init(initialValue: existingSession.endDate?.adding(hours: -1) ?? Date.distantFuture)
+            self._startTimeMax = .init(initialValue: existingSession.endDate?.adding(hours: -1) ?? Date())
             
             self._endTimeMin = .init(initialValue: existingSession.startDate.adding(hours: 1)!)
             self._endTimeMax = .init(initialValue: existingSession.startDate.adding(hours: 12)!)
@@ -110,23 +110,52 @@ struct AddSleepView: View {
     }
     
     private func saveSession() {
+        // Ensure startTime is available
+        guard let startTime else { return }
         
-        if let sessionEditId = sessionEditId {
-            let newSession = SleepSession(id: sessionEditId,
-                                          startDate: startTime!,
-                                          endDate: endTime!,
-                                          type: startTime!.isTimeDifferenceMoreThan(hours: 3, comparedTo: endTime!) ? SleepSessionType.nighttime.rawValue : SleepSessionType.nap.rawValue)
-            appState.databaseService.replaceSleepSession(sessionId: sessionEditId,
-                                                         with: newSession,
-                                                         context: modelContext)
-        } else {
-            let newSession = SleepSession(startDate: startTime!,
-                                          endDate: endTime,
-                                          type: startTime!.isTimeDifferenceMoreThan(hours: 3, comparedTo: endTime ?? .now) ? SleepSessionType.nighttime.rawValue : SleepSessionType.nap.rawValue)
-            appState.databaseService.addSleepSession(session: newSession,
-                                                     context: modelContext)
+        do {
+            // Validate input parameters using the extension method
+            try SleepSession.validateSessionInput(startTime: startTime, endTime: endTime)
+        } catch {
+            print(error)
+            return
         }
         
+        // Get the current date and time
+        let currentDate = Date()
+        
+        // Determine if we're editing an existing session or creating a new one
+        if let sessionEditId = sessionEditId {
+            // Create a new session with the existing ID using the factory method from the extension
+            let newSession = SleepSession.createSession(
+                id: sessionEditId,
+                startDate: startTime,
+                endDate: endTime,
+                currentDate: currentDate
+            )
+            
+            // Replace the existing session in the database
+            appState.databaseService.replaceSleepSession(
+                sessionId: sessionEditId,
+                with: newSession,
+                context: modelContext
+            )
+        } else {
+            // Create a new session without specifying an ID (a new UUID will be generated)
+            let newSession = SleepSession.createSession(
+                startDate: startTime,
+                endDate: endTime,
+                currentDate: currentDate
+            )
+            
+            // Add the new session to the database
+            appState.databaseService.addSleepSession(
+                session: newSession,
+                context: modelContext
+            )
+        }
+        
+        // Reset the session and dismiss the view
         session = nil
         isPresented = false
         presentationMode.wrappedValue.dismiss()

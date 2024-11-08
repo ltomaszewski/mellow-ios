@@ -52,7 +52,7 @@ struct AddSleepView: View {
             self._endTime = State(initialValue: nil)
             
             self._startTimeMin = .init(initialValue: Date.distantPast)
-            self._startTimeMax = .init(initialValue: Date.distantFuture)
+            self._startTimeMax = .init(initialValue: Date())
             
             self._endTimeMin = .init(initialValue: Date.distantPast)
             self._endTimeMax = .init(initialValue: Date.distantFuture)
@@ -97,6 +97,9 @@ struct AddSleepView: View {
             if endTime > maxEndTime {
                 self.endTime = maxEndTime
             }
+            
+            startTimeMin = Date.distantPast
+            startTimeMax = (endTime.adding(hours: -1) ?? Date())
         }
     }
     

@@ -111,8 +111,15 @@ class TodayTabViewModel: ObservableObject {
             return
         }
 
+        // Check if there is an ongoing sleep session
+        if let ongoingSession = scheduledSessions.first(where: { currentDate.isBetween($0.startTime, and: $0.endTime) }), ongoingSession.type == .nightSleep {
+            // Determine if the session is a nap or night sleep
+            let sessionTypeText = ongoingSession.type == .nightSleep ? "Night sleep now" : "Nap time now"
+            nextSleep = 0 // Ongoing session
+            nextSleepText = sessionTypeText
+        }
         // Find the next sleep session that starts after the current time
-        if let nextSession = scheduledSessions.first(where: { $0.startTime > currentDate }) {
+        else if let nextSession = scheduledSessions.first(where: { $0.startTime > currentDate }) {
             // Determine if the session is a nap or night sleep
             let sessionTypeText = nextSession.type == .nightSleep ? "Night in" : "Nap in"
 

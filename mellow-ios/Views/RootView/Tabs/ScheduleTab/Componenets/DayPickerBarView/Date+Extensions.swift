@@ -111,4 +111,13 @@ extension Date {
         let calendar = Calendar.current
         return calendar.startOfDay(for: self)
     }
+    
+    /// Checks if the date is within the range of two dates.
+    /// - Parameters:
+    ///   - startDate: The start date of the range.
+    ///   - endDate: The end date of the range.
+    /// - Returns: A Boolean value indicating whether the date is within the range.
+    func isBetween(_ startDate: Date, and endDate: Date) -> Bool {
+        return (self >= startDate) && (self <= endDate)
+    }
 }

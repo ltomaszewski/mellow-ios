@@ -127,7 +127,7 @@ class AppState: ObservableObject {
             let scheduleForDate = sleepManager.getSleepSchedule(for: ageOfCurrentKidInMonths, wakeUpTime: wakeUpTime, baseDate: dateToProcess)
 
             // 4. Map scheduled sessions to SleepSessionViewRepresentation
-            let scheduledSleepSessions = scheduleForDate?.filter { $0.startTime > currentDate }.toViewRepresentations() ?? []
+            let scheduledSleepSessions = scheduleForDate?.filter { currentDate.isBetween($0.startTime, and: $0.endTime) || $0.startTime > currentDate }.toViewRepresentations() ?? []
 
             allScheduledViewRepresentations.append(contentsOf: scheduledSleepSessions)
         }

@@ -165,6 +165,11 @@ class TodayTabViewModel: ObservableObject {
             !session.isScheduled
         }
         
+        // Ensure there is no division by zero by checking if expectedNaps.count is greater than zero
+        guard expectedNaps.count > 0 else {
+            return 0
+        }
+        
         // Calculate the nap ratio and score
         let napRatio = Float(actualNaps.count) / Float(expectedNaps.count)
         let napTimeScore = Int((napRatio * 100).rounded()) // Convert ratio to a percentage score

@@ -104,6 +104,7 @@ struct CalendarDayView: View {
                 }
             }
         }
+        .zIndex(model.sleepSession.isScheduled ? -99 : 999)
     }
     
     private func scrollToMidDay(geometry: GeometryProxy, proxy: ScrollViewProxy) {

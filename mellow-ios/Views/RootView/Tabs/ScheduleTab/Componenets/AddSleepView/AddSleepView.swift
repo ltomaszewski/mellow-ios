@@ -29,16 +29,13 @@ struct AddSleepView: View {
     @State private var selectedOption: SleepSessionType
     @State private var startTimePickerVisible = true
     @State private var endTimePickerVisible = false
-    
-    private var sessionEditId: String?
-    
+        
     init(date: Date, width: Binding<CGFloat>, session: Binding<SleepSessionViewRepresentation?>, isPresented: Binding<Bool>) {
         self.date = date
         _width = width
         _isPresented = isPresented
         
         if let existingSession = session.wrappedValue {
-            self.sessionEditId = existingSession.id
             self._selectedOption = State(initialValue: existingSession.type)
             self._startTime = State(initialValue: existingSession.startDate)
             self._endTime = State(initialValue: existingSession.endDate)
@@ -69,7 +66,7 @@ struct AddSleepView: View {
                        presentationMode: presentationMode,
                        saveAction: saveSession)
             .padding(.horizontal, 16)
-            Text(sessionEditId == nil ? "Add Sleep" : "Edit Sleep")
+            Text((session?.isScheduled ?? true) ? "Add Sleep" : "Edit Sleep")
                 .font(.main20)
                 .foregroundStyle(.white)
                 .padding(.bottom, 8)
@@ -82,7 +79,7 @@ struct AddSleepView: View {
                         startTimePickerVisible: $startTimePickerVisible,
                         endTimePickerVisible: $endTimePickerVisible,
                         width: $width)
-            if sessionEditId != nil {
+            if session != nil {
                 SessionDelete(session: $session,
                               isPresented: $isPresented,
                               presentationMode: presentationMode)
@@ -111,13 +108,18 @@ struct AddSleepView: View {
     
     private func saveSession() {
         // Ensure startTime is available
-        guard let startTime else { return }
+        guard let startTime else {
+            // Optionally, present an alert to the user
+            print("Start time is missing.")
+            return
+        }
         
         do {
             // Validate input parameters using the extension method
             try SleepSession.validateSessionInput(startTime: startTime, endTime: endTime)
         } catch {
-            print(error)
+            // Handle validation errors, e.g., present an alert to the user
+            print("Validation error: \(error)")
             return
         }
         
@@ -125,9 +127,17 @@ struct AddSleepView: View {
         let currentDate = Date()
         
         // Determine if we're editing an existing session or creating a new one
-        if let sessionEditId = sessionEditId {
-            // Create a new session with the existing ID using the factory method from the extension
-            let newSession = SleepSession.createSession(
+        let shouldEdit = (session?.isScheduled == false) && (session?.id != nil)
+        
+        if shouldEdit {
+            // Editing an existing unscheduled session
+            guard let sessionEditId = session?.id else {
+                print("Session ID is missing for editing.")
+                return
+            }
+            
+            // Create an updated session using the factory method from the extension
+            let updatedSession = SleepSession.createSession(
                 id: sessionEditId,
                 startDate: startTime,
                 endDate: endTime,
@@ -137,11 +147,11 @@ struct AddSleepView: View {
             // Replace the existing session in the database
             appState.databaseService.replaceSleepSession(
                 sessionId: sessionEditId,
-                with: newSession,
+                with: updatedSession,
                 context: modelContext
             )
         } else {
-            // Create a new session without specifying an ID (a new UUID will be generated)
+            // Adding a new session (either scheduled or a new unscheduled session)
             let newSession = SleepSession.createSession(
                 startDate: startTime,
                 endDate: endTime,
@@ -159,8 +169,7 @@ struct AddSleepView: View {
         session = nil
         isPresented = false
         presentationMode.wrappedValue.dismiss()
-    }
-}
+    }}
 
 struct AddSleepView_Previews: PreviewProvider {
     static var previews: some View {

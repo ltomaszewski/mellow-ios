@@ -98,10 +98,8 @@ struct CalendarDayView: View {
             .padding(.horizontal, 4)
             .padding(.leading, 72)
             .onTapGesture {
-                if !model.sleepSession.isScheduled {
-                    editSleepSession = model.sleepSession
-                    showEditSleepSession.toggle()
-                }
+                editSleepSession = model.sleepSession
+                showEditSleepSession.toggle()
             }
         }
         .zIndex(model.sleepSession.isScheduled ? -99 : 999)

@@ -86,6 +86,17 @@ class DatabaseService: ObservableObject {
         currentKid.send(kid)
         loadSleepSessions(for: kid, context: context)
     }
+    
+    func updateKid(kid: Kid, name: String, dateOfBirth: Date, context: ModelContext) {
+        do {
+            try kidsStore.update(kid: kid, name: name, dateOfBirth: dateOfBirth, context: context)
+            if currentKid.value?.id == kid.id {
+                selectKid(kid, context: context) // Refresh the current kid
+            }
+        } catch {
+            print("Failed to update kid: \(error)")
+        }
+    }
 
     // MARK: - Sleep Sessions Management
 

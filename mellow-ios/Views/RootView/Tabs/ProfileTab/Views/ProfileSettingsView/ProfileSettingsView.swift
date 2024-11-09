@@ -14,16 +14,19 @@ struct ProfileSettingsView: View {
     @State private var isPushNotificationEnabled = false
     
     var body: some View {
-        VStack(spacing: 1) {
-            headerView
-            kidsListView
-            addChildButtonView
-            pushNotificationsView
-            logoutButtonView
-            Spacer()
+        NavigationView {
+            VStack(spacing: 1) {
+                headerView
+                kidsListView
+                addChildButtonView
+                pushNotificationsView
+                logoutButtonView
+                Spacer()
+            }
+            .frame(maxWidth: .infinity)
+            .background(Color.deepNight)
+            .navigationBarHidden(true) // Hide the default navigation bar
         }
-        .frame(maxWidth: .infinity)
-        .background(Color.deepNight)
     }
     
     // MARK: - Header View
@@ -56,7 +59,10 @@ struct ProfileSettingsView: View {
     // MARK: - Kids List View
     private var kidsListView: some View {
         ForEach(kids) { kid in
-            KidRowView(kid: kid)
+            NavigationLink(destination: ProfileSettingsKidEditView(kid: kid)) {
+                KidRowView(kid: kid)
+            }
+            .buttonStyle(PlainButtonStyle()) // Remove the default NavigationLink styling
         }
     }
     

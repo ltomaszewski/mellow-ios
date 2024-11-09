@@ -382,6 +382,14 @@
 			path = Kid;
 			sourceTree = "<group>";
 		};
+		6D4E39B22CE00DF80012312D /* ProfileSettingsView */ = {
+			isa = PBXGroup;
+			children = (
+				6DA85F5C2C86FB510025988E /* ProfileSettingsView.swift */,
+			);
+			path = ProfileSettingsView;
+			sourceTree = "<group>";
+		};
 		6D53F1BB2C70B45000FE25E1 /* AddSleepView */ = {
 			isa = PBXGroup;
 			children = (
@@ -479,7 +487,7 @@
 		6DA85F5B2C86FB3D0025988E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				6DA85F5C2C86FB510025988E /* ProfileSettingsView.swift */,
+				6D4E39B22CE00DF80012312D /* ProfileSettingsView */,
 				6DA85F662C87277B0025988E /* ProfileView.swift */,
 			);
 			path = Views;

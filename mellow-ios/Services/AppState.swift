@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftData
 
+// TODO: Research app architecture where there is a single AppState shared across all screens, with sub-objects used by sub-screens in an intuitive way—something like Redux.
 class AppState: ObservableObject {
     @Published var isOnboardingCompleted: Bool = false
     @Published var showIntroView: Bool = true
@@ -121,11 +122,7 @@ class AppState: ObservableObject {
             // 1. Find a night sleep session that ends on dateToProcess before midday
             let nightSleepSessions = sleepSessions.filter { session in
                 guard let endDate = session.endDate else { return false }
-                if let endDate = session.endDate {
-                    return session.type == .nighttime && Calendar.current.isDate(endDate, equalTo: dateToProcess, toGranularity: .day) && endDate <= dateToProcess.adjustToMidday()
-                } else {
-                    return false
-                }
+                return session.type == .nighttime && Calendar.current.isDate(endDate, equalTo: dateToProcess, toGranularity: .day) && endDate <= dateToProcess.adjustToMidday()
             }
 
             // 2. Use wakeUpTime if found; otherwise, use baseDate

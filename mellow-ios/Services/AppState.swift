@@ -12,17 +12,21 @@ import SwiftData
 class AppState: ObservableObject {
     @Published var isOnboardingCompleted: Bool = false
     @Published var showIntroView: Bool = true
+    
+    @Published var currentKid: Kid?
     @Published var sleepSessions: [SleepSessionViewRepresentation] = []
     @Published var sleepSessionInProgress: SleepSessionViewRepresentation?
-    private var databaseSleepSessions: [SleepSessionViewRepresentation] = []
-    
+    @Published var kids: [Kid] = []
+
     var databaseService = DatabaseService()
     var onboardingStore = OnboardingPlanStore()
     var kidAgeInMonths : Int { currentKid?.ageInMonths ?? 0 }
     private let sleepManager: SleepManager = .init()
     private var cancellables: [AnyCancellable] = []
-    private var currentKid: Kid? { databaseService.currentKid.value }
     private var selectedDate: Date = .now.adjustToMidday()
+    
+    //TODO: Refactor this can be skipped with refactor of AppState
+    private var databaseSleepSessions: [SleepSessionViewRepresentation] = []
     
     init() {
         setupAppState()
@@ -37,6 +41,7 @@ class AppState: ObservableObject {
             .first { $0 != nil }
             .sink { [weak self] kid in
                 guard let self else { return }
+                self.currentKid = kid
                 self.refreshSchedule()
             }
             .store(in: &cancellables)
@@ -52,6 +57,12 @@ class AppState: ObservableObject {
                 guard let _ = self.currentKid else { return }
                 self.updateSelectedDate(self.selectedDate, force: true)
             }
+            .store(in: &cancellables)
+        
+        databaseService
+            .$kids
+            .assign(to: \.kids,
+                    on: self)
             .store(in: &cancellables)
         
         databaseService.objectWillChange

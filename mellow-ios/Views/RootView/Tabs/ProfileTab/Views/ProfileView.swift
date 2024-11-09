@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO: This view is simple, but the depenency on AppState made it hard to mock, It has to be worked out in the future to allow easier mock strategy for faster development
 struct ProfileView: View {
     @EnvironmentObject private var appState: AppState
     @State private var currentDate: Date = Date()
@@ -14,6 +15,7 @@ struct ProfileView: View {
     @State private var dayStreak: Int = 0
     @State private var name: String = ""
     @State private var imageResource: ImageResource = .kidoHim
+    @State private var age: String = "3 years 6 months"
     
     var body: some View {
         VStack(spacing: 24) {
@@ -23,7 +25,8 @@ struct ProfileView: View {
             
             // Profile Picture and Name
             ProfileHeaderView(name: $name,
-                              imageResource: $imageResource)
+                              imageResource: $imageResource,
+                              age: $age)
             
             // Stats (Hours tracked and Day streak)
             ProfileStatsView(hoursTracked: hoursTracked,
@@ -48,6 +51,9 @@ struct ProfileView: View {
             name = firstKid.name
             imageResource = .kidoHim
         }
+        .onAppear {
+            age = appState.currentKid?.ageFormatted ?? "Something is wrong"
+        }
     }
     
     func daysInMonth(date: Date) -> Int {
@@ -58,4 +64,5 @@ struct ProfileView: View {
 
 #Preview {
     ProfileView()
+        .environmentObject(AppState())
 }

@@ -43,4 +43,5 @@ struct PlanDateInputView: View {
     PlanDateInputView(value: .constant(Date()),
                       headlineText: "When is your child's birthday?",
                       submitText: "Continue")
+    .background(Color.deepNight)
 }

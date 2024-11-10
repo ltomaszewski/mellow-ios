@@ -39,7 +39,7 @@ class AppState: ObservableObject {
         
         databaseService
             .currentKid
-            .first { $0 != nil }
+            .filter { $0 != nil }
             .sink { [weak self] kid in
                 guard let self else { return }
                 self.currentKid = kid

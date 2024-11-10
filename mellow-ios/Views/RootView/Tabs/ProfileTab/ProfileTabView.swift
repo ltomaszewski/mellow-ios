@@ -11,7 +11,7 @@ struct ProfileTabView: View {
     @State private var navigateToSettings = false
     
     var body: some View {
-        NavigationStack {
+        NavigationView {
             ProfileView()
                 .navigationTitle(Text("Profile"))
             .navigationBarTitleDisplayMode(.inline)
@@ -27,6 +27,7 @@ struct ProfileTabView: View {
                 }
             }
         }
+        .toolbar(.hidden)
         .foregroundColor(.white)
         .font(.main18)
     }

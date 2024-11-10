@@ -31,6 +31,7 @@
 		6D4E39AD2CDFA9E40012312D /* ProfileKidListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4E39AC2CDFA9E40012312D /* ProfileKidListItemView.swift */; };
 		6D4E39B12CDFAA880012312D /* Kid+Age.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4E39B02CDFAA860012312D /* Kid+Age.swift */; };
 		6D4E39B42CE019FD0012312D /* ProfileSettingsKidEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4E39B32CE019F50012312D /* ProfileSettingsKidEditView.swift */; };
+		6D4E39B62CE0DCC80012312D /* DatePickerColorViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4E39B52CE0DCC80012312D /* DatePickerColorViewModifier.swift */; };
 		6D53F1BD2C70B48F00FE25E1 /* SleepTimePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D53F1BC2C70B48F00FE25E1 /* SleepTimePicker.swift */; };
 		6D53F1C02C70C4A000FE25E1 /* SleepTimePicker+ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D53F1BF2C70C4A000FE25E1 /* SleepTimePicker+ViewModel.swift */; };
 		6D70911F2C6CA32F00007689 /* CalendarSeparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D70911E2C6CA32F00007689 /* CalendarSeparator.swift */; };
@@ -80,10 +81,10 @@
 		6DB9EDB42C7F18C500B817DF /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EDB32C7F18C500B817DF /* RootViewModel.swift */; };
 		6DC513432C7F9FB500793FEA /* CurrentTimeSeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC513422C7F9FB500793FEA /* CurrentTimeSeparatorView.swift */; };
 		6DCA4FD02CD644640070B172 /* SleepSessionInProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCA4FCF2CD644640070B172 /* SleepSessionInProgressView.swift */; };
-		6DCA4FD42CD675C90070B172 /* MeasureSizeModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCA4FD32CD675C90070B172 /* MeasureSizeModifier.swift */; };
+		6DCA4FD42CD675C90070B172 /* MeasureSizeViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCA4FD32CD675C90070B172 /* MeasureSizeViewModifier.swift */; };
 		6DCA4FD62CD676000070B172 /* AppendSleepSessionInProgressViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCA4FD52CD676000070B172 /* AppendSleepSessionInProgressViewModifier.swift */; };
 		6DCA4FD92CD676290070B172 /* SleepSessionInProgressHeightPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCA4FD82CD676290070B172 /* SleepSessionInProgressHeightPreferenceKey.swift */; };
-		6DD04A832CA412420061F4F6 /* GetDimensionsModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD04A822CA412420061F4F6 /* GetDimensionsModifier.swift */; };
+		6DD04A832CA412420061F4F6 /* GetDimensionsViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD04A822CA412420061F4F6 /* GetDimensionsViewModifier.swift */; };
 		6DDD4CA62C98355100E3853E /* gothamrnd_medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6DDD4CA52C98355100E3853E /* gothamrnd_medium.otf */; };
 		6DDD4CA82C98355A00E3853E /* gothamrnd_bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6DDD4CA72C98355A00E3853E /* gothamrnd_bold.otf */; };
 		6DDD4CAA2C98356100E3853E /* gothamrnd_light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6DDD4CA92C98356100E3853E /* gothamrnd_light.otf */; };
@@ -139,6 +140,7 @@
 		6D4E39AC2CDFA9E40012312D /* ProfileKidListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileKidListItemView.swift; sourceTree = "<group>"; };
 		6D4E39B02CDFAA860012312D /* Kid+Age.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kid+Age.swift"; sourceTree = "<group>"; };
 		6D4E39B32CE019F50012312D /* ProfileSettingsKidEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingsKidEditView.swift; sourceTree = "<group>"; };
+		6D4E39B52CE0DCC80012312D /* DatePickerColorViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerColorViewModifier.swift; sourceTree = "<group>"; };
 		6D53F1BC2C70B48F00FE25E1 /* SleepTimePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepTimePicker.swift; sourceTree = "<group>"; };
 		6D53F1BF2C70C4A000FE25E1 /* SleepTimePicker+ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepTimePicker+ViewModel.swift"; sourceTree = "<group>"; };
 		6D70911E2C6CA32F00007689 /* CalendarSeparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarSeparator.swift; sourceTree = "<group>"; };
@@ -188,10 +190,10 @@
 		6DB9EDB32C7F18C500B817DF /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
 		6DC513422C7F9FB500793FEA /* CurrentTimeSeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentTimeSeparatorView.swift; sourceTree = "<group>"; };
 		6DCA4FCF2CD644640070B172 /* SleepSessionInProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepSessionInProgressView.swift; sourceTree = "<group>"; };
-		6DCA4FD32CD675C90070B172 /* MeasureSizeModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureSizeModifier.swift; sourceTree = "<group>"; };
+		6DCA4FD32CD675C90070B172 /* MeasureSizeViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureSizeViewModifier.swift; sourceTree = "<group>"; };
 		6DCA4FD52CD676000070B172 /* AppendSleepSessionInProgressViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppendSleepSessionInProgressViewModifier.swift; sourceTree = "<group>"; };
 		6DCA4FD82CD676290070B172 /* SleepSessionInProgressHeightPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepSessionInProgressHeightPreferenceKey.swift; sourceTree = "<group>"; };
-		6DD04A822CA412420061F4F6 /* GetDimensionsModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDimensionsModifier.swift; sourceTree = "<group>"; };
+		6DD04A822CA412420061F4F6 /* GetDimensionsViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDimensionsViewModifier.swift; sourceTree = "<group>"; };
 		6DDD4CA52C98355100E3853E /* gothamrnd_medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gothamrnd_medium.otf; sourceTree = "<group>"; };
 		6DDD4CA72C98355A00E3853E /* gothamrnd_bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gothamrnd_bold.otf; sourceTree = "<group>"; };
 		6DDD4CA92C98356100E3853E /* gothamrnd_light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gothamrnd_light.otf; sourceTree = "<group>"; };
@@ -622,10 +624,11 @@
 		6DD04A812CA412350061F4F6 /* ViewModifiers */ = {
 			isa = PBXGroup;
 			children = (
-				6DD04A822CA412420061F4F6 /* GetDimensionsModifier.swift */,
+				6DD04A822CA412420061F4F6 /* GetDimensionsViewModifier.swift */,
 				6DFB7BA92CA585A60017FB05 /* DimmedBackgroundViewModifier.swift */,
-				6DCA4FD32CD675C90070B172 /* MeasureSizeModifier.swift */,
+				6DCA4FD32CD675C90070B172 /* MeasureSizeViewModifier.swift */,
 				6DCA4FD52CD676000070B172 /* AppendSleepSessionInProgressViewModifier.swift */,
+				6D4E39B52CE0DCC80012312D /* DatePickerColorViewModifier.swift */,
 			);
 			path = ViewModifiers;
 			sourceTree = "<group>";
@@ -815,7 +818,7 @@
 				6DB92D262C88AC42005E48E9 /* ContentView.swift in Sources */,
 				6D77DF0B2C6C9DD9001A7B93 /* CalendarDayView.swift in Sources */,
 				6D70911F2C6CA32F00007689 /* CalendarSeparator.swift in Sources */,
-				6DD04A832CA412420061F4F6 /* GetDimensionsModifier.swift in Sources */,
+				6DD04A832CA412420061F4F6 /* GetDimensionsViewModifier.swift in Sources */,
 				6D98B5472CA8329F00065B6C /* AddSleepHeader.swift in Sources */,
 				6D9C6B482CC5327000B9D722 /* TodayTabViewModel.swift in Sources */,
 				6D9C6B4E2CC53ED600B9D722 /* Array+SleepSession.swift in Sources */,
@@ -842,8 +845,9 @@
 				6DB92D1A2C885649005E48E9 /* PlanPromptView.swift in Sources */,
 				6DB92D202C88A56C005E48E9 /* OnboardingPlanStore.swift in Sources */,
 				6D7091212C6CA34000007689 /* HourTimeView.swift in Sources */,
-				6DCA4FD42CD675C90070B172 /* MeasureSizeModifier.swift in Sources */,
+				6DCA4FD42CD675C90070B172 /* MeasureSizeViewModifier.swift in Sources */,
 				6D53F1C02C70C4A000FE25E1 /* SleepTimePicker+ViewModel.swift in Sources */,
+				6D4E39B62CE0DCC80012312D /* DatePickerColorViewModifier.swift in Sources */,
 				6D183CB72C6BBBAD00E41F93 /* ScheduleTabView.swift in Sources */,
 				6D34B3292CC962820072EA5E /* SleepSessionViewRepresentation.swift in Sources */,
 				6DB92D132C8850B4005E48E9 /* IntroView.swift in Sources */,

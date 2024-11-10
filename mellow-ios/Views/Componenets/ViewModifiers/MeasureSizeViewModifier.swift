@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MeasureSizeModifier<PrefKey: PreferenceKey>: ViewModifier where PrefKey.Value == CGSize {
+struct MeasureSizeViewModifier<PrefKey: PreferenceKey>: ViewModifier where PrefKey.Value == CGSize {
     func body(content: Content) -> some View {
         content
             .overlay(
@@ -21,6 +21,6 @@ struct MeasureSizeModifier<PrefKey: PreferenceKey>: ViewModifier where PrefKey.V
 
 extension View {
     func measureSize<PrefKey: PreferenceKey>(using preferenceKey: PrefKey.Type) -> some View where PrefKey.Value == CGSize {
-        self.modifier(MeasureSizeModifier<PrefKey>())
+        self.modifier(MeasureSizeViewModifier<PrefKey>())
     }
 }

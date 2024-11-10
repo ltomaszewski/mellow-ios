@@ -9,12 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct ProfileSettingsView: View {
+    @Environment(\.presentationMode) private var presentationMode
     @Query(sort: \Kid.dateOfBirth) var kids: [Kid]
     
     @State private var isPushNotificationEnabled = false
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 1) {
                 headerView
                 kidsListView
@@ -27,6 +28,7 @@ struct ProfileSettingsView: View {
             .background(Color.deepNight)
             .navigationBarHidden(true) // Hide the default navigation bar
         }
+        .toolbar(.hidden)
     }
     
     // MARK: - Header View
@@ -46,7 +48,7 @@ struct ProfileSettingsView: View {
     
     private var closeButton: some View {
         Button(action: {
-            print("Close")
+            presentationMode.wrappedValue.dismiss()
         }) {
             Image(.close)
                 .renderingMode(.template)
@@ -62,7 +64,7 @@ struct ProfileSettingsView: View {
             NavigationLink(destination: ProfileSettingsKidEditView(kid: kid)) {
                 KidRowView(kid: kid)
             }
-            .buttonStyle(PlainButtonStyle()) // Remove the default NavigationLink styling
+            .buttonStyle(PlainButtonStyle())
         }
     }
     

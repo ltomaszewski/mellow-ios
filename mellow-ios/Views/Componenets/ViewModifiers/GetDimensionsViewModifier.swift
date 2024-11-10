@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GetDimensionsModifier: ViewModifier {
+struct GetDimensionsViewModifier: ViewModifier {
     @Binding var width: CGFloat
     @Binding var height: CGFloat
     
@@ -24,6 +24,6 @@ struct GetDimensionsModifier: ViewModifier {
 
 extension View {
     func getSize(_ width: Binding<CGFloat>, _ height: Binding<CGFloat>) -> some View {
-        self.modifier(GetDimensionsModifier(width: width, height: height))
+        self.modifier(GetDimensionsViewModifier(width: width, height: height))
     }
 }

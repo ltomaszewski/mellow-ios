@@ -11,7 +11,7 @@ struct ProfileSettingsKidEditView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
     @EnvironmentObject var appState: AppState
-    var kid: Kid
+    let kid: Kid
     
     // MARK: - State Properties
     @State private var name: String = ""
@@ -128,14 +128,6 @@ struct ProfileSettingsKidEditView: View {
     
     // MARK: - Functions
     private func handleSubmit() {
-        // Convert date to a readable format
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        let dobString = formatter.string(from: dateOfBirth)
-        
-        // For demonstration, we'll just print the values
-        print("Name: \(name)")
-        print("Date of Birth: \(dobString)")
         appState.databaseService.updateKid(kid: kid, name: name, dateOfBirth: dateOfBirth, context: modelContext)
     }
 }

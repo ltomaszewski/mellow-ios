@@ -9,6 +9,7 @@ import SwiftUI
 
 // TODO: This view is simple, but the depenency on AppState made it hard to mock, It has to be worked out in the future to allow easier mock strategy for faster development
 struct ProfileView: View {
+    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appState: AppState
     @State private var kids: [ProfileKidsListView.Kid] = []
     @State private var currentKid: ProfileKidsListView.Kid?
@@ -56,10 +57,16 @@ struct ProfileView: View {
             hoursTracked = newValue
         }
         .onReceive(appState.$currentKid) { newValue in
-            guard let firstKid = newValue else { return }
-            name = firstKid.name
+            guard let newValue else { return }
+            currentKid = newValue.toProfileKidsListViewItem()
+        }
+        .onChange(of: currentKid) { _ , newValue in
+            guard let newValue else { return }
+            name = newValue.name
+            age = newValue.ageFormatted
             imageResource = .kidoHim
-            currentKid = firstKid.toProfileKidsListViewItem()
+            try? appState.databaseService.selectKid(id: newValue.databaseKidsID, context: modelContext)
+            showKidsList = false
         }
         .onReceive(appState.$kids,
                    perform: { newValue in

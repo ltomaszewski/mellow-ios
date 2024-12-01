@@ -112,50 +112,50 @@ extension ROnboardingState {
         }
     }
 }
-// ROnbardingState Store
-extension ROnboardingState {
-    class Store: ObservableObject {
-        @Published private(set) var state: ROnboardingState
-        private let reducer: Reducer = .init()
-        
-        init(state: ROnboardingState? = ROnboardingState.loadFromUserDefaults()) {
-            self.state = state ?? .init()
-        }
-        
-        func dispatch(_ action: ROnboardingState.Action) {
-            reducer.reduce(state: &state, action: action)
-            state.saveToUserDefaults()
-        }
-        
-        func removeStateFormUserDefaults() {
-            ROnboardingState.removeFromUserDefaults()
-            self.state = .init()
-        }
-    }
-}
+//// ROnbardingState Store
+//extension ROnboardingState {
+//    class Store: ObservableObject {
+//        @Published private(set) var state: ROnboardingState
+//        private let reducer: Reducer = .init()
+//        
+//        init(state: ROnboardingState? = ROnboardingState.loadFromUserDefaults()) {
+//            self.state = state ?? .init()
+//        }
+//        
+//        func dispatch(_ action: ROnboardingState.Action) {
+//            reducer.reduce(state: &state, action: action)
+//            state.saveToUserDefaults()
+//        }
+//        
+//        func removeStateFormUserDefaults() {
+//            ROnboardingState.removeFromUserDefaults()
+//            self.state = .init()
+//        }
+//    }
+//}
 
 import SwiftUI
 
 // Binding for State and SwiftUI TODO: Export to Swift Macro
-extension ROnboardingState.Store {
+extension RAppState.Store {
     var welcomeMessageShownBinding: Binding<Bool> {
         .init(
-            get: { self.state.welcomeMessageShown },
-            set: { [weak self] _ in self?.dispatch(.welcomeMessageShown) }
+            get: { self.state.onboardingState.welcomeMessageShown },
+            set: { [weak self] _ in self?.dispatch(.onboarding(.welcomeMessageShown)) }
         )
     }
     
     var childNameBinding: Binding<String> {
         .init(
-            get: { self.state.childName },
-            set: { [weak self] name in self?.dispatch(.setChildName(name)) }
+            get: { self.state.onboardingState.childName },
+            set: { [weak self] name in self?.dispatch(.onboarding(.setChildName(name))) }
         ) // TODO: Research If weak self is really needed here
     }
     
     var kidAgeBinding: Binding<Date?> {
         .init(
-            get: { self.state.kidDateOfBirth },
-            set: { [weak self] date in self?.dispatch(.setKidDateOfBirth(date)) }
+            get: { self.state.onboardingState.kidDateOfBirth },
+            set: { [weak self] date in self?.dispatch(.onboarding(.setKidDateOfBirth(date))) }
         )
     }
     
@@ -164,16 +164,16 @@ extension ROnboardingState.Store {
     /// Binding for "When Nina usually falls asleep?"
     var sleepTimeBinding: Binding<Date?> {
         .init(
-            get: { self.state.sleepTime },
-            set: { [weak self] date in self?.dispatch(.setSleepTime(date)) }
+            get: { self.state.onboardingState.sleepTime },
+            set: { [weak self] date in self?.dispatch(.onboarding(.setSleepTime(date))) }
         )
     }
     
     /// Binding for "When Nina usually wakes up?"
     var wakeTimeBinding: Binding<Date?> {
         .init(
-            get: { self.state.wakeTime },
-            set: { [weak self] date in self?.dispatch(.setWakeTime(date)) }
+            get: { self.state.onboardingState.wakeTime },
+            set: { [weak self] date in self?.dispatch(.onboarding(.setWakeTime(date))) }
         )
     }
 }

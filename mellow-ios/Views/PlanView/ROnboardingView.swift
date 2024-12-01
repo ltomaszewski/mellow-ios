@@ -9,54 +9,49 @@ import SwiftUI
 
 struct ROnboardingView: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject private var appState: AppState
-    @EnvironmentObject private var onboardingStore: ROnboardingState.Store
+    @EnvironmentObject private var appStateStore: RAppState.Store
     @Binding var onboardingCompleted: Bool
 
     var body: some View {
         VStack {
-            ProgressBar(value: onboardingStore.state.progress)
+            ProgressBar(value: appStateStore.state.onboardingState.progress)
                 .frame(height: 5)
                 .padding(.top, 36)
                 .padding(.horizontal, 16)
             
             // Onboarding Steps
-            if !onboardingStore.state.welcomeMessageShown {
+            if !appStateStore.state.onboardingState.welcomeMessageShown {
                 welcomeView
                     .transition(.push(from: .trailing))
-            } else if onboardingStore.state.childName.isEmpty {
+            } else if appStateStore.state.onboardingState.childName.isEmpty {
                 childNameInputView
                     .transition(.push(from: .trailing))
-            } else if onboardingStore.state.kidDateOfBirth == nil {
+            } else if appStateStore.state.onboardingState.kidDateOfBirth == nil {
                 kidAgeView
                     .transition(.push(from: .trailing))
-            } else if onboardingStore.state.sleepTime == nil {
+            } else if appStateStore.state.onboardingState.sleepTime == nil {
                 sleepTimeView
                     .transition(.push(from: .trailing))
-            } else if onboardingStore.state.wakeTime == nil {
+            } else if appStateStore.state.onboardingState.wakeTime == nil {
                 wakeTimeView
                     .transition(.push(from: .trailing))
             }
         }
         .background(Color.gunmetalBlue) // Ensure Color.gunmetalBlue is defined in your assets or extensions
-        .onChange(of: onboardingStore.state.completed) { completed in
+        .onChange(of: appStateStore.state.onboardingState.completed) { _, completed in
             if completed {
                 // Safely unwrap all required fields
-                guard let dateOfBirth = onboardingStore.state.kidDateOfBirth,
-                      let sleepTime = onboardingStore.state.sleepTime,
-                      let wakeTime = onboardingStore.state.wakeTime else {
+                guard let dateOfBirth = appStateStore.state.onboardingState.kidDateOfBirth,
+                      let sleepTime = appStateStore.state.onboardingState.sleepTime,
+                      let wakeTime = appStateStore.state.onboardingState.wakeTime else {
                     // Handle the case where data might be missing
                     print("Onboarding completed but some fields are missing.")
                     return
                 }
                 
-                try? appState.databaseService.addKid(
-                    name: onboardingStore.state.childName,
-                    dateOfBirth: dateOfBirth,
-                    sleepTime: sleepTime,
-                    wakeTime: wakeTime,
-                    context: modelContext
-                )
+                let name = appStateStore.state.onboardingState.childName
+                appStateStore.dispatch(.kidOperation(.create, Kid(name: name, dateOfBirth: dateOfBirth, sleepTime: sleepTime, wakeTime: wakeTime), modelContext))
+                
                 withAnimation {
                     onboardingCompleted = true
                 }
@@ -68,7 +63,7 @@ struct ROnboardingView: View {
     
     var welcomeView: some View {
         PlanPromptView(
-            screenTapped: onboardingStore.welcomeMessageShownBinding,
+            screenTapped: appStateStore.welcomeMessageShownBinding,
             headlineTopText: "",
             headlineText: "Answer a few questions\nto start personalizing your\nexperience.",
             headlineBottomText: "",
@@ -82,7 +77,7 @@ struct ROnboardingView: View {
     
     var childNameInputView: some View {
         PlanTextInputView(
-            value: onboardingStore.childNameBinding,
+            value: appStateStore.childNameBinding,
             headlineText: "What's your child's name?",
             placeholderText: "Enter name here",
             submitText: "Continue"
@@ -94,8 +89,8 @@ struct ROnboardingView: View {
     
     var kidAgeView: some View {
         PlanDateInputView(
-            value: onboardingStore.kidAgeBinding,
-            headlineText: "When was \(onboardingStore.state.childName) born?",
+            value: appStateStore.kidAgeBinding,
+            headlineText: "When was \(appStateStore.state.onboardingState.childName) born?",
             submitText: "Continue",
             datePickerType: .date // Assuming you modified PlanDateInputView to accept this parameter
         )
@@ -106,8 +101,8 @@ struct ROnboardingView: View {
     
     var sleepTimeView: some View {
         PlanDateInputView(
-            value: onboardingStore.sleepTimeBinding,
-            headlineText: "When does \(onboardingStore.state.childName) usually fall asleep?",
+            value: appStateStore.sleepTimeBinding,
+            headlineText: "When does \(appStateStore.state.onboardingState.childName) usually fall asleep?",
             submitText: "Continue",
             datePickerType: .time
         )
@@ -118,8 +113,8 @@ struct ROnboardingView: View {
     
     var wakeTimeView: some View {
         PlanDateInputView(
-            value: onboardingStore.wakeTimeBinding,
-            headlineText: "When does \(onboardingStore.state.childName) usually wake up?",
+            value: appStateStore.wakeTimeBinding,
+            headlineText: "When does \(appStateStore.state.onboardingState.childName) usually wake up?",
             submitText: "Continue",
             datePickerType: .time
         )

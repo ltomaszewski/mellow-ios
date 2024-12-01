@@ -8,43 +8,32 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject private var onboardingStore: ROnboardingState.Store
-    @EnvironmentObject var appState: AppState
+    @EnvironmentObject private var appStateStore: RAppState.Store
     @Environment(\.modelContext) private var modelContext
     
-    @State private var showIntroView: Bool = true
     @State private var onboardingCompleted: Bool = false
-    
+
     var body: some View {
         VStack {
-            if showIntroView {
+            switch appStateStore.state.currentViewState {
+            case .intro:
                 IntroView(imageResource: .kidoHim,
                           text: "Science based sleep program that adapts to your kid.") {
                     withAnimation {
-                        showIntroView = false
+                        appStateStore.dispatch(.openAddKidOnboarding)
                     }
                 }
-            } else if !onboardingCompleted {
+            case .onboarding:
                 ROnboardingView(onboardingCompleted: $onboardingCompleted)
-            } else {
+            case .root:
                 RootView().transition(.push(from: .bottom))
             }
         }
         .background(.gunmetalBlue)
-        .onReceive(appState.$addNewKids.filter { $0 }, perform: { newValue in
-            onboardingStore.removeStateFormUserDefaults()
-            withAnimation {
-                showIntroView = true
-                onboardingCompleted = false
-            }
-        })
         .onAppear(perform: {
             //TODO: Reset does not work
-//            appState.reset(context: modelContext)
-            let kids = appState.databaseService.loadKids(context: modelContext)
-            let hasKidInDatabase = !kids.isEmpty
-            showIntroView = !hasKidInDatabase
-            onboardingCompleted = hasKidInDatabase
+            //            appState.reset(context: modelContext)
+            appStateStore.dispatch(.load(modelContext))
         })
     }
 }

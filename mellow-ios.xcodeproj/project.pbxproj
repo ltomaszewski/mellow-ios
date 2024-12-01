@@ -39,6 +39,7 @@
 		6D4E39BA2CE1167B0012312D /* ProfileSettingsView+KidRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4E39B92CE116730012312D /* ProfileSettingsView+KidRowView.swift */; };
 		6D53F1BD2C70B48F00FE25E1 /* SleepTimePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D53F1BC2C70B48F00FE25E1 /* SleepTimePicker.swift */; };
 		6D53F1C02C70C4A000FE25E1 /* SleepTimePicker+ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D53F1BF2C70C4A000FE25E1 /* SleepTimePicker+ViewModel.swift */; };
+		6D591A3E2CFCB4FE00FA8A40 /* RAppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D591A3D2CFCB4FE00FA8A40 /* RAppState.swift */; };
 		6D70911F2C6CA32F00007689 /* CalendarSeparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D70911E2C6CA32F00007689 /* CalendarSeparator.swift */; };
 		6D7091212C6CA34000007689 /* HourTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7091202C6CA34000007689 /* HourTimeView.swift */; };
 		6D7091232C6CA35800007689 /* DayHourSlotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7091222C6CA35800007689 /* DayHourSlotView.swift */; };
@@ -153,6 +154,7 @@
 		6D4E39B92CE116730012312D /* ProfileSettingsView+KidRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileSettingsView+KidRowView.swift"; sourceTree = "<group>"; };
 		6D53F1BC2C70B48F00FE25E1 /* SleepTimePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepTimePicker.swift; sourceTree = "<group>"; };
 		6D53F1BF2C70C4A000FE25E1 /* SleepTimePicker+ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepTimePicker+ViewModel.swift"; sourceTree = "<group>"; };
+		6D591A3D2CFCB4FE00FA8A40 /* RAppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAppState.swift; sourceTree = "<group>"; };
 		6D70911E2C6CA32F00007689 /* CalendarSeparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarSeparator.swift; sourceTree = "<group>"; };
 		6D7091202C6CA34000007689 /* HourTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourTimeView.swift; sourceTree = "<group>"; };
 		6D7091222C6CA35800007689 /* DayHourSlotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayHourSlotView.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 			children = (
 				6D24DB872CFC727100D776EA /* Utils */,
 				6D24DB842CFC724B00D776EA /* States */,
+				6D591A3D2CFCB4FE00FA8A40 /* RAppState.swift */,
 			);
 			path = AppStateRedux;
 			sourceTree = "<group>";
@@ -921,6 +924,7 @@
 				6D24DB862CFC726700D776EA /* ROnboardingState.swift in Sources */,
 				6DA85F5F2C870FF90025988E /* ProfileCalendarView.swift in Sources */,
 				6D4E39B12CDFAA880012312D /* Kid+Age.swift in Sources */,
+				6D591A3E2CFCB4FE00FA8A40 /* RAppState.swift in Sources */,
 				6D183CB32C6BBB6B00E41F93 /* RootView.swift in Sources */,
 				6D4E39AA2CDFA8F30012312D /* ProfileKidsListView.swift in Sources */,
 				6D183CC12C6BBE1100E41F93 /* DayPickerBarViewRepresentable.swift in Sources */,

@@ -134,50 +134,6 @@ extension ROnboardingState {
 //    }
 //}
 
-import SwiftUI
-
-// Binding for State and SwiftUI TODO: Export to Swift Macro
-extension RAppState.Store {
-    var welcomeMessageShownBinding: Binding<Bool> {
-        .init(
-            get: { self.state.onboardingState.welcomeMessageShown },
-            set: { [weak self] _ in self?.dispatch(.onboarding(.welcomeMessageShown)) }
-        )
-    }
-    
-    var childNameBinding: Binding<String> {
-        .init(
-            get: { self.state.onboardingState.childName },
-            set: { [weak self] name in self?.dispatch(.onboarding(.setChildName(name))) }
-        ) // TODO: Research If weak self is really needed here
-    }
-    
-    var kidAgeBinding: Binding<Date?> {
-        .init(
-            get: { self.state.onboardingState.kidDateOfBirth },
-            set: { [weak self] date in self?.dispatch(.onboarding(.setKidDateOfBirth(date))) }
-        )
-    }
-    
-    // **New Bindings for Sleep and Wake Times**
-    
-    /// Binding for "When Nina usually falls asleep?"
-    var sleepTimeBinding: Binding<Date?> {
-        .init(
-            get: { self.state.onboardingState.sleepTime },
-            set: { [weak self] date in self?.dispatch(.onboarding(.setSleepTime(date))) }
-        )
-    }
-    
-    /// Binding for "When Nina usually wakes up?"
-    var wakeTimeBinding: Binding<Date?> {
-        .init(
-            get: { self.state.onboardingState.wakeTime },
-            set: { [weak self] date in self?.dispatch(.onboarding(.setWakeTime(date))) }
-        )
-    }
-}
-
 // TODO: Export Support for save to userdefaults to swiftMacro
 // Extension for UserDefaults functionality with Enhanced Debug Mode
 extension ROnboardingState {

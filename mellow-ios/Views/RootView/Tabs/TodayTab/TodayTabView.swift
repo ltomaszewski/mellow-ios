@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TodayTabView: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject var appState: AppState
+    @EnvironmentObject private var appStateStore: RAppState.Store
     @State var endSleepTriggered: Bool = false
 
     @StateObject var viewModel: TodayTabViewModel = .init()
@@ -23,7 +23,7 @@ struct TodayTabView: View {
                 headerView
                 sleepProgressBarView
                 sleepInfoView
-                if appState.sleepSessionInProgress == nil {
+                if appStateStore.state.sleepSessionInProgress == nil {
                     nextSessionView
                         .padding(.top, 24)
                 }
@@ -37,11 +37,11 @@ struct TodayTabView: View {
         .frame(maxWidth: .infinity)
         .background(Color.gunmetalBlue)
         .onAppear {
-            viewModel.onAppear(appState, context: modelContext)
+            viewModel.onAppear(appStateStore, context: modelContext)
         }
-        .showInProgressBarViewIfNeeded($appState.sleepSessionInProgress,
-                                       view: SleepSessionInProgressView(sleepSessionInProgress: $appState.sleepSessionInProgress,
-                                                                        endAction: appState.endSleepSessionInProgress(context:)))
+        .showInProgressBarViewIfNeeded(appStateStore.sleepSessionInProgressBinding,
+                                       view: SleepSessionInProgressView(sleepSessionInProgress: appStateStore.sleepSessionInProgressBinding,
+                                                                        endAction: { modelContext in appStateStore.dispatch(.endSleepSessionInProgress(modelContext))}))
         .onPreferenceChange(SleepSessionInProgressHeightPreferenceKey.self,
                             perform: { newValue in
             inProgressViewHeight = newValue.height > 0 ? newValue.height + 24 : 8

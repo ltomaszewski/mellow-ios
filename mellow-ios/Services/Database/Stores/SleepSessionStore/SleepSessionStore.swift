@@ -30,6 +30,21 @@ struct SleepSessionStore: SleepSessionStoreProtocol {
             throw NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "Kid not found"])
         }
     }
+    
+    func rawLoad(for kid: Kid, context: ModelContext) throws -> [SleepSession] {
+        let kidUUID = kid.id
+        if let updatedKid = try Kid.query(
+            predicate: #Predicate { kidToCompare in
+                kidToCompare.id == kidUUID
+            },
+            sortBy: [],
+            context: context
+        ).first {
+            return updatedKid.sleepSessions
+        } else {
+            throw NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "Kid not found"])
+        }
+    }
 
     func add(for kid: Kid, session: SleepSession, context: ModelContext) throws {
         try SleepSession.save(session, context: context)

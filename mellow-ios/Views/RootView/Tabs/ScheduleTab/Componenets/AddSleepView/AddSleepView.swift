@@ -13,7 +13,7 @@ struct AddSleepView: View {
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
-    @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var appStateStore: RAppState.Store
     
     @Binding var width: CGFloat
     @Binding var session: SleepSessionViewRepresentation?
@@ -147,12 +147,7 @@ struct AddSleepView: View {
                 currentDate: currentDate
             )
             
-            // Replace the existing session in the database
-            appState.databaseService.replaceSleepSession(
-                sessionId: sessionEditId,
-                with: updatedSession,
-                context: modelContext
-            )
+            appStateStore.dispatch(.sleepSessionOperation(.update(sessionEditId), updatedSession, modelContext))
         } else {
             // Adding a new session (either scheduled or a new unscheduled session)
             let newSession = SleepSession.createSession(
@@ -161,11 +156,7 @@ struct AddSleepView: View {
                 currentDate: currentDate
             )
             
-            // Add the new session to the database
-            appState.databaseService.addSleepSession(
-                session: newSession,
-                context: modelContext
-            )
+            appStateStore.dispatch(.sleepSessionOperation(.create, newSession, modelContext))
         }
         
         // Reset the session and dismiss the view

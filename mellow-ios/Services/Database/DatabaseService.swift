@@ -119,7 +119,7 @@ class DatabaseService: ObservableObject {
         try Kid.save(newKid, context: context)
         
         selectKid(newKid, context: context)
-
+        
         return newKid
     }
     
@@ -169,6 +169,24 @@ class DatabaseService: ObservableObject {
         }
     }
     
+    func updateKid(kidId: String, name: String, dateOfBirth: Date, context: ModelContext) -> Kid {
+        do {
+            guard let kidToUpdate = try Kid.query(
+                predicate: #Predicate { kidToCompare in
+                    kidToCompare.id == kidId
+                },
+                sortBy: [],
+                context: context
+            ).first else { fatalError("Kid not found") }
+            
+            try kidsStore.update(kid: kidToUpdate, name: name, dateOfBirth: dateOfBirth, context: context)
+            return kidToUpdate
+            
+        } catch {
+            fatalError("Failed to update kid: \(error)")
+        }
+    }
+    
     // MARK: - Sleep Sessions Management
     
     private func loadSleepSessions(for kid: Kid, context: ModelContext) {
@@ -179,8 +197,18 @@ class DatabaseService: ObservableObject {
         }
     }
     
-    func addSleepSession(session: SleepSession, context: ModelContext) {
-        guard let kid = currentKid.value else {
+    func rawLoadSleepSessions(for kid: Kid, context: ModelContext) -> [SleepSession] {
+        do {
+            return try sleepSessionStore.rawLoad(for: kid, context: context)
+        } catch {
+            print("Failed to load sleep sessions: \(error)")
+        }
+        return []
+    }
+    
+    func addSleepSession(session: SleepSession, kid: Kid? = nil, context: ModelContext) {
+        var relatedKid = kid ?? currentKid.value
+        guard let kid = relatedKid else {
             print("No kid selected.")
             return
         }

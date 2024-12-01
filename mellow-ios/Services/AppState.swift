@@ -155,7 +155,7 @@ class AppState: ObservableObject {
         }
         
         // Create a new SleepSession object with the updated endDate
-        var updatedSession = sessionInProgress.toSleepSession()
+        let updatedSession = sessionInProgress.toSleepSession()
         updatedSession.endDate = Date()
         
         // Update the session in the database

@@ -11,7 +11,7 @@ import SwiftData
 // TODO: This view is simple, but the depenency on AppState made it hard to mock, It has to be worked out in the future to allow easier mock strategy for faster development
 struct ProfileView: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var appStateStore: RAppState.Store
     @Query(sort: \Kid.dateOfBirth) var kids: [Kid]
 
     @State private var currentKid: Kid?
@@ -56,13 +56,13 @@ struct ProfileView: View {
             name = newValue.name
             age = newValue.ageFormatted
             imageResource = .kidoHim
-            try? appState.databaseService.selectKid(id: newValue.id, context: modelContext)
+            appStateStore.dispatch(.setSelectedKid(newValue))
             showKidsList = false
         })
-        .onReceive(appState.databaseService.$dayStreak) { newValue in
+        .onReceive(appStateStore.$state.map { $0.dayStreak }) { newValue in
             dayStreak = newValue
         }
-        .onReceive(appState.databaseService.$hoursTracked) { newValue in
+        .onReceive(appStateStore.$state.map { $0.hoursTracked }) { newValue in
             hoursTracked = newValue
         }
         .sheet(isPresented: $showKidsList,
@@ -72,8 +72,8 @@ struct ProfileView: View {
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })
         .onAppear {
-            age = appState.currentKid?.ageFormatted ?? "Something is wrong"
-            currentKid = appState.currentKid ?? fatalError("Kid not found") as! Kid
+            age = appStateStore.state.selectedKid?.ageFormatted ?? "Something is wrong"
+            currentKid = appStateStore.state.selectedKid ?? fatalError("Kid not found") as! Kid
         }
     }
     

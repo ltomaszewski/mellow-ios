@@ -1,42 +1,39 @@
 //
-//  OnboardingPlanView.swift
+//  ROnboardingView.swift
 //  mellow-ios
 //
-//  Created by Lukasz Tomaszewski on 04/09/2024.
+//  Created by Lukasz Tomaszewski on 01/12/2024.
 //
 
 import SwiftUI
 
-struct OnboardingView: View {
+struct ROnboardingView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appState: AppState
-    
+    @EnvironmentObject private var onboardingStore: ROnboardingState.Store
     @Binding var onboardingCompleted: Bool
-    
+
     var body: some View {
         VStack {
-            ProgressBar(value: appState.onboardingStore.progress)
+            ProgressBar(value: onboardingStore.state.progress)
                 .frame(height: 5)
                 .padding(.top, 36)
                 .padding(.horizontal, 16)
-            if !appState.onboardingStore.welcomeMessageShown {
+            if !onboardingStore.state.welcomeMessageShown {
                 welcomeView
                     .transition(.push(from: .trailing))
-            } else if appState.onboardingStore.childName.isEmpty {
-                textInputView
+            } else if onboardingStore.state.childName.isEmpty {
+                childNameInputView
                     .transition(.push(from: .trailing))
-            } else if appState.onboardingStore.kidDateOfBirth == nil {
-                dateInputView
+            } else if onboardingStore.state.kidDateOfBirth == nil{
+                kidAgeView
                     .transition(.push(from: .trailing))
             }
         }
         .background(.gunmetalBlue)
-        .onChange(of: appState.onboardingStore.welcomeMessageShown) { appState.onboardingStore.markOnboardingComplete() }
-        .onChange(of: appState.onboardingStore.childName) { appState.onboardingStore.markOnboardingComplete() }
-        .onChange(of: appState.onboardingStore.kidDateOfBirth, { appState.onboardingStore.markOnboardingComplete() })
-        .onChange(of: appState.onboardingStore.completed, {
-            appState.databaseService.addKid(name: appState.onboardingStore.childName,
-                                            dateOfBirth: appState.onboardingStore.kidDateOfBirth!,
+        .onChange(of: onboardingStore.state.completed, {
+            appState.databaseService.addKid(name: onboardingStore.state.childName,
+                                            dateOfBirth: onboardingStore.state.kidDateOfBirth!,
                                             context: modelContext)
             withAnimation {
                 onboardingCompleted = true
@@ -45,7 +42,7 @@ struct OnboardingView: View {
     }
     
     var welcomeView: some View {
-        PlanPromptView(screenTapped: $appState.onboardingStore.welcomeMessageShown, // TODO: Research why onboardingStore has to be var to be able to provide value for this class
+        PlanPromptView(screenTapped: onboardingStore.welcomeMessageShownBinding,
                        headlineTopText: "",
                        headlineText: "Answer a few questions\nto start personalizing your\nexperience.",
                        headlineBottomText: "",
@@ -56,8 +53,8 @@ struct OnboardingView: View {
         .background(.gunmetalBlue)
     }
     
-    var textInputView: some View {
-        PlanTextInputView(value: $appState.onboardingStore.childName,
+    var childNameInputView: some View {
+        PlanTextInputView(value: onboardingStore.childNameBinding,
                           headlineText: "What's your child's name?",
                           placeholderText: "Enter name here",
                           submitText: "Continue")
@@ -66,9 +63,9 @@ struct OnboardingView: View {
         .background(.gunmetalBlue)
     }
     
-    var dateInputView: some View {
-        PlanDateInputView(value: $appState.onboardingStore.kidDateOfBirth,
-                          headlineText: "When \(appState.onboardingStore.childName) was born?",
+    var kidAgeView: some View {
+        PlanDateInputView(value: onboardingStore.kidAgeBinding,
+                          headlineText: "When \(onboardingStore.state.childName) was born?",
                           submitText: "Continue")
         .frame(maxWidth: .infinity)
         .foregroundStyle(.white)
@@ -76,6 +73,9 @@ struct OnboardingView: View {
     }
 }
 
-#Preview {
-    OnboardingView(onboardingCompleted: .init(get: { false }, set: { _ in }))
-}
+//#Preview {
+//    @Previewable @State var onboardingStore: ROnboardingState.Store = .init(state: .init())
+//    
+//    ROnboardingView(onboardingCompleted: .init(get: { false }, set: { _ in }))
+//        .environmentObject(onboardingStore)
+//}

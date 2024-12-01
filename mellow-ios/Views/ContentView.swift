@@ -8,21 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject private var onboardingStore: ROnboardingState.Store
     @EnvironmentObject var appState: AppState
     @Environment(\.modelContext) private var modelContext
     
+    @State private var showIntroView: Bool = true
+    
     var body: some View {
         VStack {
-            if appState.showIntroView {
+            if showIntroView {
                 IntroView(imageResource: .kidoHim,
                           text: "Science based sleep program that adapts to your kid.") {
                     withAnimation {
-                        appState.completeIntro()
+                        showIntroView = false
                     }
                 }
-            } else if !appState.isOnboardingCompleted {
-                OnboardingView(onboardingCompleted: $appState.isOnboardingCompleted)
-                    .animation(.bouncy, value: appState.showIntroView)
+            } else if !onboardingStore.state.completed {
+                ROnboardingView(onboardingCompleted: .init(get: { false }, set: { _ in }))
             } else {
                 RootView().transition(.push(from: .bottom))
             }

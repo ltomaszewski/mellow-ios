@@ -11,16 +11,12 @@ import SwiftData
 
 // TODO: Research app architecture where there is a single AppState shared across all screens, with sub-objects used by sub-screens in an intuitive way—something like Redux.
 class AppState: ObservableObject {
-    @Published var isOnboardingCompleted: Bool = false
-    @Published var showIntroView: Bool = true
-    
     @Published var currentKid: Kid?
     @Published var sleepSessions: [SleepSessionViewRepresentation] = []
     @Published var sleepSessionInProgress: SleepSessionViewRepresentation?
     @Published var kids: [Kid] = []
 
     var databaseService = DatabaseService()
-    var onboardingStore = OnboardingPlanStore()
     var kidAgeInMonths : Int { currentKid?.ageInMonths ?? 0 }
     private let sleepManager: SleepManager = .init()
     private var cancellables: [AnyCancellable] = []
@@ -33,10 +29,7 @@ class AppState: ObservableObject {
         setupAppState()
     }
     
-    private func setupAppState() {
-        isOnboardingCompleted = onboardingStore.isOnboardingCompleted()
-        showIntroView = !isOnboardingCompleted
-        
+    private func setupAppState() {        
         databaseService
             .currentKid
             .filter { $0 != nil }
@@ -70,10 +63,6 @@ class AppState: ObservableObject {
             .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &cancellables)
         
-        onboardingStore.objectWillChange
-            .sink { [weak self] _ in self?.objectWillChange.send() }
-            .store(in: &cancellables)
-        
         $sleepSessions
             .sink { [weak self] sleepSessions in
                 guard let self = self else { return }
@@ -85,14 +74,6 @@ class AppState: ObservableObject {
                 }
             }
             .store(in: &cancellables)
-    }
-    
-    func startIntro() {
-        showIntroView = true
-    }
-    
-    func completeIntro() {
-        showIntroView = false
     }
     
     func refreshSchedule() {
@@ -194,7 +175,7 @@ class AppState: ObservableObject {
 
     func reset(context: ModelContext) {
         // Reset onboarding
-        onboardingStore.resetOnboarding()
+        ROnboardingState.removeFromUserDefaults()
         isOnboardingCompleted = false
         showIntroView = true
 

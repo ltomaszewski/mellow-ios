@@ -22,6 +22,9 @@
 		6D183CC72C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D183CC62C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift */; };
 		6D1F2C8D2CD2B90500978DAF /* DiagonalLines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D1F2C8C2CD2B90400978DAF /* DiagonalLines.swift */; };
 		6D1F2C8F2CD2BD6100978DAF /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D1F2C8E2CD2BD6100978DAF /* RoundedCorner.swift */; };
+		6D24DB862CFC726700D776EA /* ROnboardingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D24DB852CFC725000D776EA /* ROnboardingState.swift */; };
+		6D24DB892CFC727600D776EA /* ReducerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D24DB882CFC727600D776EA /* ReducerProtocol.swift */; };
+		6D24DB8D2CFC7AC900D776EA /* ROnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D24DB8C2CFC7AC900D776EA /* ROnboardingView.swift */; };
 		6D34B3292CC962820072EA5E /* SleepSessionViewRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D34B3282CC962810072EA5E /* SleepSessionViewRepresentation.swift */; };
 		6D34B32C2CC970210072EA5E /* Array+ScheduledSleepSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D34B32B2CC970210072EA5E /* Array+ScheduledSleepSession.swift */; };
 		6D3977F42C907086004CB093 /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = 6D3977F32C907086004CB093 /* ci_post_clone.sh */; };
@@ -71,7 +74,7 @@
 		6DB92D1C2C888B81005E48E9 /* PlanQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB92D1B2C888B81005E48E9 /* PlanQuestionView.swift */; };
 		6DB92D1E2C88A33E005E48E9 /* PlanTextInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB92D1D2C88A33E005E48E9 /* PlanTextInputView.swift */; };
 		6DB92D202C88A56C005E48E9 /* OnboardingPlanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB92D1F2C88A56C005E48E9 /* OnboardingPlanStore.swift */; };
-		6DB92D222C88A809005E48E9 /* OnboardingPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB92D212C88A809005E48E9 /* OnboardingPlanView.swift */; };
+		6DB92D222C88A809005E48E9 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB92D212C88A809005E48E9 /* OnboardingView.swift */; };
 		6DB92D242C88AC2A005E48E9 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB92D232C88AC2A005E48E9 /* AppState.swift */; };
 		6DB92D262C88AC42005E48E9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB92D252C88AC42005E48E9 /* ContentView.swift */; };
 		6DB92D282C898B0D005E48E9 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB92D272C898B0D005E48E9 /* ProgressBar.swift */; };
@@ -133,6 +136,9 @@
 		6D183CC62C6BC67B00E41F93 /* DayPickerBarCollectionView+Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DayPickerBarCollectionView+Cell.swift"; sourceTree = "<group>"; };
 		6D1F2C8C2CD2B90400978DAF /* DiagonalLines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagonalLines.swift; sourceTree = "<group>"; };
 		6D1F2C8E2CD2BD6100978DAF /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
+		6D24DB852CFC725000D776EA /* ROnboardingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ROnboardingState.swift; sourceTree = "<group>"; };
+		6D24DB882CFC727600D776EA /* ReducerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducerProtocol.swift; sourceTree = "<group>"; };
+		6D24DB8C2CFC7AC900D776EA /* ROnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ROnboardingView.swift; sourceTree = "<group>"; };
 		6D34B3282CC962810072EA5E /* SleepSessionViewRepresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepSessionViewRepresentation.swift; sourceTree = "<group>"; };
 		6D34B32B2CC970210072EA5E /* Array+ScheduledSleepSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+ScheduledSleepSession.swift"; sourceTree = "<group>"; };
 		6D3977F32C907086004CB093 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
@@ -183,7 +189,7 @@
 		6DB92D1B2C888B81005E48E9 /* PlanQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanQuestionView.swift; sourceTree = "<group>"; };
 		6DB92D1D2C88A33E005E48E9 /* PlanTextInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanTextInputView.swift; sourceTree = "<group>"; };
 		6DB92D1F2C88A56C005E48E9 /* OnboardingPlanStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPlanStore.swift; sourceTree = "<group>"; };
-		6DB92D212C88A809005E48E9 /* OnboardingPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPlanView.swift; sourceTree = "<group>"; };
+		6DB92D212C88A809005E48E9 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		6DB92D232C88AC2A005E48E9 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		6DB92D252C88AC42005E48E9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6DB92D272C898B0D005E48E9 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
@@ -336,6 +342,31 @@
 			path = DayPickerBarView;
 			sourceTree = "<group>";
 		};
+		6D24DB832CFC723500D776EA /* AppStateRedux */ = {
+			isa = PBXGroup;
+			children = (
+				6D24DB872CFC727100D776EA /* Utils */,
+				6D24DB842CFC724B00D776EA /* States */,
+			);
+			path = AppStateRedux;
+			sourceTree = "<group>";
+		};
+		6D24DB842CFC724B00D776EA /* States */ = {
+			isa = PBXGroup;
+			children = (
+				6D24DB852CFC725000D776EA /* ROnboardingState.swift */,
+			);
+			path = States;
+			sourceTree = "<group>";
+		};
+		6D24DB872CFC727100D776EA /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				6D24DB882CFC727600D776EA /* ReducerProtocol.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		6D34B3272CC9627C0072EA5E /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -431,6 +462,7 @@
 		6D77DF042C6C93E1001A7B93 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				6D24DB832CFC723500D776EA /* AppStateRedux */,
 				6D34B32A2CC9700C0072EA5E /* SleepManager */,
 				6D34B3272CC9627C0072EA5E /* Model */,
 				6D9C6B522CC53F4F00B9D722 /* Database */,
@@ -543,7 +575,8 @@
 			children = (
 				6DB92D182C885638005E48E9 /* Views */,
 				6DB92D1F2C88A56C005E48E9 /* OnboardingPlanStore.swift */,
-				6DB92D212C88A809005E48E9 /* OnboardingPlanView.swift */,
+				6DB92D212C88A809005E48E9 /* OnboardingView.swift */,
+				6D24DB8C2CFC7AC900D776EA /* ROnboardingView.swift */,
 			);
 			path = PlanView;
 			sourceTree = "<group>";
@@ -832,6 +865,7 @@
 				6D4E39BA2CE1167B0012312D /* ProfileSettingsView+KidRowView.swift in Sources */,
 				6DB92D1E2C88A33E005E48E9 /* PlanTextInputView.swift in Sources */,
 				6DCA4FD62CD676000070B172 /* AppendSleepSessionInProgressViewModifier.swift in Sources */,
+				6D24DB8D2CFC7AC900D776EA /* ROnboardingView.swift in Sources */,
 				6DB92D242C88AC2A005E48E9 /* AppState.swift in Sources */,
 				6D98B54A2CA8342500065B6C /* AddSleepTimePickers.swift in Sources */,
 				6D1F2C8D2CD2B90500978DAF /* DiagonalLines.swift in Sources */,
@@ -843,6 +877,7 @@
 				6D7091232C6CA35800007689 /* DayHourSlotView.swift in Sources */,
 				6DB92D2C2C899640005E48E9 /* Kid.swift in Sources */,
 				6D34B32C2CC970210072EA5E /* Array+ScheduledSleepSession.swift in Sources */,
+				6D24DB892CFC727600D776EA /* ReducerProtocol.swift in Sources */,
 				6D9C6B4C2CC53E4700B9D722 /* SleepSessionStore.swift in Sources */,
 				6DA85F612C8725FC0025988E /* ProfileHeaderView.swift in Sources */,
 				6DB9EDAB2C7F0DCB00B817DF /* ProfileTabView.swift in Sources */,
@@ -876,13 +911,14 @@
 				6D53F1BD2C70B48F00FE25E1 /* SleepTimePicker.swift in Sources */,
 				6D77DF0D2C6C9DF2001A7B93 /* Date+Extensions.swift in Sources */,
 				6D9C6B462CC3D65F00B9D722 /* SessionInfoView.swift in Sources */,
-				6DB92D222C88A809005E48E9 /* OnboardingPlanView.swift in Sources */,
+				6DB92D222C88A809005E48E9 /* OnboardingView.swift in Sources */,
 				6DB9EDB42C7F18C500B817DF /* RootViewModel.swift in Sources */,
 				6DB92D1C2C888B81005E48E9 /* PlanQuestionView.swift in Sources */,
 				6DDEC0382CC81A8300D724FC /* SleepManager.swift in Sources */,
 				6D183C872C6BB95C00E41F93 /* mellow_iosApp.swift in Sources */,
 				6D4E39B42CE019FD0012312D /* ProfileSettingsKidEditView.swift in Sources */,
 				6DA85F672C87277B0025988E /* ProfileView.swift in Sources */,
+				6D24DB862CFC726700D776EA /* ROnboardingState.swift in Sources */,
 				6DA85F5F2C870FF90025988E /* ProfileCalendarView.swift in Sources */,
 				6D4E39B12CDFAA880012312D /* Kid+Age.swift in Sources */,
 				6D183CB32C6BBB6B00E41F93 /* RootView.swift in Sources */,
@@ -1055,7 +1091,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_ASSET_PATHS = "\"mellow-ios/Preview Content\"";
 				DEVELOPMENT_TEAM = DRU4XTX272;
 				ENABLE_PREVIEWS = YES;
@@ -1088,7 +1124,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_ASSET_PATHS = "\"mellow-ios/Preview Content\"";
 				DEVELOPMENT_TEAM = DRU4XTX272;
 				ENABLE_PREVIEWS = YES;

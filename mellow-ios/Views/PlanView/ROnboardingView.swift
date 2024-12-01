@@ -50,7 +50,7 @@ struct ROnboardingView: View {
                     return
                 }
                 
-                appState.databaseService.addKid(
+                try? appState.databaseService.addKid(
                     name: onboardingStore.state.childName,
                     dateOfBirth: dateOfBirth,
                     sleepTime: sleepTime,

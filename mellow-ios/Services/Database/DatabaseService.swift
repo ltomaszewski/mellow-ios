@@ -54,17 +54,73 @@ class DatabaseService: ObservableObject {
     }
     
     func addKid(name: String,
-             dateOfBirth: Date,
-             sleepTime: Date,
-             wakeTime: Date,
-             context: ModelContext) -> Kid {
-        do {
-            let newKid = try kidsStore.add(name: name, dateOfBirth: dateOfBirth, sleepTime: sleepTime, wakeTime: wakeTime, context: context)
-            selectKid(newKid, context: context)
-            return newKid
-        } catch {
-            fatalError("Failed to add kid: \(error)")
+                dateOfBirth: Date,
+                sleepTime: Date,
+                wakeTime: Date,
+                context: ModelContext) throws -> Kid {
+        // Create a new Kid instance
+        let newKid = Kid(name: name, dateOfBirth: dateOfBirth, sleepTime: sleepTime, wakeTime: wakeTime)
+        
+        // Calculate last night's sleep session dates
+        let calendar = Calendar.current
+        let now = Date()
+        
+        // Helper function to create a Date with specific hour and minute on a given day
+        func createDate(hour: Int, minute: Int, relativeTo baseDate: Date) -> Date {
+            var components = calendar.dateComponents([.year, .month, .day], from: baseDate)
+            components.hour = hour
+            components.minute = minute
+            components.second = 0
+            return calendar.date(from: components)!
         }
+        
+        // Determine if sleepTime is earlier than wakeTime to decide if sleep spans overnight
+        let sleepComponents = calendar.dateComponents([.hour, .minute], from: sleepTime)
+        let wakeComponents = calendar.dateComponents([.hour, .minute], from: wakeTime)
+        
+        // Create sleepDate and wakeDate
+        var sleepDate: Date
+        var wakeDate: Date
+        
+        if let sleepHour = sleepComponents.hour, let sleepMinute = sleepComponents.minute,
+           let wakeHour = wakeComponents.hour, let wakeMinute = wakeComponents.minute {
+            
+            // Create sleepDate as yesterday's date with sleepTime
+            if let yesterday = calendar.date(byAdding: .day, value: -1, to: now) {
+                sleepDate = createDate(hour: sleepHour, minute: sleepMinute, relativeTo: yesterday)
+            } else {
+                // Fallback to sleepTime on the current day if date calculation fails
+                sleepDate = createDate(hour: sleepHour, minute: sleepMinute, relativeTo: now)
+            }
+            
+            // Create wakeDate as today's date with wakeTime
+            wakeDate = createDate(hour: wakeHour, minute: wakeMinute, relativeTo: now)
+            
+            // If wakeDate is earlier than sleepDate, assume wakeDate is the next day
+            if wakeDate <= sleepDate {
+                wakeDate = calendar.date(byAdding: .day, value: 1, to: wakeDate)!
+            }
+        } else {
+            // Fallback dates in case components are missing
+            sleepDate = now
+            wakeDate = now
+        }
+        
+        // Create a new SleepSession for last night's sleep
+        let sleepSession = SleepSession(startDate: sleepDate, endDate: wakeDate, type: "Night Sleep")
+        
+        // Associate the SleepSession with the Kid
+        newKid.addSleepSession(sleepSession)
+        
+        // Save the SleepSession first (if it's a separate entity)
+        try SleepSession.save(sleepSession, context: context)
+        
+        // Save the Kid to the context
+        try Kid.save(newKid, context: context)
+        
+        selectKid(newKid, context: context)
+
+        return newKid
     }
     
     func removeKid(_ kid: Kid, context: ModelContext) {

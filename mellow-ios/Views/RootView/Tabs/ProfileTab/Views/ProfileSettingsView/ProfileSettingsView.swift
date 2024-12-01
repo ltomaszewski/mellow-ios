@@ -92,7 +92,9 @@ struct ProfileSettingsView: View {
     // MARK: - Add Child Button View
     private var addChildButtonView: some View {
         Button(action: {
-            showAddChildAlert.toggle()
+            withAnimation {
+                appState.addNewKids.toggle()
+            }
         }) {
             Text("Add child")
                 .font(.main16)

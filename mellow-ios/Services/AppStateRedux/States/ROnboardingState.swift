@@ -83,6 +83,11 @@ extension ROnboardingState {
             reducer.reduce(state: &state, action: action)
             state.saveToUserDefaults()
         }
+        
+        func removeStateFormUserDefaults() {
+            ROnboardingState.removeFromUserDefaults()
+            self.state = .init()
+        }
     }
 }
 

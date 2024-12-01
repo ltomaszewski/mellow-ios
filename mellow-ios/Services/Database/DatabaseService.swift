@@ -10,7 +10,6 @@ import SwiftData
 import Combine
 
 class DatabaseService: ObservableObject {
-    @Published var kids: [Kid] = []
     @Published var hoursTracked: Int = 0
     @Published var dayStreak: Int = 0
     
@@ -28,11 +27,6 @@ class DatabaseService: ObservableObject {
     }
     
     private func setupSubscriptions() {
-        kidsStore.kids
-            .receive(on: DispatchQueue.main)
-            .assign(to: \.kids, on: self)
-            .store(in: &cancellables)
-        
         sleepSessionStore.hoursTracked
             .receive(on: DispatchQueue.main)
             .assign(to: \.hoursTracked, on: self)
@@ -46,23 +40,23 @@ class DatabaseService: ObservableObject {
     
     // MARK: - Kids Management
     
-    func loadKids(context: ModelContext) {
+    func loadKids(context: ModelContext) -> [Kid] {
         do {
             let result = try kidsStore.load(context: context)
             if let kid = result.first {
                 selectKid(kid, context: context)
             }
+            return result
         } catch {
             print("Failed to load kids: \(error)")
         }
+        return []
     }
     
     func addKid(name: String, dateOfBirth: Date, context: ModelContext) {
         do {
             let newKid = try kidsStore.add(name: name, dateOfBirth: dateOfBirth, context: context)
-            if currentKid.value == nil {
-                selectKid(newKid, context: context)
-            }
+            selectKid(newKid, context: context)
         } catch {
             print("Failed to add kid: \(error)")
         }
@@ -72,7 +66,7 @@ class DatabaseService: ObservableObject {
         do {
             try kidsStore.remove(kid, context: context)
             if currentKid.value?.id == kid.id {
-                if let firstKid = kids.first {
+                if let firstKid = try kidsStore.load(context: context).first {
                     selectKid(firstKid, context: context)
                 } else {
                     currentKid.send(nil)
@@ -169,7 +163,6 @@ class DatabaseService: ObservableObject {
     func removeAllData(context: ModelContext) {
         do {
             try kidsStore.removeAll(context: context)
-            kids = []
             currentKid.send(nil)
             sleepSessionStore.reset()
             print("All data removed successfully.")

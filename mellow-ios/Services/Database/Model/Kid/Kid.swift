@@ -47,8 +47,8 @@ class Kid {
 }
 
 extension Kid {
-    func toProfileKidsListViewItem() -> ProfileKidsListView.Kid {
-        return ProfileKidsListView.Kid(
+    func toProfileKidsListViewItem() -> ProfileKidsListView.KidViewModel {
+        return ProfileKidsListView.KidViewModel(
             name: self.name,
             ageFormatted: self.ageFormatted,
             imageResource: .kidoHim,
@@ -58,7 +58,7 @@ extension Kid {
 }
 
 extension Array where Element == Kid {
-    func toProfileKidsListViewItems() -> [ProfileKidsListView.Kid] {
+    func toProfileKidsListViewItems() -> [ProfileKidsListView.KidViewModel] {
         return self.map { $0.toProfileKidsListViewItem() }
     }
 }

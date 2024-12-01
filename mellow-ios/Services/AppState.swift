@@ -11,10 +11,10 @@ import SwiftData
 
 // TODO: Research app architecture where there is a single AppState shared across all screens, with sub-objects used by sub-screens in an intuitive way—something like Redux.
 class AppState: ObservableObject {
+    @Published var addNewKids: Bool = false
     @Published var currentKid: Kid?
     @Published var sleepSessions: [SleepSessionViewRepresentation] = []
     @Published var sleepSessionInProgress: SleepSessionViewRepresentation?
-    @Published var kids: [Kid] = []
 
     var databaseService = DatabaseService()
     var kidAgeInMonths : Int { currentKid?.ageInMonths ?? 0 }
@@ -37,6 +37,7 @@ class AppState: ObservableObject {
                 guard let self else { return }
                 self.currentKid = kid
                 self.refreshSchedule()
+                self.addNewKids = false
             }
             .store(in: &cancellables)
         
@@ -51,12 +52,6 @@ class AppState: ObservableObject {
                 guard let _ = self.currentKid else { return }
                 self.updateSelectedDate(self.selectedDate, force: true)
             }
-            .store(in: &cancellables)
-        
-        databaseService
-            .$kids
-            .assign(to: \.kids,
-                    on: self)
             .store(in: &cancellables)
         
         databaseService.objectWillChange
@@ -176,8 +171,6 @@ class AppState: ObservableObject {
     func reset(context: ModelContext) {
         // Reset onboarding
         ROnboardingState.removeFromUserDefaults()
-        isOnboardingCompleted = false
-        showIntroView = true
 
         // Clear the database
         databaseService.removeAllData(context: context)

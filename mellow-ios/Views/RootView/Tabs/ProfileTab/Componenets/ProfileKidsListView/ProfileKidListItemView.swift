@@ -8,8 +8,18 @@
 import SwiftUI
 
 struct ProfileKidListItemView: View {
-    let kid: ProfileKidsListView.Kid
+    let kid: ProfileKidsListView.KidViewModel
     let isSelected: Bool
+    
+    init(kid: ProfileKidsListView.KidViewModel, isSelected: Bool) {
+        self.kid = kid
+        self.isSelected = isSelected
+    }
+    
+    init(kid: Kid, isSelected: Bool) {
+        self.kid = kid.toProfileKidsListViewItem()
+        self.isSelected = isSelected
+    }
     
     var body: some View {
         HStack(spacing: 16) {
@@ -40,7 +50,7 @@ struct ProfileKidListItemView: View {
 }
 
 extension ProfileKidsListView {
-    struct Kid: Hashable {
+    struct KidViewModel: Hashable {
         let name: String
         let ageFormatted: String
         let imageResource: ImageResource

@@ -15,9 +15,6 @@ struct ProfileSettingsView: View {
     @Query(sort: \Kid.dateOfBirth) var kids: [Kid]
     
     @State private var isPushNotificationEnabled = false
-    @State private var showAddChildAlert = false
-    @State private var newChildName = ""
-    @State private var newChildDateOfBirth = Date()
     
     var body: some View {
         NavigationStack {
@@ -32,22 +29,6 @@ struct ProfileSettingsView: View {
             .frame(maxWidth: .infinity)
             .background(Color.deepNight)
             .navigationBarHidden(true) // Hide the default navigation bar
-            .alert("Add New Child", isPresented: $showAddChildAlert, actions: {
-                TextField("Name", text: $newChildName)
-                    .foregroundStyle(Color.black)
-                Button("Add") {
-                    appState
-                        .databaseService
-                        .addKid(name: newChildName,
-                                dateOfBirth: newChildDateOfBirth,
-                                context: modelContext)
-                }
-                Button("Cancel", role: .cancel, action: {
-                    showAddChildAlert = false
-                })
-            }, message: {
-                Text("Please enter the name and date of birth.")
-            })
         }
         .toolbar(.hidden)
     }

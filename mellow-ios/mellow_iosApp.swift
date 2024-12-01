@@ -8,13 +8,6 @@
 import SwiftUI
 import SwiftData
 
-/*
- 1. Add support for more then one onboarding session
- 2. Onboarding is on start only if the array of kids is empty
- 3. Open onboarding process from profile
- 4. Add wake up and bad time time in onboarding process
- */
-
 @main
 struct mellow_iosApp: App {
     @StateObject var appState = AppState()

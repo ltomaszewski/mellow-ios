@@ -9,9 +9,6 @@ import Foundation
 
 extension Kid {
     var ageInMonths: Int {
-        guard let dateOfBirth = dateOfBirth else {
-            return 0
-        }
         let calendar = Calendar.current
         let now = Date()
         let components = calendar.dateComponents([.month], from: dateOfBirth, to: now)
@@ -19,10 +16,6 @@ extension Kid {
     }
     
     var ageFormatted: String {
-        guard let dateOfBirth = dateOfBirth else {
-            return "Age unknown"
-        }
-        
         let calendar = Calendar.current
         let now = Date()
         let components = calendar.dateComponents([.year, .month, .day], from: dateOfBirth, to: now)

@@ -11,8 +11,12 @@ import Combine
 
 struct KidsStore: KidsStoreProtocol {
     
-    func add(name: String, dateOfBirth: Date, context: ModelContext) throws -> Kid {
-        let newKid = Kid(name: name, dateOfBirth: dateOfBirth)
+    func add(name: String,
+             dateOfBirth: Date,
+             sleepTime: Date,
+             wakeTime: Date,
+             context: ModelContext) throws -> Kid {
+        let newKid = Kid(name: name, dateOfBirth: dateOfBirth, sleepTime: sleepTime, wakeTime: wakeTime)
         try Kid.save(newKid, context: context)
         return newKid
     }

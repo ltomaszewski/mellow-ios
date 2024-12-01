@@ -12,10 +12,16 @@ struct ROnboardingState: Codable {
     var welcomeMessageShown: Bool
     var childName: String
     var kidDateOfBirth: Date?
+    
+    // New properties for sleep and wake times
+    var sleepTime: Date?
+    var wakeTime: Date?
+    
     var completed: Bool
+    
     var progress: Float {
-        var completedSteps = 0
-        let totalSteps = 3 // Updated to remove the `kidAge` step.
+        var completedSteps = 1
+        let totalSteps = 6 // Updated to include the two new steps
         
         // Increment `completedSteps` for each completed onboarding step.
         if welcomeMessageShown {
@@ -27,17 +33,31 @@ struct ROnboardingState: Codable {
         if kidDateOfBirth != nil {
             completedSteps += 1
         }
+        if sleepTime != nil {
+            completedSteps += 1
+        }
+        if wakeTime != nil {
+            completedSteps += 1
+        }
         
         // Calculate and return the progress percentage.
         return Float(completedSteps) / Float(totalSteps)
     }
     
-    // TODO: We have copy on write here, so in case the copy is created an init will be executed with the same value? Or how the sturct is copied under the hood
-    // Tested: Init on copy is not called at all. So the progress was not updated, thats why I had to export it to compund property as minimal deliver value
-    init(welcomeMessageShown: Bool = false, childName: String = "", kidDateOfBirth: Date? = nil, completed: Bool = false) {
+    // Initializer
+    init(
+        welcomeMessageShown: Bool = false,
+        childName: String = "",
+        kidDateOfBirth: Date? = nil,
+        sleepTime: Date? = nil,
+        wakeTime: Date? = nil,
+        completed: Bool = false
+    ) {
         self.welcomeMessageShown = welcomeMessageShown
         self.childName = childName
         self.kidDateOfBirth = kidDateOfBirth
+        self.sleepTime = sleepTime
+        self.wakeTime = wakeTime
         self.completed = completed
     }
 }
@@ -48,6 +68,20 @@ extension ROnboardingState {
         case welcomeMessageShown
         case setChildName(String)
         case setKidDateOfBirth(Date?)
+        
+        // New actions for sleep and wake times
+        case setSleepTime(Date?)
+        case setWakeTime(Date?)
+    }
+}
+
+extension ROnboardingState {
+    var isOnboardingCompleted: Bool {
+        return welcomeMessageShown &&
+               !childName.isEmpty &&
+               kidDateOfBirth != nil &&
+               sleepTime != nil &&
+               wakeTime != nil
     }
 }
 
@@ -56,19 +90,28 @@ extension ROnboardingState {
     struct Reducer: ReducerProtocol {
         func reduce(state: inout ROnboardingState, action: ROnboardingState.Action) {
             switch action {
-            case .welcomeMessageShown: state.welcomeMessageShown = true
-            case .setChildName(let name): state.childName = name
+            case .welcomeMessageShown:
+                state.welcomeMessageShown = true
+                
+            case .setChildName(let name):
+                state.childName = name
+                
             case .setKidDateOfBirth(let date):
                 state.kidDateOfBirth = date
-                // Validation if the onboarding is completed
-                if state.welcomeMessageShown && !state.childName.isEmpty && state.kidDateOfBirth != nil {
-                    state.completed = true
-                }
+                
+            // Handle new actions
+            case .setSleepTime(let date):
+                state.sleepTime = date
+                
+            case .setWakeTime(let date):
+                state.wakeTime = date
             }
+            
+            // After handling any action, check if onboarding is completed
+            state.completed = state.isOnboardingCompleted
         }
     }
 }
-
 // ROnbardingState Store
 extension ROnboardingState {
     class Store: ObservableObject {
@@ -93,18 +136,45 @@ extension ROnboardingState {
 
 import SwiftUI
 
-// Binding for State and swfitUI TODO: Export to swift Macro
+// Binding for State and SwiftUI TODO: Export to Swift Macro
 extension ROnboardingState.Store {
     var welcomeMessageShownBinding: Binding<Bool> {
-        .init(get: { false }, set: { [weak self] _ in self?.dispatch(.welcomeMessageShown) })
+        .init(
+            get: { self.state.welcomeMessageShown },
+            set: { [weak self] _ in self?.dispatch(.welcomeMessageShown) }
+        )
     }
     
     var childNameBinding: Binding<String> {
-        .init(get: { self.state.childName }, set: { [weak self] name in self?.dispatch(.setChildName(name)) }) // TODO: Research If weak self is really needed here
+        .init(
+            get: { self.state.childName },
+            set: { [weak self] name in self?.dispatch(.setChildName(name)) }
+        ) // TODO: Research If weak self is really needed here
     }
     
     var kidAgeBinding: Binding<Date?> {
-        .init(get: { self.state.kidDateOfBirth }, set: { [weak self] date in self?.dispatch(.setKidDateOfBirth(date)) })
+        .init(
+            get: { self.state.kidDateOfBirth },
+            set: { [weak self] date in self?.dispatch(.setKidDateOfBirth(date)) }
+        )
+    }
+    
+    // **New Bindings for Sleep and Wake Times**
+    
+    /// Binding for "When Nina usually falls asleep?"
+    var sleepTimeBinding: Binding<Date?> {
+        .init(
+            get: { self.state.sleepTime },
+            set: { [weak self] date in self?.dispatch(.setSleepTime(date)) }
+        )
+    }
+    
+    /// Binding for "When Nina usually wakes up?"
+    var wakeTimeBinding: Binding<Date?> {
+        .init(
+            get: { self.state.wakeTime },
+            set: { [weak self] date in self?.dispatch(.setWakeTime(date)) }
+        )
     }
 }
 
@@ -143,6 +213,7 @@ extension ROnboardingState {
     /// Saves the current ROnboardingState instance to UserDefaults.
     func saveToUserDefaults() {
         let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
         do {
             let encodedData = try encoder.encode(self)
             UserDefaults.standard.set(encodedData, forKey: ROnboardingState.userDefaultsKey)
@@ -163,6 +234,7 @@ extension ROnboardingState {
         }
         
         let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
         do {
             let onboardingState = try decoder.decode(ROnboardingState.self, from: savedData)
             log("ROnboardingState successfully loaded from UserDefaults.")

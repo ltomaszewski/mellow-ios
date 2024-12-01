@@ -53,12 +53,17 @@ class DatabaseService: ObservableObject {
         return []
     }
     
-    func addKid(name: String, dateOfBirth: Date, context: ModelContext) {
+    func addKid(name: String,
+             dateOfBirth: Date,
+             sleepTime: Date,
+             wakeTime: Date,
+             context: ModelContext) -> Kid {
         do {
-            let newKid = try kidsStore.add(name: name, dateOfBirth: dateOfBirth, context: context)
+            let newKid = try kidsStore.add(name: name, dateOfBirth: dateOfBirth, sleepTime: sleepTime, wakeTime: wakeTime, context: context)
             selectKid(newKid, context: context)
+            return newKid
         } catch {
-            print("Failed to add kid: \(error)")
+            fatalError("Failed to add kid: \(error)")
         }
     }
     

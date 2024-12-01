@@ -7,22 +7,52 @@
 
 import SwiftUI
 
+extension PlanDateInputView {
+    enum DatePickerType {
+        case date
+        case time
+        
+        var components: DatePickerComponents {
+            switch self {
+            case .date:
+                return [.date]
+            case .time:
+                return [.hourAndMinute]
+            }
+        }
+    }
+}
+
 struct PlanDateInputView: View {
     @Binding var value: Date?
-
+    
     let headlineText: String
     let submitText: String
-
+    
+    // New property to determine the type of DatePicker
+    let datePickerType: DatePickerType
+    
     @State private var selectedDate = Date()
-
+    
+    // Initializer with the new parameter
+    init(value: Binding<Date?>,
+         headlineText: String,
+         submitText: String,
+         datePickerType: DatePickerType = .date) {
+        self._value = value
+        self.headlineText = headlineText
+        self.submitText = submitText
+        self.datePickerType = datePickerType
+    }
+    
     var body: some View {
         VStack {
             Spacer()
             Text(headlineText)
-                .font(.main24)
+                .font(.system(size: 24, weight: .bold)) // Assuming .main24 is a custom font modifier
                 .multilineTextAlignment(.center)
                 .padding()
-            DatePicker("", selection: $selectedDate, displayedComponents: [.date])
+            DatePicker("", selection: $selectedDate, displayedComponents: datePickerType.components)
                 .datePickerStyle(WheelDatePickerStyle())
                 .labelsHidden()
                 .colorInvert()

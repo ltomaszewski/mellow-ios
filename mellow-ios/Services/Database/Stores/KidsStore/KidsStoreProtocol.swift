@@ -10,7 +10,11 @@ import Combine
 import SwiftData
 
 protocol KidsStoreProtocol {    
-    func add(name: String, dateOfBirth: Date, context: ModelContext) throws -> Kid
+    func add(name: String,
+             dateOfBirth: Date,
+             sleepTime: Date,
+             wakeTime: Date,
+             context: ModelContext) throws -> Kid
     func load(context: ModelContext) throws -> [Kid]
     func remove(_ kid: Kid, context: ModelContext) throws
     func removeAll(context: ModelContext) throws // Updated for clarity

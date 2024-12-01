@@ -9,10 +9,12 @@ import Foundation
 import Combine
 import SwiftData
 
-protocol KidsStoreProtocol {
-    var kids: CurrentValueSubject<[Kid], Never> { get }
-    
-    func add(name: String, dateOfBirth: Date, context: ModelContext) throws -> Kid
+protocol KidsStoreProtocol {    
+    func add(name: String,
+             dateOfBirth: Date,
+             sleepTime: Date,
+             wakeTime: Date,
+             context: ModelContext) throws -> Kid
     func load(context: ModelContext) throws -> [Kid]
     func remove(_ kid: Kid, context: ModelContext) throws
     func removeAll(context: ModelContext) throws // Updated for clarity

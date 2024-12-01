@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 // TODO: This view is simple, but the depenency on AppState made it hard to mock, It has to be worked out in the future to allow easier mock strategy for faster development
 struct ProfileView: View {
+    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appState: AppState
-    @State private var kids: [ProfileKidsListView.Kid] = []
-    @State private var currentKid: ProfileKidsListView.Kid?
+    @Query(sort: \Kid.dateOfBirth) var kids: [Kid]
+
+    @State private var currentKid: Kid?
     @State private var currentDate: Date = Date()
     @State private var hoursTracked: Int = 0
     @State private var dayStreak: Int = 0
@@ -22,7 +25,6 @@ struct ProfileView: View {
     @State private var sheetHeight: CGFloat = 300
     @State private var sheetWidth: CGFloat = 300
 
-    
     var body: some View {
         VStack(spacing: 24) {
             Rectangle()
@@ -49,31 +51,29 @@ struct ProfileView: View {
         }
         .background(Color.gunmetalBlue)
         .foregroundColor(.white)
+        .onChange(of: currentKid, perform: { newValue in
+            guard let newValue else { return }
+            name = newValue.name
+            age = newValue.ageFormatted
+            imageResource = .kidoHim
+            try? appState.databaseService.selectKid(id: newValue.id, context: modelContext)
+            showKidsList = false
+        })
         .onReceive(appState.databaseService.$dayStreak) { newValue in
             dayStreak = newValue
         }
         .onReceive(appState.databaseService.$hoursTracked) { newValue in
             hoursTracked = newValue
         }
-        .onReceive(appState.$currentKid) { newValue in
-            guard let firstKid = newValue else { return }
-            name = firstKid.name
-            imageResource = .kidoHim
-            currentKid = firstKid.toProfileKidsListViewItem()
-        }
-        .onReceive(appState.$kids,
-                   perform: { newValue in
-            kids = newValue.toProfileKidsListViewItems()
-        })
         .sheet(isPresented: $showKidsList,
                content: {
-            ProfileKidsListView(kids: $kids,
-                                selectedKid: $currentKid)
+            ProfileKidsListView(selectedKid: $currentKid)
             .getSize($sheetWidth, $sheetHeight)
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })
         .onAppear {
             age = appState.currentKid?.ageFormatted ?? "Something is wrong"
+            currentKid = appState.currentKid ?? fatalError("Kid not found") as! Kid
         }
     }
     
@@ -83,7 +83,7 @@ struct ProfileView: View {
     }
 }
 
-#Preview {
-    ProfileView()
-        .environmentObject(AppState())
-}
+//#Preview {
+//    ProfileView()
+//        .environmentObject(AppState())
+//}

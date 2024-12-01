@@ -11,7 +11,7 @@ struct ProfileSettingsKidEditView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
     @EnvironmentObject var appState: AppState
-    var kid: Kid
+    let kid: Kid
     
     // MARK: - State Properties
     @State private var name: String = ""
@@ -128,26 +128,38 @@ struct ProfileSettingsKidEditView: View {
     
     // MARK: - Functions
     private func handleSubmit() {
-        // Convert date to a readable format
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        let dobString = formatter.string(from: dateOfBirth)
-        
-        // For demonstration, we'll just print the values
-        print("Name: \(name)")
-        print("Date of Birth: \(dobString)")
         appState.databaseService.updateKid(kid: kid, name: name, dateOfBirth: dateOfBirth, context: modelContext)
     }
 }
 
 struct ProfileSettingsKidEditView_Previews: PreviewProvider {
     static var previews: some View {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd"
+        // Initialize a DateFormatter for the date of birth
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd"
         
-        // Create a sample Kid instance
-        let kid1 = Kid(name: "Alice", dateOfBirth: formatter.date(from: "2015/06/15")!)
+        // Create a sample date of birth
+        guard let dateOfBirth = dateFormatter.date(from: "2015/06/15") else {
+            fatalError("Failed to create date from string.")
+        }
         
+        // Initialize a Calendar instance to set specific times
+        let calendar = Calendar.current
+        
+        // Create sleepTime (e.g., 8:30 PM)
+        guard let sleepTime = calendar.date(bySettingHour: 20, minute: 30, second: 0, of: Date()) else {
+            fatalError("Failed to create sleepTime.")
+        }
+        
+        // Create wakeTime (e.g., 7:00 AM)
+        guard let wakeTime = calendar.date(bySettingHour: 7, minute: 0, second: 0, of: Date()) else {
+            fatalError("Failed to create wakeTime.")
+        }
+        
+        // Create a sample Kid instance with all required fields
+        let kid1 = Kid(name: "Alice", dateOfBirth: dateOfBirth, sleepTime: sleepTime, wakeTime: wakeTime)
+        
+        // Return the ProfileSettingsKidEditView with the sample Kid
         return ProfileSettingsKidEditView(kid: kid1)
             .environmentObject(AppState())
     }

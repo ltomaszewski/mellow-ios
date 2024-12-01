@@ -11,16 +11,12 @@ import SwiftData
 
 // TODO: Research app architecture where there is a single AppState shared across all screens, with sub-objects used by sub-screens in an intuitive way—something like Redux.
 class AppState: ObservableObject {
-    @Published var isOnboardingCompleted: Bool = false
-    @Published var showIntroView: Bool = true
-    
+    @Published var addNewKids: Bool = false
     @Published var currentKid: Kid?
     @Published var sleepSessions: [SleepSessionViewRepresentation] = []
     @Published var sleepSessionInProgress: SleepSessionViewRepresentation?
-    @Published var kids: [Kid] = []
 
     var databaseService = DatabaseService()
-    var onboardingStore = OnboardingPlanStore()
     var kidAgeInMonths : Int { currentKid?.ageInMonths ?? 0 }
     private let sleepManager: SleepManager = .init()
     private var cancellables: [AnyCancellable] = []
@@ -33,10 +29,7 @@ class AppState: ObservableObject {
         setupAppState()
     }
     
-    private func setupAppState() {
-        isOnboardingCompleted = onboardingStore.isOnboardingCompleted()
-        showIntroView = !isOnboardingCompleted
-        
+    private func setupAppState() {        
         databaseService
             .currentKid
             .filter { $0 != nil }
@@ -44,6 +37,7 @@ class AppState: ObservableObject {
                 guard let self else { return }
                 self.currentKid = kid
                 self.refreshSchedule()
+                self.addNewKids = false
             }
             .store(in: &cancellables)
         
@@ -60,17 +54,7 @@ class AppState: ObservableObject {
             }
             .store(in: &cancellables)
         
-        databaseService
-            .$kids
-            .assign(to: \.kids,
-                    on: self)
-            .store(in: &cancellables)
-        
         databaseService.objectWillChange
-            .sink { [weak self] _ in self?.objectWillChange.send() }
-            .store(in: &cancellables)
-        
-        onboardingStore.objectWillChange
             .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &cancellables)
         
@@ -85,14 +69,6 @@ class AppState: ObservableObject {
                 }
             }
             .store(in: &cancellables)
-    }
-    
-    func startIntro() {
-        showIntroView = true
-    }
-    
-    func completeIntro() {
-        showIntroView = false
     }
     
     func refreshSchedule() {
@@ -194,9 +170,7 @@ class AppState: ObservableObject {
 
     func reset(context: ModelContext) {
         // Reset onboarding
-        onboardingStore.resetOnboarding()
-        isOnboardingCompleted = false
-        showIntroView = true
+        ROnboardingState.removeFromUserDefaults()
 
         // Clear the database
         databaseService.removeAllData(context: context)

@@ -15,14 +15,18 @@ import SwiftlyBeautiful
 class Kid {
     @Attribute(.unique) var id: String
     var name: String
-    var dateOfBirth: Date?
+    var dateOfBirth: Date
     var isHim: Bool
+    var sleepTime: Date
+    var wakeTime: Date
     var sleepSessions: [SleepSession] = []
     
-    init(name: String, dateOfBirth: Date? = nil) {
+    init(name: String, dateOfBirth: Date, sleepTime: Date, wakeTime: Date) {
         self.id = UUID().uuidString
         self.name = name
         self.dateOfBirth = dateOfBirth
+        self.sleepTime = sleepTime
+        self.wakeTime = wakeTime
         self.isHim = true
     }
     
@@ -47,8 +51,8 @@ class Kid {
 }
 
 extension Kid {
-    func toProfileKidsListViewItem() -> ProfileKidsListView.Kid {
-        return ProfileKidsListView.Kid(
+    func toProfileKidsListViewItem() -> ProfileKidsListView.KidViewModel {
+        return ProfileKidsListView.KidViewModel(
             name: self.name,
             ageFormatted: self.ageFormatted,
             imageResource: .kidoHim,
@@ -58,7 +62,7 @@ extension Kid {
 }
 
 extension Array where Element == Kid {
-    func toProfileKidsListViewItems() -> [ProfileKidsListView.Kid] {
+    func toProfileKidsListViewItems() -> [ProfileKidsListView.KidViewModel] {
         return self.map { $0.toProfileKidsListViewItem() }
     }
 }

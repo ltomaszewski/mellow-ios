@@ -9,7 +9,9 @@ import SwiftUI
 import SwiftData
 
 struct ProfileSettingsView: View {
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
+    @EnvironmentObject var appState: AppState
     @Query(sort: \Kid.dateOfBirth) var kids: [Kid]
     
     @State private var isPushNotificationEnabled = false
@@ -71,7 +73,9 @@ struct ProfileSettingsView: View {
     // MARK: - Add Child Button View
     private var addChildButtonView: some View {
         Button(action: {
-            print("Add child")
+            withAnimation {
+                appState.addNewKids.toggle()
+            }
         }) {
             Text("Add child")
                 .font(.main16)
@@ -114,78 +118,6 @@ struct ProfileSettingsView: View {
     }
 }
 
-// MARK: - KidRowView
-struct KidRowView: View {
-    var kid: Kid
-    
-    var body: some View {
-        HStack(spacing: 16) {
-            Image(kid.isHim ? .kidoHim : .kidoHer) // Assuming different images based on `isHim`
-                .resizable()
-                .frame(width: 80, height: 80)
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(kid.name)
-                    .font(.main20)
-                    .foregroundColor(.white)
-                
-                Text(kid.ageFormatted)
-                    .font(.main14)
-                    .foregroundColor(.slateGray)
-            }
-            
-            Spacer()
-            
-            Image(.arrowRight)
-                .resizable()
-                .frame(width: 8, height: 14)
-        }
-        .padding(16)
-        .background(Color.gunmetalBlue)
-    }
-}
-
-// MARK: - PreviewProvider with @MainActor
-struct ProfileSettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileSettingsViewPreviewWrapper()
-            .previewLayout(.sizeThatFits)
-    }
-}
-
-@MainActor
-struct ProfileSettingsViewPreviewWrapper: View {
-    init() {
-        setupSampleData()
-    }
-
-    var body: some View {
-        ProfileSettingsView()
-            .modelContainer(sampleContainer)
-    }
-
-    // Create an in-memory ModelContainer with sample data
-    private let sampleContainer: ModelContainer = {
-        let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-        guard let container = try? ModelContainer(for: Kid.self, configurations: configuration) else {
-            fatalError("Failed to create ModelContainer")
-        }
-        return container
-    }()
-
-    // Function to insert sample kids into the main context
-    private func setupSampleData() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd"
-
-        // Create sample Kid instances
-        let kid1 = Kid(name: "Alice", dateOfBirth: formatter.date(from: "2015/06/15")!)
-        let kid2 = Kid(name: "Bob", dateOfBirth: formatter.date(from: "2013/09/23")!)
-        let kid3 = Kid(name: "Charlie", dateOfBirth: formatter.date(from: "2017/12/05")!)
-
-        // Insert sample kids into the main context
-        sampleContainer.mainContext.insert(kid1)
-        sampleContainer.mainContext.insert(kid2)
-        sampleContainer.mainContext.insert(kid3)
-    }
+#Preview {
+    ProfileSettingsViewPreviewWrapper()
 }

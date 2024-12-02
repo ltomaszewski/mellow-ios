@@ -10,7 +10,7 @@ import SwiftUI
 extension AddSleepView {
     struct SessionDelete: View {
         @Environment(\.modelContext) var modelContext
-        @EnvironmentObject var appState: AppState
+        @EnvironmentObject var appStateStore: RAppState.Store
 
         @Binding var session: SleepSessionViewRepresentation?
         @Binding var isPresented: Bool
@@ -25,8 +25,7 @@ extension AddSleepView {
                         .multilineTextAlignment(.leading)
                     Spacer()
                     Button {
-                        appState.databaseService.deleteSleepSession(sessionId: session!.id,
-                                                                    context: modelContext)
+                        appStateStore.dispatch(.sleepSessionOperation(.delete(session!.id), nil, modelContext))
                         session = nil
                         isPresented = false
                         presentationMode.wrappedValue.dismiss()

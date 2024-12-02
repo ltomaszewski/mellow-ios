@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftlyBeautiful
 
 // Current state of onboarding
 struct ROnboardingState: Codable {
@@ -112,71 +113,27 @@ extension ROnboardingState {
         }
     }
 }
-// ROnbardingState Store
-extension ROnboardingState {
-    class Store: ObservableObject {
-        @Published private(set) var state: ROnboardingState
-        private let reducer: Reducer = .init()
-        
-        init(state: ROnboardingState? = ROnboardingState.loadFromUserDefaults()) {
-            self.state = state ?? .init()
-        }
-        
-        func dispatch(_ action: ROnboardingState.Action) {
-            reducer.reduce(state: &state, action: action)
-            state.saveToUserDefaults()
-        }
-        
-        func removeStateFormUserDefaults() {
-            ROnboardingState.removeFromUserDefaults()
-            self.state = .init()
-        }
-    }
-}
-
-import SwiftUI
-
-// Binding for State and SwiftUI TODO: Export to Swift Macro
-extension ROnboardingState.Store {
-    var welcomeMessageShownBinding: Binding<Bool> {
-        .init(
-            get: { self.state.welcomeMessageShown },
-            set: { [weak self] _ in self?.dispatch(.welcomeMessageShown) }
-        )
-    }
-    
-    var childNameBinding: Binding<String> {
-        .init(
-            get: { self.state.childName },
-            set: { [weak self] name in self?.dispatch(.setChildName(name)) }
-        ) // TODO: Research If weak self is really needed here
-    }
-    
-    var kidAgeBinding: Binding<Date?> {
-        .init(
-            get: { self.state.kidDateOfBirth },
-            set: { [weak self] date in self?.dispatch(.setKidDateOfBirth(date)) }
-        )
-    }
-    
-    // **New Bindings for Sleep and Wake Times**
-    
-    /// Binding for "When Nina usually falls asleep?"
-    var sleepTimeBinding: Binding<Date?> {
-        .init(
-            get: { self.state.sleepTime },
-            set: { [weak self] date in self?.dispatch(.setSleepTime(date)) }
-        )
-    }
-    
-    /// Binding for "When Nina usually wakes up?"
-    var wakeTimeBinding: Binding<Date?> {
-        .init(
-            get: { self.state.wakeTime },
-            set: { [weak self] date in self?.dispatch(.setWakeTime(date)) }
-        )
-    }
-}
+//// ROnbardingState Store
+//extension ROnboardingState {
+//    class Store: ObservableObject {
+//        @Published private(set) var state: ROnboardingState
+//        private let reducer: Reducer = .init()
+//        
+//        init(state: ROnboardingState? = ROnboardingState.loadFromUserDefaults()) {
+//            self.state = state ?? .init()
+//        }
+//        
+//        func dispatch(_ action: ROnboardingState.Action) {
+//            reducer.reduce(state: &state, action: action)
+//            state.saveToUserDefaults()
+//        }
+//        
+//        func removeStateFormUserDefaults() {
+//            ROnboardingState.removeFromUserDefaults()
+//            self.state = .init()
+//        }
+//    }
+//}
 
 // TODO: Export Support for save to userdefaults to swiftMacro
 // Extension for UserDefaults functionality with Enhanced Debug Mode

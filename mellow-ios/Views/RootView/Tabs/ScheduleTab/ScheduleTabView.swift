@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ScheduleTabView: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var appStateStore: RAppState.Store
     @State var date: Date = Date.now.adjustToMidday()
     @State private var showAddSleepSession = false
     @State private var showEditSleepSession = false
@@ -37,7 +37,7 @@ struct ScheduleTabView: View {
             .dimmedBackground(isPresented: $showAddSleepSession)
             .dimmedBackground(isPresented: $showEditSleepSession)
 
-            if appState.sleepSessionInProgress == nil {
+            if appStateStore.state.sleepSessionInProgress == nil {
                 VStack(alignment: .trailing) {
                     Spacer()
                     HStack {
@@ -59,9 +59,9 @@ struct ScheduleTabView: View {
                 }
             }
         }
-        .showInProgressBarViewIfNeeded($appState.sleepSessionInProgress,
-                                       view: SleepSessionInProgressView(sleepSessionInProgress: $appState.sleepSessionInProgress,
-                                                                        endAction: appState.endSleepSessionInProgress(context:)))
+        .showInProgressBarViewIfNeeded(appStateStore.sleepSessionInProgressBinding,
+                                       view: SleepSessionInProgressView(sleepSessionInProgress: appStateStore.sleepSessionInProgressBinding,
+                                                                        endAction: { modelContext in appStateStore.dispatch(.endSleepSessionInProgress(modelContext))}))
         .onPreferenceChange(SleepSessionInProgressHeightPreferenceKey.self,
                             perform: { newValue in
             inProgressViewHeight = newValue.height
@@ -87,11 +87,11 @@ struct ScheduleTabView: View {
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })
         .onChange(of: date) { _, newValue in
-            appState.updateSelectedDate(newValue, force: false)
+            appStateStore.dispatch(.setSelectedDate(newValue))
         }
     }
 }
 
 #Preview {
-    ScheduleTabView().environmentObject(AppState())
+    ScheduleTabView()
 }

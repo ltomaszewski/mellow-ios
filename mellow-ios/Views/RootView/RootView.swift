@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct RootView: View {
-    @EnvironmentObject var appState: AppState
     @StateObject var viewModel = RootViewModel()
     @State var endSleepTriggered: Bool = false
     @State private var selectedItem: RootViewModel.TabItem = .schedule
@@ -18,9 +17,7 @@ struct RootView: View {
             TabView(selection: $selectedItem,
                     content:  {
                 Group {
-                    TodayTabView(onNextSessionButtonTapped: {
-                        print("Start next session")
-                    })
+                    TodayTabView()
                     .tabItem {
                         Label(RootViewModel.TabItem.today.name,
                               image: RootViewModel.TabItem.today.imageName)

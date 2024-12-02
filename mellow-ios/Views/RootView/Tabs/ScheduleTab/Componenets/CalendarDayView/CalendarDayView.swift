@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct CalendarDayView: View {
-    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var appStateStore: RAppState.Store
     @ObservedObject private(set) var viewModel: CalendarDayViewModel
     @Binding private var editSleepSession: SleepSessionViewRepresentation?
     @Binding private var showEditSleepSession: Bool
@@ -51,11 +51,11 @@ struct CalendarDayView: View {
                 }
             }
         }
-        .onReceive(appState.$sleepSessions, perform: { sessions in
-            viewModel.updateSleepSessionEntries(with: sessions)
+        .onReceive(appStateStore.$state, perform: { state in
+            viewModel.updateSleepSessionEntries(with: state.sleepSessions)
         })
         .onAppear {
-            viewModel.updateSleepSessionEntries(with: appState.sleepSessions)
+            viewModel.updateSleepSessionEntries(with: appStateStore.state.sleepSessions)
         }
     }
     

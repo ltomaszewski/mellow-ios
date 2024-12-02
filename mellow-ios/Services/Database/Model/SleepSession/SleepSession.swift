@@ -45,6 +45,7 @@ class SleepSession {
     }
 }
 
+@Printable
 enum SleepSessionType: String, CaseIterable {
     case nighttime = "Nighttime Sleep"
     case nap = "Nap"

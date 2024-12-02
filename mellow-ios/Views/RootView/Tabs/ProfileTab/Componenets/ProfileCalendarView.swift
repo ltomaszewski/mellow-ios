@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProfileCalendarView: View {
-    @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var appStateStore: RAppState.Store
     @Environment(\.modelContext) private var modelContext
     @Binding var currentDate: Date
     @StateObject var viewModel: ProfileCalendarViewModel
@@ -54,7 +54,7 @@ struct ProfileCalendarView: View {
                             let date = position - viewModel.startDayOffset + 1
                             if position >= viewModel.startDayOffset && date <= viewModel.numberOfDays {
                                 let isSelected = viewModel.isDateHighlighted(date,
-                                                                             appState: appState,
+                                                                             appState: appStateStore,
                                                                              context: modelContext)
                                 CalendarDateView(day: date, isSelected: isSelected)
                             } else {

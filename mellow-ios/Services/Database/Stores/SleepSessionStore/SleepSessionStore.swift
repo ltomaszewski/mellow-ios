@@ -10,27 +10,6 @@ import SwiftData
 import Combine
 
 struct SleepSessionStore: SleepSessionStoreProtocol {
-    let sleepSessions = CurrentValueSubject<[SleepSession], Never>([])
-    let hoursTracked = CurrentValueSubject<Int, Never>(0)
-    let dayStreak = CurrentValueSubject<Int, Never>(0)
-
-    func load(for kid: Kid, context: ModelContext) throws {
-        let kidUUID = kid.id
-        if let updatedKid = try Kid.query(
-            predicate: #Predicate { kidToCompare in
-                kidToCompare.id == kidUUID
-            },
-            sortBy: [],
-            context: context
-        ).first {
-            let sessions = updatedKid.sleepSessions
-            sleepSessions.send(sessions)
-            updateProperties(sessions: sessions)
-        } else {
-            throw NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "Kid not found"])
-        }
-    }
-    
     func rawLoad(for kid: Kid, context: ModelContext) throws -> [SleepSession] {
         let kidUUID = kid.id
         if let updatedKid = try Kid.query(
@@ -49,11 +28,6 @@ struct SleepSessionStore: SleepSessionStoreProtocol {
     func add(for kid: Kid, session: SleepSession, context: ModelContext) throws {
         try SleepSession.save(session, context: context)
         try Kid.update(id: kid.id, updateClosure: { $0.addSleepSession(session) }, context: context)
-        
-        var updatedSessions = sleepSessions.value
-        updatedSessions.append(session)
-        sleepSessions.send(updatedSessions)
-        updateProperties(sessions: updatedSessions)
     }
 
     func replace(for kid: Kid, sessionId: String, newSession: SleepSession, context: ModelContext) throws {
@@ -62,34 +36,22 @@ struct SleepSessionStore: SleepSessionStoreProtocol {
             currentSession.startDate = newSession.startDate
             currentSession.endDate = newSession.endDate
         }, context: context)
-
-        var updatedSessions = sleepSessions.value
-        if let index = updatedSessions.firstIndex(where: { $0.id == sessionId }) {
-            updatedSessions[index] = newSession
-            sleepSessions.send(updatedSessions)
-            updateProperties(sessions: updatedSessions)
-        } else {
-            throw NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "SleepSession not found in local array"])
-        }
     }
 
+    // TODO: Extend SwiftDataCRUD with simple fetch by id
     func delete(for kid: Kid, sessionId: String, context: ModelContext) throws {
-        var updatedSessions = sleepSessions.value
-        if let index = updatedSessions.firstIndex(where: { $0.id == sessionId }) {
-            let session = updatedSessions[index]
-            try SleepSession.delete(session, context: context)
-            try Kid.update(id: kid.id, updateClosure: { $0.removeSleepSession(session) }, context: context)
-
-            updatedSessions.remove(at: index)
-            sleepSessions.send(updatedSessions)
-            updateProperties(sessions: updatedSessions)
+        if let sessionToDelete = try SleepSession.query(
+            predicate: #Predicate { session in
+                session.id == sessionId
+            },
+            sortBy: [],
+            context: context
+        ).first {
+            try SleepSession.delete(sessionToDelete, context: context)
+            try Kid.update(id: kid.id, updateClosure: { $0.removeSleepSession(sessionToDelete) }, context: context)
         } else {
             throw NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "SleepSession not found in local array"])
         }
-    }
-
-    func hasSession(on date: Date) -> Bool {
-        return sleepSessions.value.hasSession(on: date)
     }
 
     func removeAll(for kid: Kid, context: ModelContext) throws {
@@ -106,27 +68,8 @@ struct SleepSessionStore: SleepSessionStoreProtocol {
                 try SleepSession.delete(session, context: context)
             }
             try Kid.update(id: kid.id, updateClosure: { $0.sleepSessions.removeAll() }, context: context)
-            
-            // Reset in-memory properties
-            sleepSessions.send([])
-            hoursTracked.send(0)
-            dayStreak.send(0)
         } else {
             throw NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "Kid not found"])
         }
-    }
-
-    private func updateProperties(sessions: [SleepSession]) {
-        let totalHours = Int(sessions.totalHours())
-        hoursTracked.send(totalHours)
-
-        let streak = sessions.numberOfDaysWithAtLeastOneSession()
-        dayStreak.send(streak)
-    }
-
-    func reset() {
-        hoursTracked.send(0)
-        dayStreak.send(0)
-        sleepSessions.send([])
     }
 }

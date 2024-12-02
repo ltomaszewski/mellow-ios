@@ -11,6 +11,7 @@ extension Array where Element == SleepSessionViewRepresentation {
     func hasSession(on date: Date) -> Bool {
         let calendar = Calendar.current
         for session in self {
+            guard !session.isScheduled else { continue }
             let sessionDayComponents = calendar.dateComponents([.year, .month, .day], from: session.startDate)
             let givenDayComponents = calendar.dateComponents([.year, .month, .day], from: date)
             if sessionDayComponents == givenDayComponents {

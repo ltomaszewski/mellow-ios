@@ -51,14 +51,14 @@ struct ProfileView: View {
         }
         .background(Color.gunmetalBlue)
         .foregroundColor(.white)
-        .onChange(of: currentKid, perform: { newValue in
+        .onChange(of: currentKid) { _, newValue in
             guard let newValue else { return }
             name = newValue.name
             age = newValue.ageFormatted
             imageResource = .kidoHim
-            appStateStore.dispatch(.setSelectedKid(newValue))
+            appStateStore.dispatch(.setSelectedKid(newValue, modelContext))
             showKidsList = false
-        })
+        }
         .onReceive(appStateStore.$state.map { $0.dayStreak }) { newValue in
             dayStreak = newValue
         }
@@ -73,7 +73,7 @@ struct ProfileView: View {
         })
         .onAppear {
             age = appStateStore.state.selectedKid?.ageFormatted ?? "Something is wrong"
-            currentKid = appStateStore.state.selectedKid ?? fatalError("Kid not found") as! Kid
+            currentKid = appStateStore.state.selectedKid
         }
     }
     

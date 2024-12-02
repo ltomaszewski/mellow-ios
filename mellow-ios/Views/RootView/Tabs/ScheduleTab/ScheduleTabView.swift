@@ -93,5 +93,5 @@ struct ScheduleTabView: View {
 }
 
 #Preview {
-    ScheduleTabView().environmentObject(AppState())
+    ScheduleTabView()
 }

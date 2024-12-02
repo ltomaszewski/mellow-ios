@@ -11,7 +11,7 @@ import SwiftData
 struct ProfileSettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
-    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var appStateStore: RAppState.Store
     @Query(sort: \Kid.dateOfBirth) var kids: [Kid]
     
     @State private var isPushNotificationEnabled = false
@@ -74,7 +74,7 @@ struct ProfileSettingsView: View {
     private var addChildButtonView: some View {
         Button(action: {
             withAnimation {
-                appState.addNewKids.toggle()
+                appStateStore.dispatch(.openAddKidOnboarding)
             }
         }) {
             Text("Add child")

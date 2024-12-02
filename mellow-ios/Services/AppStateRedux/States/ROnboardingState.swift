@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftlyBeautiful
 
 // Current state of onboarding
 struct ROnboardingState: Codable {

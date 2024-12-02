@@ -10,7 +10,7 @@ import SwiftUI
 struct ProfileSettingsKidEditView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
-    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var appStateStore: RAppState.Store
     let kid: Kid
     
     // MARK: - State Properties
@@ -43,7 +43,7 @@ struct ProfileSettingsKidEditView: View {
         }
         .onAppear {
             name = kid.name
-            dateOfBirth = kid.dateOfBirth ?? .now
+            dateOfBirth = kid.dateOfBirth
         }
     }
     
@@ -62,12 +62,9 @@ struct ProfileSettingsKidEditView: View {
     
     private var saveButton: some View {
         Button(action: {
-            appState
-                .databaseService
-                .updateKid(kid: kid,
-                           name: name,
-                           dateOfBirth: dateOfBirth,
-                           context: modelContext)
+            kid.name = name
+            kid.dateOfBirth = dateOfBirth
+            appStateStore.dispatch(.kidOperation(.update(kid.id), kid, modelContext))
             presentationMode.wrappedValue.dismiss()
         }) {
             Text("Save")
@@ -125,11 +122,6 @@ struct ProfileSettingsKidEditView: View {
         }
         .foregroundStyle(Color.white)
     }
-    
-    // MARK: - Functions
-    private func handleSubmit() {
-        appState.databaseService.updateKid(kid: kid, name: name, dateOfBirth: dateOfBirth, context: modelContext)
-    }
 }
 
 struct ProfileSettingsKidEditView_Previews: PreviewProvider {
@@ -161,6 +153,5 @@ struct ProfileSettingsKidEditView_Previews: PreviewProvider {
         
         // Return the ProfileSettingsKidEditView with the sample Kid
         return ProfileSettingsKidEditView(kid: kid1)
-            .environmentObject(AppState())
     }
 }

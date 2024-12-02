@@ -20,7 +20,7 @@ struct RAppState {
     
     init(onboardingState: ROnboardingState = .init(),
          selectedKid: Kid? = nil,
-         selectedDate: Date? = nil) {
+         selectedDate: Date = .now.adjustToMidday()) {
         self.onboardingState = onboardingState
         self.selectedKid = selectedKid
         self.selectedDate = selectedDate
@@ -41,13 +41,14 @@ extension RAppState {
         case load(ModelContext)
         case openAddKidOnboarding
         case onboarding(ROnboardingState.Action)
-        case setSelectedKid(Kid)
+        case setSelectedKid(Kid, ModelContext)
         case setSelectedDate(Date)
         case kidOperation(CRUDOperation, Kid, ModelContext)
         case sleepSessionOperation(CRUDOperation, SleepSession?, ModelContext)
         case endSleepSessionInProgress(ModelContext)
         case error(Error)
         case resetError
+        case refreshSchedule
     }
     
     enum CRUDOperation {
@@ -59,9 +60,12 @@ extension RAppState {
 
 // Action execution
 extension RAppState {
+    //TODO: Split to smaller reducers
     struct Reducer: ReducerProtocol {
         private let onboardingReducer: ROnboardingState.Reducer
-        private weak var databaseService: DatabaseService?
+        private var databaseService: DatabaseService?
+        private let sleepManager: SleepManager = .init()
+        
         private let isDebugMode: Bool
 
         init(onboardingReducer: ROnboardingState.Reducer, databaseService: DatabaseService, isDebugMode: Bool = true) {
@@ -78,16 +82,20 @@ extension RAppState {
                 handleOpenAddKidOnboarding(state: &state)
             case .onboarding(let action):
                 handleOnboardingAction(state: &state, action: action)
-            case .setSelectedKid(let kid):
+            case .setSelectedKid(let kid, let modelContext):
                 state.selectedKid = kid
+                updateSleepSessionState(state: &state, kid: kid, context: modelContext)
             case .setSelectedDate(let date):
                 state.selectedDate = date
+                handleRefreshSchedule(state: &state)
             case .kidOperation(let operation, let kid, let modelContext):
                 handleKidOperation(state: &state, operation: operation, kid: kid, context: modelContext)
             case .sleepSessionOperation(let operation, let sleepSession, let modelContext):
                 handleSleepSessionOperation(state: &state, operation: operation, sleepSession: sleepSession, context: modelContext)
             case .endSleepSessionInProgress(let modelContext):
                 handleEndSleepSessionInProgress(state: &state, context: modelContext)
+            case .refreshSchedule:
+                handleRefreshSchedule(state: &state)
             default:
                 fatalError("Unsupported action")
             }
@@ -99,7 +107,7 @@ extension RAppState {
 
         private func handleLoadAction(state: inout RAppState, context: ModelContext) {
             guard let databaseService = databaseService else {
-                print("DatabaseService is unavailable")
+                fatalError("DatabaseService is unavailable")
                 return
             }
             let kids = databaseService.loadKids(context: context)
@@ -146,18 +154,22 @@ extension RAppState {
 
         private func handleEndSleepSessionInProgress(state: inout RAppState, context: ModelContext) {
             guard let databaseService = databaseService else {
-                print("DatabaseService is unavailable")
-                return
+                fatalError("DatabaseService is unavailable")
             }
+            
+            guard let selectedKid = state.selectedKid else {
+                fatalError("SelectedKid is unavailable")
+            }
+            
             guard let sleepSessionInProgress = state.sleepSessionInProgress else {
                 return
             }
             // Create a new SleepSession object with the updated endDate
-            var updatedSession = sleepSessionInProgress.toSleepSession()
+            let updatedSession = sleepSessionInProgress.toSleepSession()
             updatedSession.endDate = Date()
 
             // Update the session in the database
-            databaseService.replaceSleepSession(sessionId: updatedSession.id, with: updatedSession, context: context)
+            databaseService.replaceSleepSession(sessionId: updatedSession.id, with: updatedSession, for: selectedKid, context: context)
 
             // Update state
             if let currentKid = state.selectedKid {
@@ -169,8 +181,7 @@ extension RAppState {
 
         private func createKid(state: inout RAppState, kid: Kid, context: ModelContext) {
             guard let databaseService = databaseService else {
-                print("DatabaseService is unavailable")
-                return
+                fatalError("DatabaseService is unavailable")
             }
             do {
                 let newKid = try databaseService.addKid(
@@ -182,6 +193,7 @@ extension RAppState {
                 )
                 state.selectedKid = newKid
                 state.currentViewState = .root
+                updateSleepSessionState(state: &state, kid: kid, context: context)
             } catch {
                 fatalError("Error saving kid in the database: \(error)")
             }
@@ -189,8 +201,7 @@ extension RAppState {
 
         private func updateKid(state: inout RAppState, kid: Kid, id: String, context: ModelContext) {
             guard let databaseService = databaseService else {
-                print("DatabaseService is unavailable")
-                return
+                fatalError("DatabaseService is unavailable")
             }
             let updatedKid = databaseService.updateKid(
                 kidId: id,
@@ -207,7 +218,7 @@ extension RAppState {
 
         private func createSleepSession(state: inout RAppState, sleepSession: SleepSession, context: ModelContext) {
             guard let databaseService = databaseService else {
-                print("DatabaseService is unavailable")
+                fatalError("DatabaseService is unavailable")
                 return
             }
             guard let currentKid = state.selectedKid else {
@@ -225,33 +236,33 @@ extension RAppState {
 
         private func updateSleepSession(state: inout RAppState, sleepSession: SleepSession, id: String, context: ModelContext) {
             guard let databaseService = databaseService else {
-                print("DatabaseService is unavailable")
+                fatalError("DatabaseService is unavailable")
                 return
             }
             guard let currentKid = state.selectedKid else {
                 print("No selected kid for updating a sleep session.")
                 return
             }
-            databaseService.replaceSleepSession(sessionId: id, with: sleepSession, context: context)
+            databaseService.replaceSleepSession(sessionId: id, with: sleepSession, for: currentKid, context: context)
             updateSleepSessionState(state: &state, kid: currentKid, context: context)
         }
 
         private func deleteSleepSession(state: inout RAppState, id: String, context: ModelContext) {
             guard let databaseService = databaseService else {
-                print("DatabaseService is unavailable")
+                fatalError("DatabaseService is unavailable")
                 return
             }
             guard let currentKid = state.selectedKid else {
                 print("No selected kid for deleting a sleep session.")
                 return
             }
-            databaseService.deleteSleepSession(sessionId: id, context: context)
+            databaseService.deleteSleepSession(sessionId: id, for: currentKid, context: context)
             updateSleepSessionState(state: &state, kid: currentKid, context: context)
         }
 
         private func updateSleepSessionState(state: inout RAppState, kid: Kid, context: ModelContext) {
             guard let databaseService = databaseService else {
-                print("DatabaseService is unavailable")
+                fatalError("DatabaseService is unavailable")
                 return
             }
             let sessions = databaseService.rawLoadSleepSessions(for: kid, context: context)
@@ -259,10 +270,63 @@ extension RAppState {
             state.sleepSessionInProgress = state.sleepSessions.first(where: { $0.isInProgress })
             state.hoursTracked = Int(sessions.totalHours())
             state.dayStreak = sessions.numberOfDaysWithAtLeastOneSession()
+            handleRefreshSchedule(state: &state)
         }
 
+        private func handleRefreshSchedule(state: inout RAppState) {
+            guard let currentKid = state.selectedKid else {
+                print("No selected kid to refresh schedule.")
+                return
+            }
+            
+            let ageInMonths = currentKid.ageInMonths
+            guard let selectedDate = state.selectedDate else {
+                print("No selected date to refresh schedule.")
+                return
+            }
+            
+            // Calculate the day before and the day after the selected date
+            let calendar = Calendar.current
+            guard let dayBefore = calendar.date(byAdding: .day, value: -1, to: selectedDate),
+                  let dayAfter = calendar.date(byAdding: .day, value: 1, to: selectedDate) else {
+                print("Failed to calculate adjacent dates.")
+                return
+            }
+            
+            // List of dates for which to generate schedules
+            let datesToGenerate = [dayBefore, selectedDate, dayAfter]
+            
+            // Generate new sleep schedules for each date
+            var allNewSleepSessions: [SleepSessionViewRepresentation] = []
+            
+            for date in datesToGenerate {
+                guard let newSchedule = sleepManager.getSleepSchedule(for: ageInMonths, baseDate: date) else {
+                    print("Failed to generate sleep schedule for date: \(date)")
+                    continue
+                }
+                let newSleepSessions = newSchedule.toViewRepresentations()
+                allNewSleepSessions.append(contentsOf: newSleepSessions)
+            }
+            
+            // Merge with existing sleep sessions
+            var mergedSleepSessions = state.sleepSessions
+            
+            // Remove existing scheduled sessions for the three dates to prevent duplicates
+            mergedSleepSessions.removeAll { session in
+                session.isScheduled && datesToGenerate.contains(where: { calendar.isDate(session.startDate, inSameDayAs: $0) })
+            }
+            
+            // Add new scheduled sessions
+            mergedSleepSessions.append(contentsOf: allNewSleepSessions)
+            
+            // Sort the sleep sessions by start date
+            mergedSleepSessions.sort { $0.startDate < $1.startDate }
+            
+            // Update the state
+            state.sleepSessions = mergedSleepSessions
+        }
+        
         // MARK: - Debug Mode
-
         private func debugPrint(state: RAppState) {
             guard isDebugMode else { return }
             let formatter = DateFormatter()

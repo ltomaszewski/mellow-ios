@@ -95,28 +95,33 @@ struct TodayTabView: View {
                 .font(.main14)
                 .foregroundStyle(.slateGray)
                 .padding(.bottom, 8)
-            VStack {
-                scoreDetailView(
-                    infoType: .score,
-                    score: viewModel.scoreSleep,
-                    rightText: viewModel.scoreSleepMark
-                )
-                scoreDetailView(
-                    infoType: .napTimes,
-                    rightScore: viewModel.napTimeScore
-                )
-                scoreDetailView(
-                    infoType: .sleepDuration,
-                    rightScore: viewModel.sleepDurationScore
-                )
-                scoreDetailView(
-                    infoType: .wakeupTime,
-                    rightScore: viewModel.wakeupTimeScore
-                )
-                scoreDetailView(
-                    infoType: .consistency,
-                    rightScore: viewModel.threeDayConsistencyScore
-                )
+            
+            if appStateStore.state.dayStreak > 1 {
+                VStack {
+                    scoreDetailView(
+                        infoType: .score,
+                        score: viewModel.scoreSleep,
+                        rightText: viewModel.scoreSleepMark
+                    )
+                    scoreDetailView(
+                        infoType: .napTimes,
+                        rightScore: viewModel.napTimeScore
+                    )
+                    scoreDetailView(
+                        infoType: .sleepDuration,
+                        rightScore: viewModel.sleepDurationScore
+                    )
+                    scoreDetailView(
+                        infoType: .wakeupTime,
+                        rightScore: viewModel.wakeupTimeScore
+                    )
+                    scoreDetailView(
+                        infoType: .consistency,
+                        rightScore: viewModel.threeDayConsistencyScore
+                    )
+                }
+            } else {
+                SleepScoreLockedView()
             }
         }
     }

@@ -98,6 +98,7 @@
 		6DDEC0362CC8173500D724FC /* PlanDateInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDEC0352CC8173500D724FC /* PlanDateInputView.swift */; };
 		6DDEC0382CC81A8300D724FC /* SleepManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDEC0372CC81A8300D724FC /* SleepManager.swift */; };
 		6DFB7BAA2CA585A60017FB05 /* DimmedBackgroundViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DFB7BA92CA585A60017FB05 /* DimmedBackgroundViewModifier.swift */; };
+		6DFF4AD02CFE417E00D29356 /* SleepScoreLockedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DFF4ACF2CFE417C00D29356 /* SleepScoreLockedView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -212,6 +213,7 @@
 		6DDEC0352CC8173500D724FC /* PlanDateInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanDateInputView.swift; sourceTree = "<group>"; };
 		6DDEC0372CC81A8300D724FC /* SleepManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepManager.swift; sourceTree = "<group>"; };
 		6DFB7BA92CA585A60017FB05 /* DimmedBackgroundViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimmedBackgroundViewModifier.swift; sourceTree = "<group>"; };
+		6DFF4ACF2CFE417C00D29356 /* SleepScoreLockedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepScoreLockedView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -489,6 +491,7 @@
 		6D7D2D192CBAA64C00FA4BCF /* Componenets */ = {
 			isa = PBXGroup;
 			children = (
+				6DFF4ACF2CFE417C00D29356 /* SleepScoreLockedView.swift */,
 				6D7D2D1A2CBAA80500FA4BCF /* SleepProgressBarView.swift */,
 				6D7D2D1C2CBAC8AC00FA4BCF /* NextSleepView.swift */,
 				6D9C6B452CC3D65F00B9D722 /* SessionInfoView.swift */,
@@ -916,6 +919,7 @@
 				6DDEC0382CC81A8300D724FC /* SleepManager.swift in Sources */,
 				6D183C872C6BB95C00E41F93 /* mellow_iosApp.swift in Sources */,
 				6D4E39B42CE019FD0012312D /* ProfileSettingsKidEditView.swift in Sources */,
+				6DFF4AD02CFE417E00D29356 /* SleepScoreLockedView.swift in Sources */,
 				6DA85F672C87277B0025988E /* ProfileView.swift in Sources */,
 				6D24DB862CFC726700D776EA /* ROnboardingState.swift in Sources */,
 				6DA85F5F2C870FF90025988E /* ProfileCalendarView.swift in Sources */,

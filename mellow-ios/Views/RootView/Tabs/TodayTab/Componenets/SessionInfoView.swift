@@ -91,7 +91,6 @@ extension SessionInfoView {
     }
 }
 
-
 // Preview section for SwiftUI previews, showcasing different configurations of the SleepScoreView
 #Preview {
     VStack {

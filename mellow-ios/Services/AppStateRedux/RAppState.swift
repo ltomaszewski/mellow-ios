@@ -254,13 +254,13 @@ extension RAppState {
                 print("No selected kid to refresh schedule.")
                 return
             }
-            
+
             let ageInMonths = currentKid.ageInMonths
             guard let selectedDate = state.selectedDate else {
                 print("No selected date to refresh schedule.")
                 return
             }
-            
+
             // Calculate the day before and the day after the selected date
             let calendar = Calendar.current
             guard let dayBefore = calendar.date(byAdding: .day, value: -1, to: selectedDate),
@@ -268,36 +268,41 @@ extension RAppState {
                 print("Failed to calculate adjacent dates.")
                 return
             }
-            
+
             // List of dates for which to generate schedules
             let datesToGenerate = [dayBefore, selectedDate, dayAfter]
-            
+
             // Generate new sleep schedules for each date
             var allNewSleepSessions: [SleepSessionViewRepresentation] = []
-            
+
             for date in datesToGenerate {
-                guard let newSchedule = sleepManager.getSleepSchedule(for: ageInMonths, baseDate: date) else {
+                // Find the wake-up time from the night sleep session ending on this date
+                let wakeUpTime = state.sleepSessions.nightSleepEnding(on: date)?.endDate
+
+                // Generate sleep schedule for this date
+                guard let newSchedule = sleepManager.getSleepSchedule(for: ageInMonths, wakeUpTime: wakeUpTime, baseDate: date) else {
                     print("Failed to generate sleep schedule for date: \(date)")
                     continue
                 }
+
                 let newSleepSessions = newSchedule.toViewRepresentations()
                 allNewSleepSessions.append(contentsOf: newSleepSessions)
             }
-            
+
             // Merge with existing sleep sessions
             var mergedSleepSessions = state.sleepSessions
-            
+
             // Remove existing scheduled sessions for the three dates to prevent duplicates
             mergedSleepSessions.removeAll { session in
                 session.isScheduled && datesToGenerate.contains(where: { calendar.isDate(session.startDate, inSameDayAs: $0) })
             }
-            
+
             // Add new scheduled sessions
             mergedSleepSessions.append(contentsOf: allNewSleepSessions)
-            
+
             // Sort the sleep sessions by start date
             mergedSleepSessions.sort { $0.startDate < $1.startDate }
-            
+
             // Update the state
             state.sleepSessions = mergedSleepSessions
         }

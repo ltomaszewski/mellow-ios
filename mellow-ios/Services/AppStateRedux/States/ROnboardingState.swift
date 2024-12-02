@@ -113,27 +113,7 @@ extension ROnboardingState {
         }
     }
 }
-//// ROnbardingState Store
-//extension ROnboardingState {
-//    class Store: ObservableObject {
-//        @Published private(set) var state: ROnboardingState
-//        private let reducer: Reducer = .init()
-//        
-//        init(state: ROnboardingState? = ROnboardingState.loadFromUserDefaults()) {
-//            self.state = state ?? .init()
-//        }
-//        
-//        func dispatch(_ action: ROnboardingState.Action) {
-//            reducer.reduce(state: &state, action: action)
-//            state.saveToUserDefaults()
-//        }
-//        
-//        func removeStateFormUserDefaults() {
-//            ROnboardingState.removeFromUserDefaults()
-//            self.state = .init()
-//        }
-//    }
-//}
+
 
 // TODO: Export Support for save to userdefaults to swiftMacro
 // Extension for UserDefaults functionality with Enhanced Debug Mode

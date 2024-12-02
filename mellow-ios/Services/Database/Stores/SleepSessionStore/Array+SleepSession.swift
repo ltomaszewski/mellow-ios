@@ -20,6 +20,33 @@ extension Array where Element == SleepSessionViewRepresentation {
         }
         return false
     }
+    
+    func nightSleepEnding(on date: Date) -> SleepSessionViewRepresentation? {
+        let calendar = Calendar.current
+        
+        // Find the start of the day for the input date
+        let startOfDay = calendar.startOfDay(for: date)
+        
+        return self.first { session in
+            // Check if the session is of type .nightSleep
+            guard session.type == .nighttime else {
+                return false
+            }
+            
+            // Ensure the session ended on the given date
+            guard let endDate = session.endDate, calendar.isDate(endDate, inSameDayAs: startOfDay) else {
+                return false
+            }
+            
+            // Ensure the session started the day before
+            let dayBefore = calendar.date(byAdding: .day, value: -1, to: startOfDay)
+            guard let startDate = dayBefore, calendar.isDate(session.startDate, inSameDayAs: startDate) else {
+                return false
+            }
+            
+            return true
+        }
+    }
 }
 
 extension Array where Element == SleepSession {

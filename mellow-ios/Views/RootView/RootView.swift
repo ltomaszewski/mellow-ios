@@ -17,9 +17,7 @@ struct RootView: View {
             TabView(selection: $selectedItem,
                     content:  {
                 Group {
-                    TodayTabView(onNextSessionButtonTapped: {
-                        print("Start next session")
-                    })
+                    TodayTabView()
                     .tabItem {
                         Label(RootViewModel.TabItem.today.name,
                               image: RootViewModel.TabItem.today.imageName)

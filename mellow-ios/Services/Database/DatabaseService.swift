@@ -80,12 +80,13 @@ class DatabaseService: ObservableObject {
         
         // Create a new SleepSession for last night's sleep
         let sleepSession = SleepSession(startDate: sleepDate, endDate: wakeDate, type: "Night Sleep")
-        
-        // Associate the SleepSession with the Kid
-        newKid.addSleepSession(sleepSession)
+    
         
         // Save the SleepSession first (if it's a separate entity)
         try SleepSession.save(sleepSession, context: context)
+        
+        // Associate the SleepSession with the Kid
+        newKid.addSleepSession(sleepSession)
         
         // Save the Kid to the context
         try Kid.save(newKid, context: context)

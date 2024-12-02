@@ -13,7 +13,6 @@ struct TodayTabView: View {
     @State var endSleepTriggered: Bool = false
 
     @StateObject var viewModel: TodayTabViewModel = .init()
-    var onNextSessionButtonTapped: () -> Void
     
     @State var inProgressViewHeight: CGFloat = 0.0
 
@@ -85,7 +84,9 @@ struct TodayTabView: View {
             infoType: .nextSession,
             scoreText: viewModel.nextSleepText,
             buttonImage: .buttonStartnow,
-            buttonAction: onNextSessionButtonTapped)
+            buttonAction: {
+                appStateStore.dispatch(.startSleepSessionInProgress(modelContext))
+            })
     }
 
     private var sleepScoreSection: some View {
@@ -149,7 +150,5 @@ struct TodayTabView: View {
 }
 
 #Preview {
-    TodayTabView {
-        print("Start next session now")
-    }
+    TodayTabView()
 }

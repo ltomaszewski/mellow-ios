@@ -53,6 +53,9 @@ struct CalendarDayView: View {
         }
         .onReceive(appStateStore.$state, perform: { state in
             viewModel.updateSleepSessionEntries(with: state.sleepSessions)
+            for sleepSession in viewModel.sleepSessionsEntries {
+                print(sleepSession)
+            }
         })
         .onAppear {
             viewModel.updateSleepSessionEntries(with: appStateStore.state.sleepSessions)
@@ -90,10 +93,8 @@ struct CalendarDayView: View {
     
     private func sleepSessionEntry(for model: SleepSessionViewModel) -> some View {
         VStack {
-            HStack {
-                SleepSessionEntryView(model: model)
-                    .frame(height: model.height)
-            }
+            SleepSessionEntryView(model: model)
+            .frame(height: model.height)
             .padding(.top, model.topOffset)
             .padding(.horizontal, 4)
             .padding(.leading, 72)

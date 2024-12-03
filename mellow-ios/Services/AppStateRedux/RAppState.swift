@@ -69,7 +69,7 @@ extension RAppState {
         
         private let isDebugMode: Bool
 
-        init(onboardingReducer: ROnboardingState.Reducer, databaseService: DatabaseService, isDebugMode: Bool = true) {
+        init(onboardingReducer: ROnboardingState.Reducer, databaseService: DatabaseService, isDebugMode: Bool = false) {
             self.onboardingReducer = onboardingReducer
             self.databaseService = databaseService
             self.isDebugMode = isDebugMode
@@ -289,6 +289,26 @@ extension RAppState {
                 allNewSleepSessions.append(contentsOf: newSleepSessions)
             }
 
+            // Extract existing saved sleep sessions (not scheduled)
+            let savedSleepSessions = state.sleepSessions.filter { !$0.isScheduled }
+
+            // Function to check if two date ranges overlap
+            func sessionsOverlap(_ session1: SleepSessionViewRepresentation, _ session2: SleepSessionViewRepresentation) -> Bool {
+                guard let session1EndDate = session1.endDate, let session2EndDate = session2.endDate else { return false }
+                return session1.startDate < session2EndDate && session2.startDate < session1EndDate
+            }
+
+            // Filter out new scheduled sessions that overlap with any saved session
+            let filteredNewSleepSessions = allNewSleepSessions.filter { newSession in
+                !savedSleepSessions.contains { savedSession in
+                    sessionsOverlap(newSession, savedSession)
+                }
+            }
+
+            if filteredNewSleepSessions.count < allNewSleepSessions.count {
+                print("Some scheduled sessions were excluded due to overlaps with saved sessions.")
+            }
+
             // Merge with existing sleep sessions
             var mergedSleepSessions = state.sleepSessions
 
@@ -297,8 +317,8 @@ extension RAppState {
                 session.isScheduled && datesToGenerate.contains(where: { calendar.isDate(session.startDate, inSameDayAs: $0) })
             }
 
-            // Add new scheduled sessions
-            mergedSleepSessions.append(contentsOf: allNewSleepSessions)
+            // Add the filtered new scheduled sessions
+            mergedSleepSessions.append(contentsOf: filteredNewSleepSessions)
 
             // Sort the sleep sessions by start date
             mergedSleepSessions.sort { $0.startDate < $1.startDate }

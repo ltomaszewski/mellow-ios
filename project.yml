@@ -49,6 +49,7 @@ targets:
           - gothamrnd_light.otf
           - gothamrnd_medium.otf
           - gothamrnd_bold.otf
+        ITSAppUsesNonExemptEncryption: NO
   mellow-iosTests:
     type: bundle.unit-test
     platform: iOS

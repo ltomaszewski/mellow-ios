@@ -34,6 +34,15 @@ targets:
     info:
       path: mellow-ios/Info.plist
       properties:
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
         UILaunchScreen:
           UIImageName: ""
         UIAppFonts:
@@ -86,13 +95,25 @@ schemes:
     build:
       targets:
         mellow-ios: all
-        mellow-iosTests: all
-        mellow-iosUITests: all
     test:
       targets:
-        - target: mellow-iosTests
-        - target: mellow-iosUITests
-    run:
-      configuration: Debug
+        - name: mellow-iosTests
+          parallelizable: true
+          randomExecutionOrder: false
+      run:
+        config: Debug
     archive:
-      configuration: Release
+      config: Release
+  mellow-iosUITests:
+    build:
+      targets:
+        mellow-ios: all
+    test:
+      targets:
+        - name: mellow-iosUITests
+          parallelizable: true
+          randomExecutionOrder: false
+      run:
+        config: Debug
+    archive:
+      config: Release

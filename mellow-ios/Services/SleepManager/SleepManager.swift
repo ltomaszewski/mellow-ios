@@ -27,12 +27,7 @@ class SleepManager {
     
     /// Returns an array of scheduled sleep sessions (naps and night sleep) based on the child's age and either wake-up time or base date.
     /// Validation: Either wakeUpTime or baseDate must be provided.
-    func getSleepSchedule(for ageInMonths: Int, wakeUpTime: Date? = nil, baseDate: Date? = nil) -> [ScheduledSleepSession]? {        
-        // Validation: Ensure either wakeUpTime or baseDate is provided
-        guard let wakeTime = wakeUpTime ?? baseDate else {
-            print("Error: Either wakeUpTime or baseDate must be provided.")
-            return nil
-        }
+    func getSleepSchedule(for ageInMonths: Int, wakeUpTime: Date? = nil, baseDate: Date? = nil) -> [ScheduledSleepSession]? {
         
         // If no wake-up time is provided, use the ideal wake-up time calculated from the baseDate.
         let wakeUpTime = wakeUpTime ?? getIdealWakeUpTime(for: ageInMonths, baseDate: baseDate)

@@ -73,10 +73,9 @@ extension OnboardingState {
         case welcomeMessageShown
         case setChildName(String)
         case setKidDateOfBirth(Date?)
-        
-        // New actions for sleep and wake times
         case setSleepTime(Date?)
         case setWakeTime(Date?)
+        case close
     }
 }
 
@@ -86,8 +85,7 @@ extension OnboardingState {
         !childName.isEmpty &&
         kidDateOfBirth != nil &&
         sleepTime != nil &&
-        wakeTime != nil &&
-        numberOfNaps > 0
+        wakeTime != nil
     }
 }
 
@@ -116,6 +114,7 @@ extension OnboardingState {
                 
             case .setWakeTime(let date):
                 state.wakeTime = date
+            case .close: break
             }
             
             // After handling any action, check if onboarding is completed

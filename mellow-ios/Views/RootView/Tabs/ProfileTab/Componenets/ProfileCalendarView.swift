@@ -101,15 +101,21 @@ struct CalendarDateView: View {
     }
 }
 
-#Preview(body: {
+
+#Preview {
+    // Mock AppState for preview
+    let mockAppStateStore = AppState.Store(state: .init(),
+                                           databaseService: DatabaseService())
+    
     VStack {
         Spacer()
         ProfileCalendarView(
-            currentDate: .init(get: { .now }, set: { _ in }),
+            currentDate: .constant(Date()),
             highlightedDates: [23, 24, 25, 26, 28]
         )
+        .environmentObject(mockAppStateStore)
         .padding(16)
         Spacer()
     }
     .background(Color.gunmetalBlue)
-})
+}

@@ -10,8 +10,8 @@ import SwiftUI
 struct OnboardingView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appStateStore: AppState.Store
-    @Binding var onboardingCompleted: Bool
-
+    @State var onboardingSubmitted: Bool = false
+    
     var body: some View {
         VStack {
             ProgressBar(value: appStateStore.state.onboardingState.progress)
@@ -35,10 +35,13 @@ struct OnboardingView: View {
             } else if appStateStore.state.onboardingState.wakeTime == nil {
                 wakeTimeView
                     .transition(.push(from: .trailing))
+            } else if appStateStore.state.onboardingState.completed {
+                OnboardingCompletedView(beginTrigger: $onboardingSubmitted)
+                    .transition(.push(from: .trailing))
             }
         }
         .background(Color.gunmetalBlue) // Ensure Color.gunmetalBlue is defined in your assets or extensions
-        .onChange(of: appStateStore.state.onboardingState.completed) { _, completed in
+        .onChange(of: onboardingSubmitted) { _, completed in
             if completed {
                 // Safely unwrap all required fields
                 guard let dateOfBirth = appStateStore.state.onboardingState.kidDateOfBirth,
@@ -51,10 +54,6 @@ struct OnboardingView: View {
                 
                 let name = appStateStore.state.onboardingState.childName
                 appStateStore.dispatch(.kidOperation(.create, Kid(name: name, dateOfBirth: dateOfBirth, sleepTime: sleepTime, wakeTime: wakeTime), modelContext))
-                
-                withAnimation {
-                    onboardingCompleted = true
-                }
             }
         }
     }
@@ -128,7 +127,7 @@ struct OnboardingView: View {
     @Previewable @State var appStateStore: AppState.Store = .init(state: .init(onboardingState: .init()),
                                                                   databaseService: DatabaseService())
     
-    OnboardingView(onboardingCompleted: .init(get: { false }, set: { _ in }))
+    OnboardingView()
         .environmentObject(appStateStore)
         .modelContainer(.inMemoryContainer(for: Kid.self))
 }

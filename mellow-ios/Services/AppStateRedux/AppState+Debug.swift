@@ -10,6 +10,8 @@ import Foundation
 extension OnboardingState.Action: CustomStringConvertible {
     var description: String {
         switch self {
+        case .close:
+            return "Close"
         case .welcomeMessageShown:
             return "Welcome message shown"
         case .setChildName(let name):

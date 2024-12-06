@@ -68,13 +68,13 @@ extension AppState {
         private let sleepManager: SleepManager = .init()
         
         private let isDebugMode: Bool
-
+        
         init(onboardingReducer: OnboardingState.Reducer, databaseService: DatabaseService, isDebugMode: Bool = true) {
             self.onboardingReducer = onboardingReducer
             self.databaseService = databaseService
             self.isDebugMode = isDebugMode
         }
-
+        
         func reduce(state: inout AppState, action: AppState.Action) {
             switch action {
             case .load(let context):
@@ -82,7 +82,12 @@ extension AppState {
             case .openAddKidOnboarding:
                 handleOpenAddKidOnboarding(state: &state)
             case .onboarding(let action):
-                handleOnboardingAction(state: &state, action: action)
+                switch action {
+                case .close:
+                    state.currentViewState = .root
+                default:
+                    handleOnboardingAction(state: &state, action: action)
+                }
             case .setSelectedKid(let kid, let modelContext):
                 state.selectedKid = kid
                 updateSleepSessionState(state: &state, kid: kid, context: modelContext)
@@ -105,13 +110,13 @@ extension AppState {
             default:
                 fatalError("Unsupported action")
             }
-
+            
             debugPrint(item: action)
-            debugPrint(state: state)
+//            debugPrint(state: state)
         }
-
+        
         // MARK: - Helper Methods
-
+        
         private func handleLoadAction(state: inout AppState, context: ModelContext) {
             let kids = databaseService.loadKids(context: context)
             state.currentViewState = kids.isEmpty ? .intro : .root
@@ -120,17 +125,17 @@ extension AppState {
                 updateSleepSessionState(state: &state, kid: kid, context: context)
             }
         }
-
+        
         private func handleOpenAddKidOnboarding(state: inout AppState) {
             OnboardingState.removeFromUserDefaults()
             state.onboardingState = .init()
             state.currentViewState = .onboarding
         }
-
+        
         private func handleOnboardingAction(state: inout AppState, action: OnboardingState.Action) {
             onboardingReducer.reduce(state: &state.onboardingState, action: action)
         }
-
+        
         private func handleKidOperation(state: inout AppState, operation: CRUDOperation, kid: Kid, context: ModelContext) {
             switch operation {
             case .create:
@@ -141,7 +146,7 @@ extension AppState {
                 fatalError("Delete kid is not supported")
             }
         }
-
+        
         private func handleSleepSessionOperation(state: inout AppState, operation: CRUDOperation, sleepSession: SleepSession?, context: ModelContext) {
             switch operation {
             case .create:
@@ -154,7 +159,7 @@ extension AppState {
                 deleteSleepSession(state: &state, id: id, context: context)
             }
         }
-
+        
         private func handleEndSleepSessionInProgress(state: inout AppState, context: ModelContext) {
             guard let selectedKid = state.selectedKid else {
                 fatalError("SelectedKid is unavailable")
@@ -166,18 +171,18 @@ extension AppState {
             // Create a new SleepSession object with the updated endDate
             let updatedSession = sleepSessionInProgress.toSleepSession()
             updatedSession.endDate = Date()
-
+            
             // Update the session in the database
             databaseService.replaceSleepSession(sessionId: updatedSession.id, with: updatedSession, for: selectedKid, context: context)
-
+            
             // Update state
             if let currentKid = state.selectedKid {
                 updateSleepSessionState(state: &state, kid: currentKid, context: context)
             }
         }
-
+        
         // MARK: - Kid Operations
-
+        
         private func createKid(state: inout AppState, kid: Kid, context: ModelContext) {
             do {
                 let newKid = try databaseService.addKid(
@@ -194,7 +199,7 @@ extension AppState {
                 fatalError("Error saving kid in the database: \(error)")
             }
         }
-
+        
         private func updateKid(state: inout AppState, kid: Kid, id: String, context: ModelContext) {
             let updatedKid = databaseService.updateKid(
                 kidId: id,
@@ -206,9 +211,9 @@ extension AppState {
                 state.selectedKid = updatedKid
             }
         }
-
+        
         // MARK: - Sleep Session Operations
-
+        
         private func createSleepSession(state: inout AppState, sleepSession: SleepSession, context: ModelContext) {
             guard let currentKid = state.selectedKid else {
                 print("No selected kid for adding a sleep session.")
@@ -222,7 +227,7 @@ extension AppState {
             databaseService.addSleepSession(session: newSession, kid: currentKid, context: context)
             updateSleepSessionState(state: &state, kid: currentKid, context: context)
         }
-
+        
         private func updateSleepSession(state: inout AppState, sleepSession: SleepSession, id: String, context: ModelContext) {
             guard let currentKid = state.selectedKid else {
                 print("No selected kid for updating a sleep session.")
@@ -231,7 +236,7 @@ extension AppState {
             databaseService.replaceSleepSession(sessionId: id, with: sleepSession, for: currentKid, context: context)
             updateSleepSessionState(state: &state, kid: currentKid, context: context)
         }
-
+        
         private func deleteSleepSession(state: inout AppState, id: String, context: ModelContext) {
             guard let currentKid = state.selectedKid else {
                 print("No selected kid for deleting a sleep session.")
@@ -240,7 +245,7 @@ extension AppState {
             databaseService.deleteSleepSession(sessionId: id, for: currentKid, context: context)
             updateSleepSessionState(state: &state, kid: currentKid, context: context)
         }
-
+        
         private func updateSleepSessionState(state: inout AppState, kid: Kid, context: ModelContext) {
             let sessions = databaseService.rawLoadSleepSessions(for: kid, context: context)
             state.sleepSessions = sessions.map { $0.toViewRepresentation() }
@@ -249,19 +254,19 @@ extension AppState {
             state.dayStreak = sessions.numberOfDaysWithAtLeastOneSession()
             handleRefreshSchedule(state: &state)
         }
-
+        
         private func handleRefreshSchedule(state: inout AppState) {
             guard let currentKid = state.selectedKid else {
                 print("No selected kid to refresh schedule.")
                 return
             }
-
+            
             let ageInMonths = currentKid.ageInMonths
             guard let selectedDate = state.selectedDate else {
                 print("No selected date to refresh schedule.")
                 return
             }
-
+            
             // Calculate the day before and the day after the selected date
             let calendar = Calendar.current
             guard let dayBeforeBefore = calendar.date(byAdding: .day, value: -2, to: selectedDate),
@@ -271,57 +276,57 @@ extension AppState {
                 print("Failed to calculate adjacent dates.")
                 return
             }
-
+            
             // List of dates for which to generate schedules
             let datesToGenerate = [dayBeforeBefore, dayBefore, selectedDate, dayAfter, dayAfterAfter]
-
+            
             // Generate new sleep schedules for each date
             var allNewSleepSessions: [SleepSessionViewRepresentation] = []
-
+            
             for date in datesToGenerate {
                 // Find the wake-up time from the night sleep session ending on this date
                 let wakeUpTime = state.sleepSessions.nightSleepEnding(on: date)?.endDate
-
+                
                 // Generate sleep schedule for this date
                 guard let newSchedule = sleepManager.getSleepSchedule(for: ageInMonths, wakeUpTime: wakeUpTime, baseDate: date) else {
                     print("Failed to generate sleep schedule for date: \(date)")
                     continue
                 }
-
+                
                 let newSleepSessions = newSchedule.toViewRepresentations()
                 allNewSleepSessions.append(contentsOf: newSleepSessions)
             }
-
+            
             // Extract existing saved sleep sessions (not scheduled)
             let savedSleepSessions = state.sleepSessions.filter { !$0.isScheduled }
-
+            
             // Function to check if two date ranges overlap
             func sessionsOverlap(_ session1: SleepSessionViewRepresentation, _ session2: SleepSessionViewRepresentation) -> Bool {
                 guard let session1EndDate = session1.endDate, let session2EndDate = session2.endDate else { return false }
                 return session1.startDate < session2EndDate && session2.startDate < session1EndDate
             }
-
+            
             // Filter out new scheduled sessions that overlap with any saved session
             let filteredNewSleepSessions = allNewSleepSessions.filter { newSession in
                 !savedSleepSessions.contains { savedSession in
                     sessionsOverlap(newSession, savedSession)
                 }
             }
-
+            
             // Merge with existing sleep sessions
             var mergedSleepSessions = state.sleepSessions
-
+            
             // Remove existing scheduled sessions for the three dates to prevent duplicates
             mergedSleepSessions.removeAll { session in
                 session.isScheduled && datesToGenerate.contains(where: { calendar.isDate(session.startDate, inSameDayAs: $0) })
             }
-
+            
             // Add the filtered new scheduled sessions
             mergedSleepSessions.append(contentsOf: filteredNewSleepSessions)
-
+            
             // Sort the sleep sessions by start date
             mergedSleepSessions.sort { $0.startDate < $1.startDate }
-
+            
             // Update the state
             state.sleepSessions = mergedSleepSessions
         }

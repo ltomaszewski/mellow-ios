@@ -10,8 +10,6 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var appStateStore: AppState.Store
     @Environment(\.modelContext) private var modelContext
-    
-    @State private var onboardingCompleted: Bool = false
 
     var body: some View {
         VStack {
@@ -24,7 +22,7 @@ struct ContentView: View {
                     }
                 }
             case .onboarding:
-                OnboardingView(onboardingCompleted: $onboardingCompleted)
+                OnboardingView()
             case .root:
                 RootView().transition(.push(from: .bottom))
             }

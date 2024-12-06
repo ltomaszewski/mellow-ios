@@ -82,11 +82,11 @@ struct TodayTabView: View {
     private var nextSessionView: some View {
         SessionInfoView(
             infoType: .nextSession,
-            scoreText: viewModel.nextSleepText,
-            buttonImage: .buttonStartnow,
-            buttonAction: {
+            leftScoreText: viewModel.nextSleepText,
+            rightContent: [.button(image: ImageResource.buttonStartnow) {
                 appStateStore.dispatch(.startSleepSessionInProgress(modelContext))
-            })
+            }]
+        )
     }
 
     private var sleepScoreSection: some View {
@@ -145,11 +145,17 @@ struct TodayTabView: View {
         rightText: String? = nil,
         rightScore: Int? = nil
     ) -> some View {
-        SessionInfoView(
+        // Construct the array of right-side content items based on provided parameters
+        let rightContent: [SessionInfoView.RightContentItem] = [
+            rightText.map(SessionInfoView.RightContentItem.text),
+            rightScore.map(SessionInfoView.RightContentItem.score)
+        ]
+        .compactMap { $0 } // Remove any nil values
+        
+        return SessionInfoView(
             infoType: infoType,
-            score: score,
-            rightText: rightText,
-            rightScore: rightScore
+            leftScore: score,
+            rightContent: rightContent.isEmpty ? nil : rightContent
         )
     }
 }

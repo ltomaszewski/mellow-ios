@@ -10,7 +10,7 @@ import SwiftUI
 struct ProfileSettingsKidEditView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
-    @EnvironmentObject var appStateStore: RAppState.Store
+    @EnvironmentObject var appStateStore: AppState.Store
     let kid: Kid
     
     // MARK: - State Properties

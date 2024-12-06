@@ -28,7 +28,7 @@ class TodayTabViewModel: ObservableObject {
 
     // MARK: - onAppear Method
 
-    func onAppear(_ appState: RAppState.Store, context: ModelContext) {
+    func onAppear(_ appState: AppState.Store, context: ModelContext) {
         setupBindings(appState)
         
         // Compute kidAgeInMonths
@@ -47,14 +47,14 @@ class TodayTabViewModel: ObservableObject {
     
     // MARK: - Data Fetching
 
-    private func fetchTodayData(_ appState: RAppState.Store) {
+    private func fetchTodayData(_ appState: AppState.Store) {
         // Set the sleep goal based on the kid's age or app settings
         sleepGoal = Float(sleepManager.getIdealSleepHours(for: kidAgeInMonths))
         updateProgress()
         calculateSleepScores(from: appState.state)
     }
 
-    private func setupBindings(_ appState: RAppState.Store) {
+    private func setupBindings(_ appState: AppState.Store) {
         // Bind total sleep time and calculate progress
         appState
             .$state
@@ -88,7 +88,7 @@ class TodayTabViewModel: ObservableObject {
         progress = min(totalAsleep / sleepGoal, 1.0)
     }
 
-    private func calculateSleepScores(from state: RAppState) {
+    private func calculateSleepScores(from state: AppState) {
         let sessions = state.sleepSessions
         
         // Calculate individual scores
@@ -106,7 +106,7 @@ class TodayTabViewModel: ObservableObject {
 
     // MARK: - Scoring Calculations
 
-    private func calculateNextSleep(for state: RAppState) {
+    private func calculateNextSleep(for state: AppState) {
         // Get the current date and time
         let currentDate = Date()
 

@@ -11,7 +11,7 @@ import SwiftData
 struct ProfileSettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
-    @EnvironmentObject var appStateStore: RAppState.Store
+    @EnvironmentObject var appStateStore: AppState.Store
     @Query(sort: \Kid.dateOfBirth) var kids: [Kid]
     
     @State private var isPushNotificationEnabled = false

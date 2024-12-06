@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject private var appStateStore: RAppState.Store
+    @EnvironmentObject private var appStateStore: AppState.Store
     @Environment(\.modelContext) private var modelContext
     
     @State private var onboardingCompleted: Bool = false
@@ -24,7 +24,7 @@ struct ContentView: View {
                     }
                 }
             case .onboarding:
-                ROnboardingView(onboardingCompleted: $onboardingCompleted)
+                OnboardingView(onboardingCompleted: $onboardingCompleted)
             case .root:
                 RootView().transition(.push(from: .bottom))
             }

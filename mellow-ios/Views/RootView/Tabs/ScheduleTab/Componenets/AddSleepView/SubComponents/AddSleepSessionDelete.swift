@@ -10,10 +10,9 @@ import SwiftUI
 extension AddSleepView {
     struct SessionDelete: View {
         @Environment(\.modelContext) var modelContext
-        @EnvironmentObject var appStateStore: RAppState.Store
+        @EnvironmentObject var appStateStore: AppState.Store
 
-        @Binding var session: SleepSessionViewRepresentation?
-        @Binding var isPresented: Bool
+        let session: SleepSessionViewRepresentation?
         var presentationMode: Binding<PresentationMode>
 
         var body: some View {
@@ -26,8 +25,6 @@ extension AddSleepView {
                     Spacer()
                     Button {
                         appStateStore.dispatch(.sleepSessionOperation(.delete(session!.id), nil, modelContext))
-                        session = nil
-                        isPresented = false
                         presentationMode.wrappedValue.dismiss()
                     } label: {
                         Image(.trash)

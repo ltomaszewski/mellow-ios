@@ -116,7 +116,7 @@ class SleepManager {
     }
     
     /// Provides nap durations based on the child's age.
-    private func getNapDurations(for ageInMonths: Int) -> [(hours: Int, minutes: Int)] {
+    func getNapDurations(for ageInMonths: Int) -> [(hours: Int, minutes: Int)] {
         switch ageInMonths {
         case 1:
             return [(1, 0), (1, 0), (1, 0)]

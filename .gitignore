@@ -1,0 +1,91 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# iOS
+*.ipa
+*.dSYM.zip
+*.dSYM
+build/
+DerivedData/
+.idea/
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# Xcode project and workspace files (ignored because of xcodegen)
+*.xcodeproj
+*.xcworkspace
+
+# Xcode specific settings
+!default.xcconfig
+!*.plist
+
+# Swift Package Manager
+.build/
+.swiftpm/xcode/package.resolved
+*.swiftinterface
+*.swiftmodule
+
+# Cocoapods
+Pods/
+
+# Carthage
+Carthage/Build/
+Carthage/Checkouts/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# Archives
+*.xcarchive
+
+# Logs
+*.log
+*.lock
+
+# Environment files
+.env
+.env.*
+
+# Temporary files
+*.swp
+*.swo
+*.tmp
+*.vscode
+
+# Linting
+.swiftlint.yml
+.swiftformat
+
+# Node.js
+node_modules/
+
+# Generated files
+*.generated.swift
+
+# Bundler
+.bundle/
+
+# Git generated files
+*.orig
+*.rej
+
+# XcodeGen cache
+.xcodegen
+project.yml.generated/
+
+# CI/CD
+*.result
+*.xccovreport
+*.xccovarchive
+
+# Ignore specific tools' configurations
+*.xcresult
+*.profraw
+
+

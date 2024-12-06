@@ -11,7 +11,7 @@ import SwiftData
 // TODO: This view is simple, but the depenency on AppState made it hard to mock, It has to be worked out in the future to allow easier mock strategy for faster development
 struct ProfileView: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject private var appStateStore: RAppState.Store
+    @EnvironmentObject private var appStateStore: AppState.Store
     @Query(sort: \Kid.dateOfBirth) var kids: [Kid]
 
     @State private var currentKid: Kid?

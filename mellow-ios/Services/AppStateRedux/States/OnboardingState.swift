@@ -9,12 +9,11 @@ import Foundation
 import SwiftlyBeautiful
 
 // Current state of onboarding
-struct ROnboardingState: Codable {
+struct OnboardingState: Codable {
     var welcomeMessageShown: Bool
     var childName: String
     var kidDateOfBirth: Date?
-    
-    // New properties for sleep and wake times
+    var numberOfNaps: Int
     var sleepTime: Date?
     var wakeTime: Date?
     
@@ -22,7 +21,7 @@ struct ROnboardingState: Codable {
     
     var progress: Float {
         var completedSteps = 1
-        let totalSteps = 6 // Updated to include the two new steps
+        let totalSteps = 7 // Updated to include the two new steps and nap update
         
         // Increment `completedSteps` for each completed onboarding step.
         if welcomeMessageShown {
@@ -40,6 +39,9 @@ struct ROnboardingState: Codable {
         if wakeTime != nil {
             completedSteps += 1
         }
+        if numberOfNaps > 0 {
+            completedSteps += 1
+        }
         
         // Calculate and return the progress percentage.
         return Float(completedSteps) / Float(totalSteps)
@@ -50,6 +52,7 @@ struct ROnboardingState: Codable {
         welcomeMessageShown: Bool = false,
         childName: String = "",
         kidDateOfBirth: Date? = nil,
+        numberOfNaps: Int = 0,
         sleepTime: Date? = nil,
         wakeTime: Date? = nil,
         completed: Bool = false
@@ -57,6 +60,7 @@ struct ROnboardingState: Codable {
         self.welcomeMessageShown = welcomeMessageShown
         self.childName = childName
         self.kidDateOfBirth = kidDateOfBirth
+        self.numberOfNaps = numberOfNaps
         self.sleepTime = sleepTime
         self.wakeTime = wakeTime
         self.completed = completed
@@ -64,7 +68,7 @@ struct ROnboardingState: Codable {
 }
 
 // All possible actions for onboarding
-extension ROnboardingState {
+extension OnboardingState {
     enum Action {
         case welcomeMessageShown
         case setChildName(String)
@@ -76,20 +80,23 @@ extension ROnboardingState {
     }
 }
 
-extension ROnboardingState {
+extension OnboardingState {
     var isOnboardingCompleted: Bool {
         return welcomeMessageShown &&
-               !childName.isEmpty &&
-               kidDateOfBirth != nil &&
-               sleepTime != nil &&
-               wakeTime != nil
+        !childName.isEmpty &&
+        kidDateOfBirth != nil &&
+        sleepTime != nil &&
+        wakeTime != nil &&
+        numberOfNaps > 0
     }
 }
 
 // Action execution
-extension ROnboardingState {
+extension OnboardingState {
     struct Reducer: ReducerProtocol {
-        func reduce(state: inout ROnboardingState, action: ROnboardingState.Action) {
+        private let sleepManager = SleepManager()
+        
+        func reduce(state: inout OnboardingState, action: OnboardingState.Action) {
             switch action {
             case .welcomeMessageShown:
                 state.welcomeMessageShown = true
@@ -99,8 +106,11 @@ extension ROnboardingState {
                 
             case .setKidDateOfBirth(let date):
                 state.kidDateOfBirth = date
-                
-            // Handle new actions
+                guard let birthDate = date else { return }
+                let ageInMonths = calculateAgeInMonths(birthDate: birthDate, from: Date())
+                let napDurations = sleepManager.getNapDurations(for: ageInMonths)
+                state.numberOfNaps = napDurations.count
+                // Handle new actions
             case .setSleepTime(let date):
                 state.sleepTime = date
                 
@@ -111,13 +121,21 @@ extension ROnboardingState {
             // After handling any action, check if onboarding is completed
             state.completed = state.isOnboardingCompleted
         }
+        
+        /// Helper method to calculate age in months
+        private func calculateAgeInMonths(birthDate: Date, from currentDate: Date) -> Int {
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.year, .month], from: birthDate, to: currentDate)
+            let years = components.year ?? 0
+            let months = components.month ?? 0
+            return years * 12 + months
+        }
     }
 }
 
-
 // TODO: Export Support for save to userdefaults to swiftMacro
 // Extension for UserDefaults functionality with Enhanced Debug Mode
-extension ROnboardingState {
+extension OnboardingState {
     
     // MARK: - UserDefaults Key
     private static let userDefaultsKey = "ROnboardingStateKey"
@@ -154,7 +172,7 @@ extension ROnboardingState {
         encoder.dateEncodingStrategy = .iso8601
         do {
             let encodedData = try encoder.encode(self)
-            UserDefaults.standard.set(encodedData, forKey: ROnboardingState.userDefaultsKey)
+            UserDefaults.standard.set(encodedData, forKey: OnboardingState.userDefaultsKey)
             Self.log("ROnboardingState successfully saved to UserDefaults.")
         } catch {
             Self.log("Failed to encode ROnboardingState: \(error)")
@@ -164,7 +182,7 @@ extension ROnboardingState {
     // MARK: - Load from UserDefaults
     /// Loads the ROnboardingState from UserDefaults if it exists.
     /// - Returns: An optional ROnboardingState instance.
-    static func loadFromUserDefaults() -> ROnboardingState? {
+    static func loadFromUserDefaults() -> OnboardingState? {
         let defaults = UserDefaults.standard
         guard let savedData = defaults.data(forKey: userDefaultsKey) else {
             log("No ROnboardingState found in UserDefaults.")
@@ -174,7 +192,7 @@ extension ROnboardingState {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         do {
-            let onboardingState = try decoder.decode(ROnboardingState.self, from: savedData)
+            let onboardingState = try decoder.decode(OnboardingState.self, from: savedData)
             log("ROnboardingState successfully loaded from UserDefaults.")
             return onboardingState
         } catch {

@@ -9,6 +9,7 @@ import Foundation
 import SwiftData
 import Combine
 
+// TODO: Store should be renamed to repository
 struct SleepSessionStore: SleepSessionStoreProtocol {
     func rawLoad(for kid: Kid, context: ModelContext) throws -> [SleepSession] {
         let kidUUID = kid.id

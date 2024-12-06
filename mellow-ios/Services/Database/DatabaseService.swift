@@ -9,16 +9,14 @@ import Foundation
 import SwiftData
 import Combine
 
-class DatabaseService: ObservableObject {
+struct DatabaseService {
     private let kidsStore = KidsStore()
     private let sleepSessionStore = SleepSessionStore()
-    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Kids Management
     func loadKids(context: ModelContext) -> [Kid] {
         do {
-            let result = try kidsStore.load(context: context)
-            return result
+            return try kidsStore.load(context: context)
         } catch {
             print("Failed to load kids: \(error)")
         }

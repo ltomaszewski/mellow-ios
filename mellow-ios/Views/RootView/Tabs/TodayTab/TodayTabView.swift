@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TodayTabView: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject private var appStateStore: RAppState.Store
+    @EnvironmentObject private var appStateStore: AppState.Store
     @State var endSleepTriggered: Bool = false
 
     @StateObject var viewModel: TodayTabViewModel = .init()

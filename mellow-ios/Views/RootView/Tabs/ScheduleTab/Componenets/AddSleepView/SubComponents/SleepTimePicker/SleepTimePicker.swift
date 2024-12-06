@@ -16,7 +16,7 @@ struct SleepTimePicker: View {
     @Binding var isDatePickerVisible: Bool
     @Binding var width: CGFloat
 
-    @ObservedObject private var viewModel: ViewModel
+    @StateObject private var viewModel: ViewModel
 
     init(text: String,
          date: Binding<Date?>,
@@ -30,7 +30,7 @@ struct SleepTimePicker: View {
         self._maxDate = maxDate
         self._isDatePickerVisible = isDatePickerVisible
         self._width = width
-        self._viewModel = ObservedObject(wrappedValue: ViewModel(date: date.wrappedValue))
+        self._viewModel = StateObject(wrappedValue: ViewModel(date: date.wrappedValue))
     }
 
     var body: some View {
@@ -72,7 +72,7 @@ struct SleepTimePicker: View {
                 .colorMultiply(.white)
             }
         }
-        .onChange(of: date) { newDate in
+        .onChange(of: date) { _, newDate in
             viewModel.date = newDate
         }
     }

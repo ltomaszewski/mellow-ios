@@ -9,14 +9,12 @@ import SwiftUI
 
 extension AddSleepView {
     struct HeaderView: View {
-        @Binding var isPresented: Bool
         var presentationMode: Binding<PresentationMode>
         var saveAction: () -> Void
 
         var body: some View {
             HStack {
                 Button("Cancel") {
-                    isPresented = false
                     presentationMode.wrappedValue.dismiss()
                 }
                 .font(.main16)

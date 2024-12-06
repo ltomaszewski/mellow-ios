@@ -76,20 +76,37 @@ struct SessionInfoView: View {
 // Extension for the SessionInfoView to define the types of information
 extension SessionInfoView {
     // Enum representing different types of information that can be displayed
-    enum InfoType: String {
-        case score = "Score"                      // Overall score
-        case napTimes = "Nap times"               // Number of naps
-        case sleepDuration = "Sleep duration"     // Total sleep duration
-        case wakeupTime = "Wakeup time"           // Wakeup time
-        case consistency = "3-day consistency"    // Consistency over 3 days
-        case nextSession = "Next sleep"   // Next session (represented by the button)
+    enum InfoType {
+        case score                             // Overall score
+        case napTimes                          // Number of naps
+        case sleepDuration                     // Total sleep duration
+        case wakeupTime                        // Wakeup time
+        case consistency                       // Consistency over 3 days
+        case nextSession                       // Next session (represented by the button)
+        case custom(String)                    // Custom case with an associated string value
 
-        // Method to return the raw value (title) of each enum case
+        // Method to return the title of each enum case
         func title() -> String {
-            return self.rawValue
+            switch self {
+            case .score:
+                return "Score"
+            case .napTimes:
+                return "Nap times"
+            case .sleepDuration:
+                return "Sleep duration"
+            case .wakeupTime:
+                return "Wakeup time"
+            case .consistency:
+                return "3-day consistency"
+            case .nextSession:
+                return "Next sleep"
+            case .custom(let value):
+                return value
+            }
         }
     }
 }
+
 
 // Preview section for SwiftUI previews, showcasing different configurations of the SleepScoreView
 #Preview {

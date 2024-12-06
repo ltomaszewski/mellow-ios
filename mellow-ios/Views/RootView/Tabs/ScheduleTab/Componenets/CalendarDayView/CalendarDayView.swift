@@ -9,11 +9,11 @@ import SwiftUI
 import SwiftData
 
 struct CalendarDayView: View {
-    @EnvironmentObject var appStateStore: RAppState.Store
+    @EnvironmentObject var appStateStore: AppState.Store
     @ObservedObject private(set) var viewModel: CalendarDayViewModel
     @Binding private var editSleepSession: SleepSessionViewRepresentation?
     @Binding private var showEditSleepSession: Bool
-    
+
     private let hourSlotHeight: CGFloat = 48
     
     // Binding to trigger scrolling action from the parent view
@@ -53,9 +53,6 @@ struct CalendarDayView: View {
         }
         .onReceive(appStateStore.$state, perform: { state in
             viewModel.updateSleepSessionEntries(with: state.sleepSessions)
-            for sleepSession in viewModel.sleepSessionsEntries {
-                print(sleepSession)
-            }
         })
         .onAppear {
             viewModel.updateSleepSessionEntries(with: appStateStore.state.sleepSessions)
@@ -100,7 +97,7 @@ struct CalendarDayView: View {
             .padding(.leading, 72)
             .onTapGesture {
                 editSleepSession = model.sleepSession
-                showEditSleepSession.toggle()
+                showEditSleepSession = true
             }
         }
         .zIndex(model.sleepSession.isScheduled ? -99 : 999)

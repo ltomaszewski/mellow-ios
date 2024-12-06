@@ -10,7 +10,7 @@ import SwiftData
 
 @main
 struct mellow_iosApp: App {
-    @StateObject var rAppStateStore = RAppState.Store(databaseService: .init())
+    @StateObject var rAppStateStore = AppState.Store(databaseService: .init())
 
     var body: some Scene {
         WindowGroup {

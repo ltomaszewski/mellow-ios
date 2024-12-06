@@ -55,7 +55,7 @@ final class ProfileCalendarViewModel: ObservableObject {
         onNextMonthTap?()
     }
 
-    func isDateHighlighted(_ day: Int, appState: RAppState.Store, context: ModelContext) -> Bool {
+    func isDateHighlighted(_ day: Int, appState: AppState.Store, context: ModelContext) -> Bool {
         guard let dayDate = createDayDate(for: monthDate, to: day) else {
             fatalError("Day creation for isDateHighlighted has failed")
         }

@@ -9,8 +9,8 @@ import Foundation
 import SwiftData
 import Combine
 
+// TODO: Store should be renamed to repository
 struct KidsStore: KidsStoreProtocol {
-    
     func add(name: String,
              dateOfBirth: Date,
              sleepTime: Date,

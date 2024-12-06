@@ -43,6 +43,7 @@ struct PlanDateInputView: View {
         self.headlineText = headlineText
         self.submitText = submitText
         self.datePickerType = datePickerType
+        self._selectedDate = .init(initialValue: value.wrappedValue ?? .now)
     }
     
     var body: some View {

@@ -1,0 +1,98 @@
+name: mellow-ios
+options:
+  bundleIdPrefix: com.growgenie
+  deploymentTarget:
+    iOS: "17.5"
+  developmentLanguage: en
+  organizationName: GrowGenie
+packages:
+  SwiftlyBeautiful:
+    url: https://github.com/ltomaszewski/SwiftlyBeautiful
+    branch: master
+targets:
+  mellow-ios:
+    type: application
+    platform: iOS
+    sources:
+      - path: mellow-ios
+    resources:
+      - path: mellow-ios/Resources/Assets.xcassets
+    dependencies:
+      - package: SwiftlyBeautiful
+    settings:
+      base:
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: DRU4XTX272
+        MARKETING_VERSION: 1.1
+        CURRENT_PROJECT_VERSION: 42
+        SWIFT_VERSION: 5.0
+        ENABLE_PREVIEWS: YES
+        INFOPLIST_FILE: mellow-ios/Info.plist
+        GENERATE_INFOPLIST_FILE: YES
+        ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS: YES
+        ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+    info:
+      path: mellow-ios/Info.plist
+      properties:
+        UILaunchScreen:
+          UIImageName: ""
+        UIAppFonts:
+          - gothamrnd_light.otf
+          - gothamrnd_medium.otf
+          - gothamrnd_bold.otf
+  mellow-iosTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: mellow-iosTests
+    dependencies:
+      - target: mellow-ios
+    settings:
+      base:
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: DRU4XTX272
+        SWIFT_VERSION: 5.0
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/mellow-ios.app/mellow-ios"
+        PRODUCT_BUNDLE_IDENTIFIER: com.growgenie.mellow-iosTests
+        GENERATE_INFOPLIST_FILE: YES
+  mellow-iosUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: mellow-iosUITests
+    dependencies:
+      - target: mellow-ios
+    settings:
+      base:
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: DRU4XTX272
+        SWIFT_VERSION: 5.0
+        TEST_TARGET_NAME: mellow-ios
+        PRODUCT_BUNDLE_IDENTIFIER: com.growgenie.mellow-iosUITests
+        GENERATE_INFOPLIST_FILE: YES
+configurations:
+  Debug:
+    settings:
+      SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+      ENABLE_TESTABILITY: YES
+    xcconfig: Debug.xcconfig
+  Release:
+    settings:
+      SWIFT_COMPILATION_MODE: wholemodule
+      VALIDATE_PRODUCT: YES
+    xcconfig: Release.xcconfig
+schemes:
+  mellow-ios:
+    build:
+      targets:
+        mellow-ios: all
+        mellow-iosTests: all
+        mellow-iosUITests: all
+    test:
+      targets:
+        - target: mellow-iosTests
+        - target: mellow-iosUITests
+    run:
+      configuration: Debug
+    archive:
+      configuration: Release

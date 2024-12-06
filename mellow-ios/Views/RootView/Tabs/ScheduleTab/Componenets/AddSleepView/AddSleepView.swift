@@ -9,15 +9,14 @@ import SwiftUI
 
 struct AddSleepView: View {
     let date: Date
-    @Binding var isPresented: Bool
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
-    @EnvironmentObject private var appStateStore: RAppState.Store
+    @EnvironmentObject private var appStateStore: AppState.Store
     
-    @Binding var width: CGFloat
+    let width: CGFloat
     @Binding var session: SleepSessionViewRepresentation?
-    
+
     @State private var startTime: Date?
     @State private var startTimeMin: Date
     @State private var startTimeMax: Date
@@ -30,10 +29,9 @@ struct AddSleepView: View {
     @State private var startTimePickerVisible = true
     @State private var endTimePickerVisible = false
         
-    init(date: Date, width: Binding<CGFloat>, session: Binding<SleepSessionViewRepresentation?>, isPresented: Binding<Bool>) {
+    init(date: Date, width: CGFloat, session: Binding<SleepSessionViewRepresentation?>) {
         self.date = date
-        _width = width
-        _isPresented = isPresented
+        self.width = width
         
         if let existingSession = session.wrappedValue {
             self._selectedOption = State(initialValue: existingSession.type)
@@ -57,13 +55,12 @@ struct AddSleepView: View {
             self._endTimeMin = .init(initialValue: Date.distantPast)
             self._endTimeMax = .init(initialValue: Date.distantFuture)
         }
-        _session = session
+        self._session = session
     }
     
     var body: some View {
         VStack(spacing: 16) {
-            HeaderView(isPresented: $isPresented,
-                       presentationMode: presentationMode,
+            HeaderView(presentationMode: presentationMode,
                        saveAction: saveSession)
             .padding(.horizontal, 16)
             Text((session?.isScheduled ?? true) ? "Add Sleep" : "Edit Sleep")
@@ -78,10 +75,9 @@ struct AddSleepView: View {
                         endTimeMax: $endTimeMax,
                         startTimePickerVisible: $startTimePickerVisible,
                         endTimePickerVisible: $endTimePickerVisible,
-                        width: $width)
+                        width: .constant(width))
             if session != nil {
-                SessionDelete(session: $session,
-                              isPresented: $isPresented,
+                SessionDelete(session: session,
                               presentationMode: presentationMode)
             }
         }
@@ -105,7 +101,6 @@ struct AddSleepView: View {
     
     private func cancel() {
         session = nil
-        isPresented = false
         presentationMode.wrappedValue.dismiss()
     }
     
@@ -160,18 +155,15 @@ struct AddSleepView: View {
         }
         
         // Reset the session and dismiss the view
-        session = nil
-        isPresented = false
-        presentationMode.wrappedValue.dismiss()
+        cancel()
     }}
 
 struct AddSleepView_Previews: PreviewProvider {
     static var previews: some View {
         AddSleepView(
             date: .now,
-            width: .init(get: { 768 }, set: { _ in } ),
-            session: .init(get: { .mocked() }, set: { _ in }),
-            isPresented: .init(get: { true }, set: { _ in } )
-        )
+            width: 768,
+            session: .init(get: { .mocked() }, set: { _ in }))
+        
     }
 }

@@ -8,6 +8,30 @@
 import Foundation
 
 extension Date {
+    /// Creates a date at 8:00 AM for the current date.
+    /// - Returns: A new date with the time set to 8:00 AM.
+    func morning() -> Date {
+        return self.setHour(8)
+    }
+    
+    /// Creates a date at 8:00 PM for the current date.
+    /// - Returns: A new date with the time set to 8:00 PM.
+    func evening() -> Date {
+        return self.setHour(20)
+    }
+    
+    /// Sets the hour of the current date to a specified value.
+    /// - Parameter hour: The hour value to set (0-23).
+    /// - Returns: A new date with the specified hour.
+    func setHour(_ hour: Int) -> Date {
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month, .day], from: self)
+        components.hour = hour
+        components.minute = 0
+        components.second = 0
+        return calendar.date(from: components)!
+    }
+    
     func adjustDay(by days: Int) -> Date {
         guard let newDay = Calendar.current.date(byAdding: .day, value: days, to: self) else {
             fatalError("Something went wrong during day creation in calendar pager for ")

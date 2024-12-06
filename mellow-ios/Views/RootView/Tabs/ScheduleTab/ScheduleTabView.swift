@@ -9,10 +9,9 @@ import SwiftUI
 
 struct ScheduleTabView: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject var appStateStore: RAppState.Store
+    @EnvironmentObject var appStateStore: AppState.Store
     @State var date: Date = Date.now.adjustToMidday()
     @State private var showAddSleepSession = false
-    @State private var showEditSleepSession = false
     @State private var editSleepSession: SleepSessionViewRepresentation?
     @State private var sheetHeight: CGFloat = 300
     @State private var sheetWidth: CGFloat = 300
@@ -20,7 +19,7 @@ struct ScheduleTabView: View {
     
     @State var inProgressViewHeight: CGFloat = 0.0
     @State var endSleepTriggered: Bool = false
-
+    
     var body: some View {
         ZStack {
             VStack {
@@ -28,15 +27,13 @@ struct ScheduleTabView: View {
                     .frame(height: 64)
                 CalendarDayViewWithPager(date: $date,
                                          editSleepSession: $editSleepSession,
-                                         showEditSleepSession: $showEditSleepSession,
+                                         showEditSleepSession: $showAddSleepSession,
                                          shouldScrollToCurrentTime: $shouldScrollToCurrentTime)
                 .padding(.bottom, inProgressViewHeight)
                 Spacer()
             }
             .background(Color.gunmetalBlue)
             .dimmedBackground(isPresented: $showAddSleepSession)
-            .dimmedBackground(isPresented: $showEditSleepSession)
-
             if appStateStore.state.sleepSessionInProgress == nil {
                 VStack(alignment: .trailing) {
                     Spacer()
@@ -68,26 +65,23 @@ struct ScheduleTabView: View {
         })
         .sheet(isPresented: $showAddSleepSession,
                content: {
-            AddSleepView(date: date,
-                         width: $sheetWidth,
-                         session: $editSleepSession,
-                         isPresented: $showAddSleepSession)
-            .fixedSize(horizontal: false, vertical: true)
-            .getSize($sheetWidth, $sheetHeight)
-            .presentationDetents([.height(CGFloat(sheetHeight))])
-        })
-        .sheet(isPresented: $showEditSleepSession,
-               content: {
-            AddSleepView(date: date,
-                         width: $sheetWidth,
-                         session: $editSleepSession,
-                         isPresented: $showAddSleepSession)
+            AddSleepView(
+                date: date,
+                width: sheetWidth,
+                session: $editSleepSession
+            )
             .fixedSize(horizontal: false, vertical: true)
             .getSize($sheetWidth, $sheetHeight)
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })
         .onChange(of: date) { _, newValue in
             appStateStore.dispatch(.setSelectedDate(newValue))
+        }
+        // TODO: No idea why the hell this is needed. For unknown reason the sheet do not populate editSleepSession even thought it is there only for the first time. Every next works as expected
+        .onChange(of: editSleepSession) { oldValue, newValue in
+            if newValue != nil {
+                showAddSleepSession = true
+            }
         }
     }
 }

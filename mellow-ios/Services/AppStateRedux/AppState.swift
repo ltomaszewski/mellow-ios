@@ -8,8 +8,8 @@
 import Foundation
 import SwiftData
 
-struct RAppState {
-    var onboardingState: ROnboardingState
+struct AppState {
+    var onboardingState: OnboardingState
     var selectedKid: Kid?
     var selectedDate: Date?
     var hoursTracked: Int = 0
@@ -18,7 +18,7 @@ struct RAppState {
     var sleepSessions: [SleepSessionViewRepresentation] = []
     var sleepSessionInProgress: SleepSessionViewRepresentation?
     
-    init(onboardingState: ROnboardingState = .init(),
+    init(onboardingState: OnboardingState = .init(),
          selectedKid: Kid? = nil,
          selectedDate: Date = .now.adjustToMidday()) {
         self.onboardingState = onboardingState
@@ -27,7 +27,7 @@ struct RAppState {
     }
 }
 
-extension RAppState {
+extension AppState {
     enum CurrentViewState {
         case intro
         case onboarding
@@ -36,11 +36,11 @@ extension RAppState {
 }
 
 // All possible actions for AppState
-extension RAppState {
+extension AppState {
     enum Action {
         case load(ModelContext)
         case openAddKidOnboarding
-        case onboarding(ROnboardingState.Action)
+        case onboarding(OnboardingState.Action)
         case setSelectedKid(Kid, ModelContext)
         case setSelectedDate(Date)
         case kidOperation(CRUDOperation, Kid, ModelContext)
@@ -60,22 +60,22 @@ extension RAppState {
 }
 
 // Action execution
-extension RAppState {
+extension AppState {
     //TODO: Split to smaller reducers
     struct Reducer: ReducerProtocol {
-        private let onboardingReducer: ROnboardingState.Reducer
+        private let onboardingReducer: OnboardingState.Reducer
         private let databaseService: DatabaseService
         private let sleepManager: SleepManager = .init()
         
         private let isDebugMode: Bool
 
-        init(onboardingReducer: ROnboardingState.Reducer, databaseService: DatabaseService, isDebugMode: Bool = false) {
+        init(onboardingReducer: OnboardingState.Reducer, databaseService: DatabaseService, isDebugMode: Bool = true) {
             self.onboardingReducer = onboardingReducer
             self.databaseService = databaseService
             self.isDebugMode = isDebugMode
         }
 
-        func reduce(state: inout RAppState, action: RAppState.Action) {
+        func reduce(state: inout AppState, action: AppState.Action) {
             switch action {
             case .load(let context):
                 handleLoadAction(state: &state, context: context)
@@ -106,12 +106,13 @@ extension RAppState {
                 fatalError("Unsupported action")
             }
 
+            debugPrint(item: action)
             debugPrint(state: state)
         }
 
         // MARK: - Helper Methods
 
-        private func handleLoadAction(state: inout RAppState, context: ModelContext) {
+        private func handleLoadAction(state: inout AppState, context: ModelContext) {
             let kids = databaseService.loadKids(context: context)
             state.currentViewState = kids.isEmpty ? .intro : .root
             if let kid = kids.first {
@@ -120,17 +121,17 @@ extension RAppState {
             }
         }
 
-        private func handleOpenAddKidOnboarding(state: inout RAppState) {
-            ROnboardingState.removeFromUserDefaults()
+        private func handleOpenAddKidOnboarding(state: inout AppState) {
+            OnboardingState.removeFromUserDefaults()
             state.onboardingState = .init()
             state.currentViewState = .onboarding
         }
 
-        private func handleOnboardingAction(state: inout RAppState, action: ROnboardingState.Action) {
+        private func handleOnboardingAction(state: inout AppState, action: OnboardingState.Action) {
             onboardingReducer.reduce(state: &state.onboardingState, action: action)
         }
 
-        private func handleKidOperation(state: inout RAppState, operation: CRUDOperation, kid: Kid, context: ModelContext) {
+        private func handleKidOperation(state: inout AppState, operation: CRUDOperation, kid: Kid, context: ModelContext) {
             switch operation {
             case .create:
                 createKid(state: &state, kid: kid, context: context)
@@ -141,7 +142,7 @@ extension RAppState {
             }
         }
 
-        private func handleSleepSessionOperation(state: inout RAppState, operation: CRUDOperation, sleepSession: SleepSession?, context: ModelContext) {
+        private func handleSleepSessionOperation(state: inout AppState, operation: CRUDOperation, sleepSession: SleepSession?, context: ModelContext) {
             switch operation {
             case .create:
                 guard let sleepSession else { fatalError("createSleepSession: sleepSession is nil")}
@@ -154,7 +155,7 @@ extension RAppState {
             }
         }
 
-        private func handleEndSleepSessionInProgress(state: inout RAppState, context: ModelContext) {
+        private func handleEndSleepSessionInProgress(state: inout AppState, context: ModelContext) {
             guard let selectedKid = state.selectedKid else {
                 fatalError("SelectedKid is unavailable")
             }
@@ -177,7 +178,7 @@ extension RAppState {
 
         // MARK: - Kid Operations
 
-        private func createKid(state: inout RAppState, kid: Kid, context: ModelContext) {
+        private func createKid(state: inout AppState, kid: Kid, context: ModelContext) {
             do {
                 let newKid = try databaseService.addKid(
                     name: kid.name,
@@ -194,7 +195,7 @@ extension RAppState {
             }
         }
 
-        private func updateKid(state: inout RAppState, kid: Kid, id: String, context: ModelContext) {
+        private func updateKid(state: inout AppState, kid: Kid, id: String, context: ModelContext) {
             let updatedKid = databaseService.updateKid(
                 kidId: id,
                 name: kid.name,
@@ -208,7 +209,7 @@ extension RAppState {
 
         // MARK: - Sleep Session Operations
 
-        private func createSleepSession(state: inout RAppState, sleepSession: SleepSession, context: ModelContext) {
+        private func createSleepSession(state: inout AppState, sleepSession: SleepSession, context: ModelContext) {
             guard let currentKid = state.selectedKid else {
                 print("No selected kid for adding a sleep session.")
                 return
@@ -222,7 +223,7 @@ extension RAppState {
             updateSleepSessionState(state: &state, kid: currentKid, context: context)
         }
 
-        private func updateSleepSession(state: inout RAppState, sleepSession: SleepSession, id: String, context: ModelContext) {
+        private func updateSleepSession(state: inout AppState, sleepSession: SleepSession, id: String, context: ModelContext) {
             guard let currentKid = state.selectedKid else {
                 print("No selected kid for updating a sleep session.")
                 return
@@ -231,7 +232,7 @@ extension RAppState {
             updateSleepSessionState(state: &state, kid: currentKid, context: context)
         }
 
-        private func deleteSleepSession(state: inout RAppState, id: String, context: ModelContext) {
+        private func deleteSleepSession(state: inout AppState, id: String, context: ModelContext) {
             guard let currentKid = state.selectedKid else {
                 print("No selected kid for deleting a sleep session.")
                 return
@@ -240,7 +241,7 @@ extension RAppState {
             updateSleepSessionState(state: &state, kid: currentKid, context: context)
         }
 
-        private func updateSleepSessionState(state: inout RAppState, kid: Kid, context: ModelContext) {
+        private func updateSleepSessionState(state: inout AppState, kid: Kid, context: ModelContext) {
             let sessions = databaseService.rawLoadSleepSessions(for: kid, context: context)
             state.sleepSessions = sessions.map { $0.toViewRepresentation() }
             state.sleepSessionInProgress = state.sleepSessions.first(where: { $0.isInProgress })
@@ -249,7 +250,7 @@ extension RAppState {
             handleRefreshSchedule(state: &state)
         }
 
-        private func handleRefreshSchedule(state: inout RAppState) {
+        private func handleRefreshSchedule(state: inout AppState) {
             guard let currentKid = state.selectedKid else {
                 print("No selected kid to refresh schedule.")
                 return
@@ -263,14 +264,16 @@ extension RAppState {
 
             // Calculate the day before and the day after the selected date
             let calendar = Calendar.current
-            guard let dayBefore = calendar.date(byAdding: .day, value: -1, to: selectedDate),
-                  let dayAfter = calendar.date(byAdding: .day, value: 1, to: selectedDate) else {
+            guard let dayBeforeBefore = calendar.date(byAdding: .day, value: -2, to: selectedDate),
+                  let dayBefore = calendar.date(byAdding: .day, value: -1, to: selectedDate),
+                  let dayAfter = calendar.date(byAdding: .day, value: 1, to: selectedDate),
+                  let dayAfterAfter = calendar.date(byAdding: .day, value: 2, to: selectedDate) else {
                 print("Failed to calculate adjacent dates.")
                 return
             }
 
             // List of dates for which to generate schedules
-            let datesToGenerate = [dayBefore, selectedDate, dayAfter]
+            let datesToGenerate = [dayBeforeBefore, dayBefore, selectedDate, dayAfter, dayAfterAfter]
 
             // Generate new sleep schedules for each date
             var allNewSleepSessions: [SleepSessionViewRepresentation] = []
@@ -305,10 +308,6 @@ extension RAppState {
                 }
             }
 
-            if filteredNewSleepSessions.count < allNewSleepSessions.count {
-                print("Some scheduled sessions were excluded due to overlaps with saved sessions.")
-            }
-
             // Merge with existing sleep sessions
             var mergedSleepSessions = state.sleepSessions
 
@@ -328,23 +327,32 @@ extension RAppState {
         }
         
         // MARK: - Debug Mode
-        private func debugPrint(state: RAppState) {
+        private func debugPrint(state: AppState) {
             guard isDebugMode else { return }
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             let timestamp = formatter.string(from: Date())
             print("[\(timestamp)] Current State: \(state)")
         }
+        
+        // MARK: - Debug Mode
+        private func debugPrint(item: CustomStringConvertible) {
+            guard isDebugMode else { return }
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let timestamp = formatter.string(from: Date())
+            print("[\(timestamp)] Output: \(item)")
+        }
     }
 }
 
 // RAppState Store
-extension RAppState {
+extension AppState {
     class Store: ObservableObject {
-        @Published private(set) var state: RAppState
+        @Published private(set) var state: AppState
         private let reducer: Reducer
         
-        init(state: RAppState = .init(), databaseService: DatabaseService) {
+        init(state: AppState = .init(), databaseService: DatabaseService) {
             self.state = state
             reducer = .init(onboardingReducer: .init(), databaseService: databaseService)
         }
@@ -359,7 +367,7 @@ extension RAppState {
 import SwiftUI
 
 // Binding for State and SwiftUI TODO: Export to Swift Macro
-extension RAppState.Store {
+extension AppState.Store {
     var welcomeMessageShownBinding: Binding<Bool> {
         .init(
             get: { self.state.onboardingState.welcomeMessageShown },
@@ -386,7 +394,7 @@ extension RAppState.Store {
     /// Binding for "When Nina usually falls asleep?"
     var sleepTimeBinding: Binding<Date?> {
         .init(
-            get: { self.state.onboardingState.sleepTime },
+            get: { self.state.onboardingState.sleepTime ?? .now.evening() },
             set: { [weak self] date in self?.dispatch(.onboarding(.setSleepTime(date))) }
         )
     }
@@ -394,7 +402,7 @@ extension RAppState.Store {
     /// Binding for "When Nina usually wakes up?"
     var wakeTimeBinding: Binding<Date?> {
         .init(
-            get: { self.state.onboardingState.wakeTime },
+            get: { self.state.onboardingState.wakeTime ?? .now.morning() },
             set: { [weak self] date in self?.dispatch(.onboarding(.setWakeTime(date))) }
         )
     }

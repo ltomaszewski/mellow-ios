@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProfileCalendarView: View {
-    @EnvironmentObject private var appStateStore: RAppState.Store
+    @EnvironmentObject private var appStateStore: AppState.Store
     @Environment(\.modelContext) private var modelContext
     @Binding var currentDate: Date
     @StateObject var viewModel: ProfileCalendarViewModel

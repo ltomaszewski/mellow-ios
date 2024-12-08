@@ -29,9 +29,13 @@ struct ContentView: View {
         }
         .background(.gunmetalBlue)
         .onAppear(perform: {
-            //TODO: Reset does not work
-            //            appState.reset(context: modelContext)
             appStateStore.dispatch(.load(modelContext))
         })
     }
+}
+
+#Preview("Default") {
+    ContentView()
+        .environmentObject(AppState.Store(databaseService: DatabaseService()))
+        .modelContainer(for: [Kid.self, SleepSession.self], inMemory: true)
 }

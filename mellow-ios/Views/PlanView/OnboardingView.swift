@@ -129,6 +129,6 @@ struct OnboardingView: View {
     
     OnboardingView()
         .environmentObject(appStateStore)
-        .modelContainer(.inMemoryContainer(for: Kid.self))
+        .modelContainer(for: [Kid.self], inMemory: true)
 }
 

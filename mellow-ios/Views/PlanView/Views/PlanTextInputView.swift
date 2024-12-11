@@ -28,13 +28,25 @@ struct PlanTextInputView: View {
                 .font(.main24)
                 .multilineTextAlignment(.center)
                 .padding()
-            TextField(placeholderText, text: $inputText)
+            TextField("", text: $inputText)
                 .focused($focusedField, equals: .field)
                 .autocorrectionDisabled()
                 .multilineTextAlignment(.center)
                 .font(.main64)
                 .padding()
-                .tint(.black)
+                .tint(.white)
+                .overlay(
+                    Group {
+                        if inputText.isEmpty {
+                            Text(placeholderText)
+                                .foregroundColor(.gray)
+                                .font(.main64)
+                                .padding()
+                                .allowsHitTesting(false)
+                        }
+                    },
+                    alignment: .center
+                )
                 .onAppear {
                     self.focusedField = .field
                 }
@@ -55,7 +67,8 @@ struct PlanTextInputView: View {
 
 #Preview {
     PlanTextInputView(value: .init(get: { "" }, set: { _ in }),
-                      headlineText: "How do you call your child?",
-                      placeholderText: "name",
-                      submitText: "Continue")
+                      headlineText: "What's your child's name?",
+                      placeholderText: "Enter name here",
+                      submitText: "Continue"
+    )
 }

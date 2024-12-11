@@ -50,8 +50,9 @@ struct PlanDateInputView: View {
         VStack {
             Spacer()
             Text(headlineText)
-                .font(.system(size: 24, weight: .bold)) // Assuming .main24 is a custom font modifier
+                .font(.main24)
                 .multilineTextAlignment(.center)
+                .foregroundStyle(.white)
                 .padding()
             DatePicker("", selection: $selectedDate, displayedComponents: datePickerType.components)
                 .datePickerStyle(WheelDatePickerStyle())
@@ -74,5 +75,8 @@ struct PlanDateInputView: View {
     PlanDateInputView(value: .constant(Date()),
                       headlineText: "When is your child's birthday?",
                       submitText: "Continue")
+    .onAppear {
+        UIDatePicker.appearance().overrideUserInterfaceStyle = .light
+    }
     .background(Color.deepNight)
 }

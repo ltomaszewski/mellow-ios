@@ -126,7 +126,7 @@ extension AppState {
                 
                 var currentSettings = oldState.appSettings
                 currentSettings.kidId = kid.id
-                newState = await self.reduce(oldState, action: .updateSettings(currentSettings))
+                newState = await self.reduce(newState, action: .updateSettings(currentSettings))
                 
             case .setSelectedDate(let date):
                 newState.selectedDate = date

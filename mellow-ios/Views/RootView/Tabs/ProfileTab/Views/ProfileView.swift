@@ -56,7 +56,6 @@ struct ProfileView: View {
             name = newValue.name
             age = newValue.ageFormatted
             imageResource = .kidoHim
-            appStateStore.dispatch(.setSelectedKid(newValue, modelContext))
             showKidsList = false
         }
         .onReceive(appStateStore.$state.map { $0.dayStreak }) { newValue in
@@ -65,9 +64,16 @@ struct ProfileView: View {
         .onReceive(appStateStore.$state.map { $0.hoursTracked }) { newValue in
             hoursTracked = newValue
         }
+        .onReceive(appStateStore.$state.compactMap { $0.selectedKid }, perform: { newValue in
+            DispatchQueue.main.async {
+                currentKid = newValue
+                print("selectedKid \(newValue.name) \(newValue.id)")
+                print("selectedKid appState \(appStateStore.state.selectedKid?.name) \(appStateStore.state.selectedKid?.id)")
+            }
+        })
         .sheet(isPresented: $showKidsList,
                content: {
-            ProfileKidsListView(selectedKid: $currentKid)
+            ProfileKidsListView()
             .getSize($sheetWidth, $sheetHeight)
             .presentationDetents([.height(CGFloat(sheetHeight))])
         })

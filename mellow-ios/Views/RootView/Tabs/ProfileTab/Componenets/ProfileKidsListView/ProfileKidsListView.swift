@@ -10,7 +10,9 @@ import SwiftData
 
 struct ProfileKidsListView: View {
     @Query(sort: \Kid.dateOfBirth) var kids: [Kid]
-    @Binding var selectedKid: Kid?
+    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var appStateStore: AppState.Store
+    @State var selectedKid: Kid?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -29,6 +31,7 @@ struct ProfileKidsListView: View {
                         .contentShape(Rectangle()) // Makes the entire row tappable
                         .onTapGesture {
                             selectedKid = kid
+                            appStateStore.dispatch(.setSelectedKid(kid, modelContext))
                         }
                         .background(Color.gunmetalBlue)
                         .listRowInsets(EdgeInsets())
@@ -39,6 +42,9 @@ struct ProfileKidsListView: View {
         }
         .background(Color.gunmetalBlue)
         .scrollDisabled(true)
+        .onAppear {
+            selectedKid = appStateStore.state.selectedKid
+        }
     }
 }
 

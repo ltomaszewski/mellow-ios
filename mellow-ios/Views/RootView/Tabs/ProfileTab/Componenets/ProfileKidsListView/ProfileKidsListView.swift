@@ -47,36 +47,3 @@ struct ProfileKidsListView: View {
         }
     }
 }
-
-//#Preview {
-//    // Mock data for kids
-//    @Previewable @State var selectedKid: ProfileKidsListView.Kid? = nil
-//    // Mock data for kids
-//    let mockKids = [
-//        ProfileKidsListView.Kid(
-//            name: "Lukasz",
-//            ageFormatted: "3 years 6 months",
-//            imageResource: .kidoHim,
-//            databaseKidsID: "1"
-//        ),
-//        ProfileKidsListView.Kid(
-//            name: "Anna",
-//            ageFormatted: "5 years",
-//            imageResource: .kidoHer,
-//            databaseKidsID: "2"
-//        ),
-//        ProfileKidsListView.Kid(
-//            name: "Mia",
-//            ageFormatted: "4 years 2 months",
-//            imageResource: .kidoHer,
-//            databaseKidsID: "3"
-//        )
-//    ]
-//    
-//    ProfileKidsListView(
-//        kids: .constant(mockKids),
-//        selectedKid: $selectedKid
-//    )
-//    .padding()
-//    .background(Color.gray.opacity(0.2)) // Optional: Add a background for better visibility
-//}

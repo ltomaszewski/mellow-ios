@@ -20,7 +20,7 @@ struct AppState {
     var currentViewState: CurrentViewState = .intro
     var sleepSessions: [SleepSessionViewRepresentation] = []
     var sleepSessionInProgress: SleepSessionViewRepresentation?
-    var appSettings: AppSettings = .init(kidId: "")
+    var appSettings: AppSettings = .init(deviceId: "", kidId: "")
     
     init(onboardingState: OnboardingState = .init(),
          selectedKid: Kid? = nil,
@@ -156,13 +156,12 @@ extension AppState {
                 handleUpdateSettings(state: &newState, newSettings: newSettings)
                 
             case .resetSettings:
-                handleResetSettings(state: &newState)
+                await handleResetSettings(state: &newState)
                 
             case .error, .resetError:
                 // For brevity, not implemented in your snippet.
                 // You might handle error states or reset error states here.
                 break
-                
             case .refresh:
                 // Handled at top of function
                 break
@@ -186,11 +185,9 @@ extension AppState {
             state.appSettings = newSettings
         }
         
-        private func handleResetSettings(state: inout AppState) {
-            Task {
-                await settingsManager.reset()
-            }
-            state.appSettings = AppSettings(kidId: "")
+        private func handleResetSettings(state: inout AppState) async {
+            await settingsManager.reset()
+            state.appSettings = await settingsManager.getSettings()
         }
         
         // MARK: - Helper Methods
@@ -439,7 +436,6 @@ extension AppState {
 }
 
 // MARK: - Store
-
 extension AppState {
     // TODO: Think about how to make store an actor
     class Store: ObservableObject {

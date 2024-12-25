@@ -67,8 +67,6 @@ struct ProfileView: View {
         .onReceive(appStateStore.$state.compactMap { $0.selectedKid }, perform: { newValue in
             DispatchQueue.main.async {
                 currentKid = newValue
-                print("selectedKid \(newValue.name) \(newValue.id)")
-                print("selectedKid appState \(appStateStore.state.selectedKid?.name) \(appStateStore.state.selectedKid?.id)")
             }
         })
         .sheet(isPresented: $showKidsList,

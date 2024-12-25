@@ -162,4 +162,6 @@ struct TodayTabView: View {
 
 #Preview {
     TodayTabView()
+        .environmentObject(AppState.Store(databaseService: DatabaseService()))
+        .modelContainer(for: [Kid.self, SleepSession.self], inMemory: true)
 }

@@ -8,6 +8,7 @@
 import Foundation
 
 struct AppSettings: Codable {
+    var deviceId: String
     var kidId: String
 }
 
@@ -31,7 +32,8 @@ actor SettingsManager {
             self.settings = loadedSettings
         } else {
             // Initialize with default settings
-            self.settings = AppSettings(kidId: "")
+            self.settings = AppSettings(deviceId: UUID().uuidString,
+                                        kidId: "")
             Task {
                 await saveSettings()
             }
@@ -79,7 +81,7 @@ actor SettingsManager {
     /// Resets settings in memory and removes the file from disk synchronously.
     func reset() {
         // Reset settings to default values
-        settings = AppSettings(kidId: "")
+        settings = AppSettings(deviceId: self.settings.deviceId, kidId: "")
         
         // Remove settings file from disk
         do {

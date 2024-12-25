@@ -10,5 +10,5 @@ protocol ReducerProtocol {
     associatedtype ReducerState
     associatedtype ReducerAction
 
-    func reduce(state: inout ReducerState, action: ReducerAction)
+    func reduce(_ oldState: ReducerState, action: ReducerAction) async -> AppState
 }

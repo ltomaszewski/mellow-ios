@@ -89,6 +89,13 @@ extension AppState.Action: CustomStringConvertible {
             return "Error reset"
         case .refreshSchedule:
             return "Schedule refreshed"
+        case .updateSettings(let newSettings):
+            return "App settings updated: \(newSettings)"
+        case .resetSettings:
+            return "App settings reset to defaults"
+        case .refresh(_):
+            return "REfresh"
         }
     }
 }
+

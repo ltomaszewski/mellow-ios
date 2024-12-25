@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -53,6 +53,8 @@
 		66F72DD82820DC781D054D6A /* SleepSession+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ADAAB7E8C3C2E01A6C7AFB3 /* SleepSession+Validation.swift */; };
 		6930E6C1DF0E6C56A7B3A0A8 /* AddSleepHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4967E0C8D5811F69C02660BF /* AddSleepHeader.swift */; };
 		6BE866474DA149120B497520 /* CalendarSeparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC6CE621B7CB6537876956D /* CalendarSeparator.swift */; };
+		6D7615C62D1C2225005A2105 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7615C52D1C2225005A2105 /* SettingsManager.swift */; };
+		6D7615C92D1C2476005A2105 /* SettingsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7615C72D1C2457005A2105 /* SettingsManagerTests.swift */; };
 		72C49868BB63C206E4F3F7CB /* SleepTimePicker+ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9B2947E66302347A8FB416 /* SleepTimePicker+ViewModel.swift */; };
 		73F01405F6645ED2841CB89B /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49A4A792F91B8B6F1AC1FD5 /* OnboardingView.swift */; };
 		7469472A5313DD8092D8BCD2 /* ProfileKidsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0114EB40550A808EA0E644AB /* ProfileKidsListView.swift */; };
@@ -156,6 +158,8 @@
 		62F01C87679FCF4E4FA070EF /* ProfileSettingsKidEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingsKidEditView.swift; sourceTree = "<group>"; };
 		6334B31A7B1C5237ABE8FF2E /* PageViewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewContent.swift; sourceTree = "<group>"; };
 		662EF81402D59DDD5452221F /* GothamFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GothamFont.swift; sourceTree = "<group>"; };
+		6D7615C52D1C2225005A2105 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
+		6D7615C72D1C2457005A2105 /* SettingsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManagerTests.swift; sourceTree = "<group>"; };
 		710D8DDFCC5E32332E3A370A /* ProfileStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStatsView.swift; sourceTree = "<group>"; };
 		742C0671CD9391CE8B76E976 /* PlanQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanQuestionView.swift; sourceTree = "<group>"; };
 		7445EFD0D06C470301AD5852 /* DiagonalLines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagonalLines.swift; sourceTree = "<group>"; };
@@ -634,10 +638,12 @@
 		C52FE9AA86D1FE85608C88F2 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				6D7615C72D1C2457005A2105 /* SettingsManagerTests.swift */,
 				CC1ACE96FF3CC36CCDD106DA /* AppStateRedux */,
 				7121F69D140EC579FB95ADD5 /* Database */,
 				54E77C3CDDA706EB8E0CA36B /* Model */,
 				405357D94FD2C3BC939E296F /* SleepManager */,
+				6D7615C52D1C2225005A2105 /* SettingsManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -815,6 +821,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D7615C92D1C2476005A2105 /* SettingsManagerTests.swift in Sources */,
 				9B100ED6A3B61F1E12BB1B1D /* mellow_iosTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -875,6 +882,7 @@
 				B2F962484D72F9EDC25B223E /* ProfileSettingsKidEditView.swift in Sources */,
 				01A2B7D50EA44CEC83EF9472 /* ProfileSettingsView+KidRowView.swift in Sources */,
 				62B5CEED23C06D94499986FC /* ProfileSettingsView.swift in Sources */,
+				6D7615C62D1C2225005A2105 /* SettingsManager.swift in Sources */,
 				F1372E044257CC18DDDDC04C /* ProfileSettingsViewPreviewWrapper.swift in Sources */,
 				7DD3C9244ABD17C49AF18374 /* ProfileStatsView.swift in Sources */,
 				02B52C8751DD0ED7300D8078 /* ProfileTabView.swift in Sources */,

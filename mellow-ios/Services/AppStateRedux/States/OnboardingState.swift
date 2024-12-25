@@ -95,30 +95,36 @@ extension OnboardingState {
         private let sleepManager = SleepManager()
         
         func reduce(state: inout OnboardingState, action: OnboardingState.Action) {
-            switch action {
-            case .welcomeMessageShown:
-                state.welcomeMessageShown = true
+            DispatchQueue.main.sync {
+                switch action {
+                case .welcomeMessageShown:
+                    state.welcomeMessageShown = true
+                    
+                case .setChildName(let name):
+                    state.childName = name
+                    
+                case .setKidDateOfBirth(let date):
+                    state.kidDateOfBirth = date
+                    guard let birthDate = date else { return }
+                    let ageInMonths = calculateAgeInMonths(birthDate: birthDate, from: Date())
+                    let napDurations = sleepManager.getNapDurations(for: ageInMonths)
+                    state.numberOfNaps = napDurations.count
+                    // Handle new actions
+                case .setSleepTime(let date):
+                    state.sleepTime = date
+                    
+                case .setWakeTime(let date):
+                    state.wakeTime = date
+                case .close: break
+                }
                 
-            case .setChildName(let name):
-                state.childName = name
-                
-            case .setKidDateOfBirth(let date):
-                state.kidDateOfBirth = date
-                guard let birthDate = date else { return }
-                let ageInMonths = calculateAgeInMonths(birthDate: birthDate, from: Date())
-                let napDurations = sleepManager.getNapDurations(for: ageInMonths)
-                state.numberOfNaps = napDurations.count
-                // Handle new actions
-            case .setSleepTime(let date):
-                state.sleepTime = date
-                
-            case .setWakeTime(let date):
-                state.wakeTime = date
-            case .close: break
+                // After handling any action, check if onboarding is completed
+                state.completed = state.isOnboardingCompleted
             }
-            
-            // After handling any action, check if onboarding is completed
-            state.completed = state.isOnboardingCompleted
+        }
+        
+        func reduce(_ oldState: AppState, action: AppState.Action) async -> AppState {
+            .init()
         }
         
         /// Helper method to calculate age in months

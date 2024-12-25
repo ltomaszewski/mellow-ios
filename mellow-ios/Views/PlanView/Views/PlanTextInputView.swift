@@ -39,10 +39,12 @@ struct PlanTextInputView: View {
                     Group {
                         if inputText.isEmpty {
                             Text(placeholderText)
-                                .foregroundColor(.gray)
+                                .foregroundColor(.slate300)
                                 .font(.main64)
                                 .padding()
                                 .allowsHitTesting(false)
+                                .minimumScaleFactor(0.5) // Scales down the font size if the text is too long
+                                .lineLimit(1)
                         }
                     },
                     alignment: .center

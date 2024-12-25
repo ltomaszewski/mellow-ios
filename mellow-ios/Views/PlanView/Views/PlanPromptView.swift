@@ -1,4 +1,3 @@
-//
 //  PlanPromptView.swift
 //  mellow-ios
 //
@@ -17,51 +16,62 @@ struct PlanPromptView: View {
     let bottomText: String
     
     var body: some View {
-        VStack {
-            Spacer()
-            VStack {
-                if !headlineTopText.isEmpty {
-                    Text(headlineTopText)
-                        .font(.main16)
-                        .foregroundColor(.slateGray)
-                        .padding(.bottom)
+        ZStack {
+            Color.clear
+                .contentShape(Rectangle()) // Ensures the entire background is tappable
+                .onTapGesture {
+                    withAnimation(.easeInOut) {
+                        screenTapped = true
+                    }
                 }
-                
-                Text(headlineText)
-                    .font(.main24)
-                    .multilineTextAlignment(.center)
-                
-                if !headlineBottomText.isEmpty {
-                    Text(headlineBottomText)
-                        .font(.main16)
-                        .foregroundColor(.slateGray)
-                        .padding(.top)
-                }
-                
-                if !headlineBottomTextImageName.isEmpty {
-                    Image(headlineBottomTextImageName)
-                        .padding(.top)
-                }
-            }
             
-            Spacer()
-            if !bottomText.isEmpty {
-                Text(bottomText)
-                    .font(.main16)
-                    .foregroundColor(.slateGray)
+            VStack {
+                Spacer()
+                VStack {
+                    if !headlineTopText.isEmpty {
+                        Text(headlineTopText)
+                            .font(.main16)
+                            .foregroundColor(.slateGray)
+                            .padding(.bottom)
+                    }
+                    
+                    Text(headlineText)
+                        .font(.main24)
+                        .multilineTextAlignment(.center)
+                    
+                    if !headlineBottomText.isEmpty {
+                        Text(headlineBottomText)
+                            .font(.main16)
+                            .foregroundColor(.slateGray)
+                            .padding(.top)
+                    }
+                    
+                    if !headlineBottomTextImageName.isEmpty {
+                        Image(headlineBottomTextImageName)
+                            .padding(.top)
+                    }
+                }
+                
+                Spacer()
+                if !bottomText.isEmpty {
+                    Text(bottomText)
+                        .font(.main16)
+                        .foregroundColor(.slateGray)
+                }
             }
-        }
-        .padding(.bottom)
-        .onTapGesture {
-            withAnimation(.easeInOut) {
-                screenTapped = true
+            .padding(.bottom)
+            .onTapGesture {
+                withAnimation(.easeInOut) {
+                    screenTapped = true
+                }
             }
         }
     }
 }
 
 #Preview {
-    PlanPromptView(screenTapped: .init(get: { false }, set: { _ in }),
+    @Previewable @State var screenTapped: Bool = false
+    PlanPromptView(screenTapped: $screenTapped,
                    headlineTopText: "Top headline",
                    headlineText: "Answer a few questions to start personalizing your experience.",
                    headlineBottomText: "Bootom text",
@@ -69,5 +79,8 @@ struct PlanPromptView: View {
                    bottomText: "Tap anywhere to continue")
     .frame(maxWidth: .infinity)
     .foregroundStyle(.white)
+    .onChange(of: screenTapped, { oldValue, newValue in
+        print("newValue: \(newValue)")
+    })
     .background(.gunmetalBlue)
 }

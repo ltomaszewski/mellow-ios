@@ -15,9 +15,6 @@ struct mellow_iosApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .onAppear {
-                    UIDatePicker.appearance().overrideUserInterfaceStyle = .light
-                }
                 .environmentObject(rAppStateStore)
         }
         .modelContainer(for: [Kid.self, SleepSession.self])

@@ -30,6 +30,7 @@ struct ContentView: View {
         .background(.gunmetalBlue)
         .onAppear(perform: {
             appStateStore.dispatch(.load(modelContext))
+            UIDatePicker.appearance().overrideUserInterfaceStyle = .light
         })
     }
 }

@@ -173,7 +173,7 @@
 		8ADAAB7E8C3C2E01A6C7AFB3 /* SleepSession+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSession+Validation.swift"; sourceTree = "<group>"; };
 		8B52D6C27D81800855A3BE5B /* Kid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kid.swift; sourceTree = "<group>"; };
 		8C8C76EB5A9A56AE98D8DF73 /* DayPickerBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPickerBarView.swift; sourceTree = "<group>"; };
-		8C9AA25AE38023F51D90945E /* mellow-ios.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "mellow-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C9AA25AE38023F51D90945E /* mellow-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mellow-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D9696BA9100704F15034635 /* SleepTimePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepTimePicker.swift; sourceTree = "<group>"; };
 		8E2AE3A9107319C7B79508F1 /* ProfileCalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCalendarViewModel.swift; sourceTree = "<group>"; };
 		8FFBBE5BD7070BBAA188EC8B /* SleepSession+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSession+Factory.swift"; sourceTree = "<group>"; };
@@ -1117,7 +1117,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.growgenie.mellow-ios";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1182,7 +1182,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.growgenie.mellow-ios";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;

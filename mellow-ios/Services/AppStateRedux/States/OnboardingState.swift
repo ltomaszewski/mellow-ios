@@ -95,32 +95,30 @@ extension OnboardingState {
         private let sleepManager = SleepManager()
         
         func reduce(state: inout OnboardingState, action: OnboardingState.Action) {
-            DispatchQueue.main.sync {
-                switch action {
-                case .welcomeMessageShown:
-                    state.welcomeMessageShown = true
-                    
-                case .setChildName(let name):
-                    state.childName = name
-                    
-                case .setKidDateOfBirth(let date):
-                    state.kidDateOfBirth = date
-                    guard let birthDate = date else { return }
-                    let ageInMonths = calculateAgeInMonths(birthDate: birthDate, from: Date())
-                    let napDurations = sleepManager.getNapDurations(for: ageInMonths)
-                    state.numberOfNaps = napDurations.count
-                    // Handle new actions
-                case .setSleepTime(let date):
-                    state.sleepTime = date
-                    
-                case .setWakeTime(let date):
-                    state.wakeTime = date
-                case .close: break
-                }
+            switch action {
+            case .welcomeMessageShown:
+                state.welcomeMessageShown = true
                 
-                // After handling any action, check if onboarding is completed
-                state.completed = state.isOnboardingCompleted
+            case .setChildName(let name):
+                state.childName = name
+                
+            case .setKidDateOfBirth(let date):
+                state.kidDateOfBirth = date
+                guard let birthDate = date else { return }
+                let ageInMonths = calculateAgeInMonths(birthDate: birthDate, from: Date())
+                let napDurations = sleepManager.getNapDurations(for: ageInMonths)
+                state.numberOfNaps = napDurations.count
+                // Handle new actions
+            case .setSleepTime(let date):
+                state.sleepTime = date
+                
+            case .setWakeTime(let date):
+                state.wakeTime = date
+            case .close: break
             }
+            
+            // After handling any action, check if onboarding is completed
+            state.completed = state.isOnboardingCompleted
         }
         
         func reduce(_ oldState: AppState, action: AppState.Action) async -> AppState {

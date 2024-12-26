@@ -11,7 +11,7 @@ import SwiftUI
 
 // MARK: - AppState
 
-struct AppState {
+struct AppState: Sendable {
     var onboardingState: OnboardingState
     var selectedKid: Kid?
     var selectedDate: Date?
@@ -94,7 +94,7 @@ extension AppState {
         }
         
         /// **Refactored**: Returns a new `AppState` (instead of inout).
-        func reduce(_ oldState: AppState, action: AppState.Action) async -> AppState {
+        func reduce(_ oldState: AppState, action: AppState.Action) -> AppState {
             // If the action is `.refresh(...)`, it means the Store is trying
             // to push a new state onto the main thread. We just return
             // that new state immediately without further processing.
@@ -107,7 +107,7 @@ extension AppState {
             // Switch on the action and mutate `newState`
             switch action {
             case .load(let context):
-                await handleLoadAction(state: &newState, context: context)
+                handleLoadAction(state: &newState, context: context)
                 
             case .openAddKidOnboarding:
                 handleOpenAddKidOnboarding(state: &newState)
@@ -117,7 +117,7 @@ extension AppState {
                 case .close:
                     newState.currentViewState = .root
                 default:
-                    await handleOnboardingAction(state: &newState, action: subAction)
+                    handleOnboardingAction(state: &newState, action: subAction)
                 }
                 
             case .setSelectedKid(let kid, let modelContext):
@@ -126,7 +126,7 @@ extension AppState {
                 
                 var currentSettings = oldState.appSettings
                 currentSettings.kidId = kid.id
-                newState = await self.reduce(newState, action: .updateSettings(currentSettings))
+                newState = self.reduce(newState, action: .updateSettings(currentSettings))
                 
             case .setSelectedDate(let date):
                 newState.selectedDate = date
@@ -156,7 +156,7 @@ extension AppState {
                 handleUpdateSettings(state: &newState, newSettings: newSettings)
                 
             case .resetSettings:
-                await handleResetSettings(state: &newState)
+                handleResetSettings(state: &newState)
                 
             case .error, .resetError:
                 // For brevity, not implemented in your snippet.
@@ -177,23 +177,21 @@ extension AppState {
         // MARK: - AppSettings Actions
         
         private func handleUpdateSettings(state: inout AppState, newSettings: AppSettings) {
-            Task {
-                await settingsManager.updateSettings { settings in
-                    settings = newSettings
-                }
+            settingsManager.updateSettings { settings in
+                settings = newSettings
             }
             state.appSettings = newSettings
         }
         
-        private func handleResetSettings(state: inout AppState) async {
-            await settingsManager.reset()
-            state.appSettings = await settingsManager.getSettings()
+        private func handleResetSettings(state: inout AppState) {
+            settingsManager.reset()
+            state.appSettings = settingsManager.getSettings()
         }
         
         // MARK: - Helper Methods
         
-        private func handleLoadAction(state: inout AppState, context: ModelContext) async {
-            state.appSettings = await settingsManager.getSettings()
+        private func handleLoadAction(state: inout AppState, context: ModelContext) {
+            state.appSettings = settingsManager.getSettings()
             state.currentViewState = state.appSettings.kidId.isEmpty ? .intro : .root
             
             guard !state.appSettings.kidId.isEmpty else { return }
@@ -211,7 +209,7 @@ extension AppState {
             state.currentViewState = .onboarding
         }
         
-        private func handleOnboardingAction(state: inout AppState, action: OnboardingState.Action) async {
+        private func handleOnboardingAction(state: inout AppState, action: OnboardingState.Action) {
             onboardingReducer.reduce(state: &state.onboardingState, action: action)
         }
         
@@ -438,7 +436,7 @@ extension AppState {
 // MARK: - Store
 extension AppState {
     // TODO: Think about how to make store an actor
-    class Store: ObservableObject {
+    final class Store: ObservableObject {
         @Published private(set) var state: AppState
         private let reducer: Reducer
         
@@ -456,23 +454,8 @@ extension AppState {
         /// 2. Otherwise, run the reducer off the main thread and then
         ///    dispatch `.refresh(newState)` to apply it.
         func dispatch(_ action: Action) {
-            switch action {
-            case .refresh(let newState):
-                // Apply new state on main thread for UI update
-                DispatchQueue.main.async {
-                    self.state = newState
-                }
-                
-            default:
-                // Offload to a background task
-                Task.detached(priority: .userInitiated) { [weak self] in
-                    guard let self = self else { return }
-                    let newState = await self.reducer.reduce(self.state, action: action)
-                    // Once we have the new state, dispatch `.refresh`
-                    // so we can apply it on the main thread
-                    self.dispatch(.refresh(newState))
-                }
-            }
+            let newState = self.reducer.reduce(self.state, action: action)
+            self.state = newState
         }
     }
 }

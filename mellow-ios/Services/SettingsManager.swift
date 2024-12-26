@@ -13,12 +13,11 @@ struct AppSettings: Codable {
 }
 
 // MARK: - Settings Manager Actor
-actor SettingsManager {
+final class SettingsManager {
     
     // MARK: - Private Properties
     private var settings: AppSettings
     private let settingsFileURL: URL
-    private var continuations: [UUID: AsyncStream<AppSettings>.Continuation] = [:]
     
     // MARK: - Initialization
     init() {
@@ -34,9 +33,7 @@ actor SettingsManager {
             // Initialize with default settings
             self.settings = AppSettings(deviceId: UUID().uuidString,
                                         kidId: "")
-            Task {
-                await saveSettings()
-            }
+            saveSettings()
         }
     }
     
@@ -47,36 +44,12 @@ actor SettingsManager {
         return settings
     }
     
-    /// Retrieves the current settings asynchronously in a thread-safe manner.
-    func getSettingsAsync() async -> AppSettings {
-        return settings
-    }
-    
     /// Updates the settings with a new value in a thread-safe manner.
-    func updateSettings(_ update: @escaping (inout AppSettings) -> Void) async {
+    func updateSettings(_ update: @escaping (inout AppSettings) -> Void) {
         update(&settings)
-        await saveSettings()
-        await notifySubscribers()
+        saveSettings()
     }
     
-    /// Provides an AsyncStream to observe settings changes.
-    func settingsUpdates() -> AsyncStream<AppSettings> {
-        AsyncStream { continuation in
-            // Generate a unique identifier for this continuation
-            let id = UUID()
-            
-            Task {
-                await self.addContinuation(id: id, continuation: continuation)
-            }
-            
-            // Handle cancellation by removing the continuation using its UUID
-            continuation.onTermination = { @Sendable _ in
-                Task {
-                    await self.removeContinuation(id: id)
-                }
-            }
-        }
-    }
     
     /// Resets settings in memory and removes the file from disk synchronously.
     func reset() {
@@ -94,31 +67,12 @@ actor SettingsManager {
     // MARK: - Private Methods
     
     /// Saves the current settings to disk.
-    private func saveSettings() async {
+    private func saveSettings() {
         do {
             let data = try JSONEncoder().encode(settings)
             try data.write(to: settingsFileURL, options: [.atomicWrite])
         } catch {
             print("Failed to save settings: \(error)")
         }
-    }
-    
-    /// Notifies all subscribers about the updated settings.
-    private func notifySubscribers() async {
-        for continuation in continuations.values {
-            continuation.yield(settings)
-        }
-    }
-    
-    /// Adds a new continuation to the subscribers list.
-    private func addContinuation(id: UUID, continuation: AsyncStream<AppSettings>.Continuation) async {
-        continuations[id] = continuation
-        // Send the current settings immediately upon subscription
-        continuation.yield(settings)
-    }
-    
-    /// Removes a continuation from the subscribers list using its UUID.
-    private func removeContinuation(id: UUID) async {
-        continuations.removeValue(forKey: id)
     }
 }

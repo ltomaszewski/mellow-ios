@@ -120,6 +120,16 @@ extension AppState {
             case .kidOperation(let operation, let kid, let modelContext):
                 handleKidOperation(state: &newState, operation: operation, kid: kid, context: modelContext)
                 
+                switch operation {
+                case .create where newState.appSettings.kidId.isEmpty:
+                    guard let firstKid = databaseService.loadKids(context: modelContext).first else { fatalError("Kid not found despite create request") }
+                    var currentSettings = oldState.appSettings
+                    currentSettings.kidId = firstKid.id
+                    newState = self.reduce(newState, action: .updateSettings(currentSettings))
+                default:
+                    break;
+                }
+                
             case .sleepSessionOperation(let operation, let sleepSession, let modelContext):
                 handleSleepSessionOperation(state: &newState, operation: operation, sleepSession: sleepSession, context: modelContext)
                 
@@ -145,7 +155,7 @@ extension AppState {
             }
             
             // Debug prints
-            debugPrint(item: action)
+            //            debugPrint(item: action)
             // debugPrint(state: newState)
             
             return newState

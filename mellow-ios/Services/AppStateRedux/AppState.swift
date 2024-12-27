@@ -11,7 +11,7 @@ import SwiftUI
 
 // MARK: - AppState
 
-struct AppState: Sendable {
+struct AppState {
     var onboardingState: OnboardingState
     var selectedKid: Kid?
     var selectedDate: Date?
@@ -43,10 +43,6 @@ extension AppState {
 
 extension AppState {
     enum Action {
-        /// **New**: The `.refresh(newState)` action will be used on the main thread
-        /// to update the store's published `state`.
-        case refresh(AppState)
-        
         case load(ModelContext)
         case openAddKidOnboarding
         case onboarding(OnboardingState.Action)
@@ -56,8 +52,6 @@ extension AppState {
         case sleepSessionOperation(CRUDOperation, SleepSession?, ModelContext)
         case startSleepSessionInProgress(ModelContext)
         case endSleepSessionInProgress(ModelContext)
-        case error(Error)
-        case resetError
         case refreshSchedule
         case updateSettings(AppSettings)
         case resetSettings
@@ -73,8 +67,6 @@ extension AppState {
 // MARK: - Reducer
 
 extension AppState {
-    // Convert from `inout` to a function that returns a **new** `AppState`.
-    // This function can be called off the main thread.
     struct Reducer: ReducerProtocol {
         private let onboardingReducer: OnboardingState.Reducer
         private let databaseService: DatabaseService
@@ -93,14 +85,7 @@ extension AppState {
             self.isDebugMode = isDebugMode
         }
         
-        /// **Refactored**: Returns a new `AppState` (instead of inout).
         func reduce(_ oldState: AppState, action: AppState.Action) -> AppState {
-            // If the action is `.refresh(...)`, it means the Store is trying
-            // to push a new state onto the main thread. We just return
-            // that new state immediately without further processing.
-            
-            if case .refresh(_) = action { fatalError("The store should handle it") }
-            
             // Create a mutable copy for us to modify
             var newState = oldState
             
@@ -157,14 +142,6 @@ extension AppState {
                 
             case .resetSettings:
                 handleResetSettings(state: &newState)
-                
-            case .error, .resetError:
-                // For brevity, not implemented in your snippet.
-                // You might handle error states or reset error states here.
-                break
-            case .refresh:
-                // Handled at top of function
-                break
             }
             
             // Debug prints

@@ -83,18 +83,12 @@ extension AppState.Action: CustomStringConvertible {
             return "Sleep session in progress started"
         case .endSleepSessionInProgress(_):
             return "Sleep session in progress ended"
-        case .error(let error):
-            return "Error: \(error)"
-        case .resetError:
-            return "Error reset"
         case .refreshSchedule:
             return "Schedule refreshed"
         case .updateSettings(let newSettings):
             return "App settings updated: \(newSettings)"
         case .resetSettings:
             return "App settings reset to defaults"
-        case .refresh(_):
-            return "REfresh"
         }
     }
 }

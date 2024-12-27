@@ -23,7 +23,7 @@ targets:
       base:
         CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: DRU4XTX272
-        MARKETING_VERSION: 1.1
+        MARKETING_VERSION: 1.1.6
         CURRENT_PROJECT_VERSION: 42
         SWIFT_VERSION: 5.0
         ENABLE_PREVIEWS: YES

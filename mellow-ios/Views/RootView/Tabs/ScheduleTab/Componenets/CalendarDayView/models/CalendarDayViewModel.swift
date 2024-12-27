@@ -89,7 +89,7 @@ class CalendarDayViewModel: ObservableObject {
             let sleepSessionView = SleepSessionViewModel(
                 topOffset: topOffset,
                 height: height,
-                text: session.type.rawValue,
+                text: session.isInProgress ? "sleeping…" : session.type.rawValue,
                 subText: session.formattedTimeRange,
                 sleepSession: session
             )

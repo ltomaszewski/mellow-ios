@@ -1,3 +1,6 @@
+*GoogleService-Info.plist
+mellow-ios/GoogleService-Info.plist
+
 # macOS
 .DS_Store
 .AppleDouble
@@ -89,3 +92,4 @@ project.yml.generated/
 *.profraw
 
 
+mellow-ios/GoogleService-Info.plist

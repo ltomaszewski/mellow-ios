@@ -29,8 +29,6 @@ class TodayTabViewModel: ObservableObject {
     // MARK: - onAppear Method
 
     func onAppear(_ appState: AppState.Store, context: ModelContext) {
-        setupBindings(appState)
-        
         // Compute kidAgeInMonths
         if let dateOfBirth = appState.state.selectedKid?.dateOfBirth {
             let ageComponents = Calendar.current.dateComponents([.month], from: dateOfBirth, to: Date())
@@ -38,7 +36,8 @@ class TodayTabViewModel: ObservableObject {
         } else {
             kidAgeInMonths = 0
         }
-
+        
+        setupBindings(appState)
         fetchTodayData(appState)
 
         // Calculate the next expected sleep session
@@ -177,11 +176,20 @@ class TodayTabViewModel: ObservableObject {
         }
     }
 
-    private func calculateNapTimeScore(from sessions: [SleepSessionViewRepresentation]) -> Int {
-        let today = Calendar.current.startOfDay(for: Date())
-        
+    private func calculateNapTimeScore(from sessions: [SleepSessionViewRepresentation], referenceDate: Date? = nil) -> Int {
+        let today = if let referenceDate {
+            Calendar.current.startOfDay(for: referenceDate)
+        } else {
+            Calendar.current.startOfDay(for: Date())
+        }
+        let yesterday = if referenceDate != nil {
+            today
+        } else {
+            Calendar.current.date(byAdding: .day, value: -1, to: today)!
+        }
+
         // Retrieve the expected sleep schedule for the current kid's age on today's date
-        guard let expectedSchedule = sleepManager.getSleepSchedule(for: kidAgeInMonths, baseDate: today) else {
+        guard let expectedSchedule = sleepManager.getSleepSchedule(for: kidAgeInMonths, baseDate: yesterday) else {
             return 0
         }
         
@@ -194,7 +202,7 @@ class TodayTabViewModel: ObservableObject {
         // Filter the sessions to include only actual naps taken today (not scheduled)
         let actualNaps = sessions.filter { session in
             session.type == .nap &&
-            Calendar.current.isDate(session.startDate.startOfDay(), inSameDayAs: today) &&
+            Calendar.current.isDate(session.startDate.startOfDay(), inSameDayAs: yesterday) &&
             !session.isScheduled
         }
         
@@ -209,10 +217,10 @@ class TodayTabViewModel: ObservableObject {
         return napTimeScore
     }
 
-    private func calculateDurationScore(from sessions: [SleepSessionViewRepresentation]) -> Int {
-        let today = Calendar.current.startOfDay(for: Date())
-        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
-
+    private func calculateDurationScore(from sessions: [SleepSessionViewRepresentation], referenceDate: Date = Date()) -> Int {
+        let today = Calendar.current.startOfDay(for: referenceDate)
+        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: referenceDate)!
+        
         let idealSleepHours = Float(sleepManager.getIdealSleepHours(for: kidAgeInMonths))
 
         let nightSleepDuration = sessions
@@ -226,7 +234,7 @@ class TodayTabViewModel: ObservableObject {
         let napDuration = sessions
             .filter { session in
                 session.type == .nap &&
-                Calendar.current.isDate(session.startDate, inSameDayAs: today) &&
+                Calendar.current.isDate(session.startDate, inSameDayAs: yesterday) &&
                 !session.isScheduled
             }
             .reduce(0.0) { total, session in total + Float(session.durationInHours) }
@@ -238,88 +246,86 @@ class TodayTabViewModel: ObservableObject {
         return durationScore
     }
 
-    private func calculateWakeupScore(from sessions: [SleepSessionViewRepresentation]) -> Int {
-        let today = Calendar.current.startOfDay(for: Date())
-        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
+    private func calculateWakeupScore(from sessions: [SleepSessionViewRepresentation], referenceDate: Date = Date()) -> Int {
+        let today = Calendar.current.startOfDay(for: referenceDate)
+        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: referenceDate)!
 
-        guard let nightSleepSession = sessions.first(where: { session in
-            session.type == .nighttime &&
-            Calendar.current.isDate(session.startDate, inSameDayAs: yesterday) &&
-            Calendar.current.isDate(session.endDate ?? Date(), inSameDayAs: today)
+        // 1. Identify the relevant nighttime session
+        guard let nightSleepSession = sessions.first(where: {
+            $0.type == .nighttime &&
+            Calendar.current.isDate($0.startDate, inSameDayAs: yesterday) &&
+            Calendar.current.isDate($0.endDate ?? Date(), inSameDayAs: today)
         }) else {
             return 0
         }
 
+        // 2. Get the actual wake-up time
         guard let actualWakeUpTime = nightSleepSession.endDate else {
             return 0
         }
 
-        guard let idealWakeUpTime = sleepManager.getSleepSchedule(for: kidAgeInMonths, baseDate: today)?
-            .first(where: { session in
-                if case .nightSleep = session.type { return true }
+        // 3. Get the *ideal* wake-up time from the schedule
+        guard let idealWakeUpTime = sleepManager
+            .getSleepSchedule(for: kidAgeInMonths, baseDate: yesterday)?
+            .first(where: {
+                if case .nightSleep = $0.type { return true }
                 return false
-            })?.endTime else {
+            })?.endTime
+        else {
             return 0
         }
 
-        let timeDifference = abs(actualWakeUpTime.timeIntervalSince(idealWakeUpTime)) / 3600
+        // 4. Calculate the difference in hours
+        let timeDifferenceHours = abs(actualWakeUpTime.timeIntervalSince(idealWakeUpTime)) / 3600
 
-        switch timeDifference {
+        // 5. Return a more “optimistic” score based on the time difference
+        switch timeDifferenceHours {
         case 0..<1:
+            // Very close to ideal: top score
             return 100
         case 1..<2:
-            return 50
+            // Slightly off, but still good
+            return 80
+        case 2..<3:
+            // Getting further, but keep some decent score
+            return 60
+        case 3..<4:
+            // More deviation, but don’t drop to 0
+            return 40
         default:
-            return 0
+            // Large deviation, but let's still give *some* points
+            return 20
         }
     }
 
     private func calculateThreeDayConsistencyScore(from sessions: [SleepSessionViewRepresentation]) -> Int {
         let today = Calendar.current.startOfDay(for: Date())
-        let pastThreeDays = (0..<3).map { Calendar.current.date(byAdding: .day, value: -$0, to: today)! }
-
-        var wakeUpScores: [Int] = []
-        var durationScores: [Int] = []
-        var napTimeScores: [Int] = []
+        let pastThreeDays = (1..<4).map { Calendar.current.date(byAdding: .day, value: -$0, to: today)! }
+        
+        var dayScores: [Int] = []
 
         for day in pastThreeDays {
-            let sessionsForDay = sessions.filter { session in
-                Calendar.current.isDate(session.startDate, inSameDayAs: day)
+            let sessionsForDay = sessions.filter {
+                Calendar.current.isDate($0.startDate, inSameDayAs: day)
             }
 
-            let wakeUpScore = calculateWakeupScore(from: sessionsForDay)
-            let durationScore = calculateDurationScore(from: sessionsForDay)
-            let napTimeScore = calculateNapTimeScore(from: sessionsForDay)
+            let wakeUpScore = calculateWakeupScore(from: sessions, referenceDate: day)
+            let durationScore = calculateDurationScore(from: sessionsForDay, referenceDate: day)
+            let napTimeScore = calculateNapTimeScore(from: sessionsForDay, referenceDate: day)
 
-            wakeUpScores.append(wakeUpScore)
-            durationScores.append(durationScore)
-            napTimeScores.append(napTimeScore)
+            // One approach: sum up the three scores and take their average for that day
+            let dailyTotal = wakeUpScore + durationScore + napTimeScore
+            let dailyAverage = dailyTotal / 3
+            
+            dayScores.append(dailyAverage)
         }
 
-        let wakeUpOffset = averageOffset(wakeUpScores)
-        let durationOffset = averageOffset(durationScores)
-        let napTimeOffset = averageOffset(napTimeScores)
-
-        let averageOffset = (wakeUpOffset + durationOffset + napTimeOffset) / 3
-
-        switch averageOffset {
-        case 0..<1:
-            return 100
-        case 1..<2:
-            return 50
-        default:
+        // Get the overall average across the three days
+        guard !dayScores.isEmpty else {
             return 0
         }
-    }
-
-    private func averageOffset(_ scores: [Int]) -> Float {
-        guard scores.count > 1 else { return 0 }
-
-        var totalOffset: Float = 0.0
-        for i in 1..<scores.count {
-            totalOffset += abs(Float(scores[i] - scores[i - 1])) / 100.0 * 24
-        }
-        return totalOffset / Float(scores.count - 1)
+        let finalScore = dayScores.reduce(0, +) / dayScores.count
+        return finalScore
     }
 
     // MARK: - Formatting Helpers

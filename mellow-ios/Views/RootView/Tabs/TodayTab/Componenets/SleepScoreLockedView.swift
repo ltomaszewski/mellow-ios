@@ -16,7 +16,7 @@ struct SleepScoreLockedView: View {
                 .foregroundColor(.slateGray)
 
             // Bottom text: "Complete at least one day of sleep to unlock sleep score"
-            Text("Complete at least one day of sleep to unlock sleep score")
+            Text("Complete at least two days of sleep to unlock sleep score")
                 .font(.main18)
                 .foregroundColor(Color.white)
                 .multilineTextAlignment(.center)

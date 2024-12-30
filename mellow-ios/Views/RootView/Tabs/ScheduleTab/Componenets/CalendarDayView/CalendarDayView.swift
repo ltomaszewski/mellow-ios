@@ -61,11 +61,13 @@ struct CalendarDayView: View {
     
     private var currentTimeSeparator: some View {
         VStack {
-            CurrentTimeSeparatorView(hourSlotHeight: hourSlotHeight,
-                                     numberHours: CGFloat(viewModel.hours.count),
-                                     firstDate: viewModel.hours.first ?? .now)
-            .padding(.leading, 64)
-            Spacer()
+            if viewModel.midDayDate.isToday() {
+                CurrentTimeSeparatorView(hourSlotHeight: hourSlotHeight,
+                                         numberHours: CGFloat(viewModel.hours.count),
+                                         firstDate: viewModel.hours.first ?? .now)
+                .padding(.leading, 64)
+                Spacer()
+            }
         }
     }
     

@@ -75,11 +75,37 @@ class TodayTabViewModel: ObservableObject {
     }
 
     private func updateTotalAsleep(from sessions: [SleepSessionViewRepresentation]) {
+        let calendar = Calendar.current
+        let now = Date()
+        
+        // Today starts at midnight:
+        let startOfToday = calendar.startOfDay(for: now)
+        
+        // Option A: End of today can be next midnight (the beginning of tomorrow)
+        guard let endOfToday = calendar.date(byAdding: .day, value: 1, to: startOfToday) else {
+            // Fallback if we can’t compute the next day for any reason.
+            totalAsleep = 0
+            return
+        }
+        
         totalAsleep = sessions
-            .filter { !$0.isScheduled } // Exclude scheduled sessions
+            .filter { !$0.isScheduled || !$0.isInProgress } // Exclude scheduled and in progres sessions
             .reduce(0) { total, session in
-                let durationInHours = Float(session.durationInHours)
-                return total + durationInHours
+                
+                // If `endDate` is nil, we treat "now" as the end of the session
+                let sessionEnd = session.endDate ?? now
+                
+                // Calculate intersection between session interval and today's interval
+                //  i.e.  [max(startOfToday, session.startDate), min(endOfToday, sessionEnd)]
+                let actualStart = max(session.startDate, startOfToday)
+                let actualEnd = min(sessionEnd, endOfToday)
+                
+                // If the session doesn't overlap with today (end <= start), skip
+                guard actualEnd > actualStart else { return total }
+                
+                // Convert the time interval to hours
+                let duration = actualEnd.timeIntervalSince(actualStart) / 3600.0
+                return total + Float(duration)
             }
     }
 

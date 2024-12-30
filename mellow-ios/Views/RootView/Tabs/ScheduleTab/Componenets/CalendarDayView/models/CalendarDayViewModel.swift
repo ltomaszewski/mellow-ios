@@ -25,19 +25,19 @@ class CalendarDayViewModel: ObservableObject {
         
         let midDayDate = (date.wrappedValue ?? .now).adjustToMidday()
         
-        guard let startDate = midDayDate.adding(hours: -24) else {
+        guard let startDate = midDayDate.adding(hours: -19) else {
             fatalError("Can not create startDate")
         }
-        guard let endDate = midDayDate.adding(hours: 24) else {
+        guard let endDate = midDayDate.adding(hours: 22) else {
             fatalError("Can not create endDate")
         }
         
         self.startDate = startDate
         self.endDate = endDate
         self.midDayDate = midDayDate
-        
+                
         let calendar = Calendar.current
-        let range = -24...24
+        let range = -19...22
         self.hours = range.compactMap { [midDayDate] offset in
             calendar.date(byAdding: .hour, value: offset, to: midDayDate)
         }

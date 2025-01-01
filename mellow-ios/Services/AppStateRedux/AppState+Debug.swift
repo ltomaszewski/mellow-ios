@@ -89,6 +89,8 @@ extension AppState.Action: CustomStringConvertible {
             return "App settings updated: \(newSettings)"
         case .resetSettings:
             return "App settings reset to defaults"
+        case .saveCrenentials(usedID: let usedID, fullName: let fullName, email: let email):
+            return "Saved credentials with User ID: \(usedID), Full Name: \(fullName), Email: \(email)"
         }
     }
 }

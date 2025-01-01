@@ -21,13 +21,16 @@ struct AppState {
     var sleepSessions: [SleepSessionViewRepresentation] = []
     var sleepSessionInProgress: SleepSessionViewRepresentation?
     var appSettings: AppSettings = .init(deviceId: "", kidId: "")
+    var userCredentials: UserCredentials?
     
     init(onboardingState: OnboardingState = .init(),
          selectedKid: Kid? = nil,
-         selectedDate: Date = .now.adjustToMidday()) {
+         selectedDate: Date = .now.adjustToMidday(),
+         userCredentials: UserCredentials? = nil) {
         self.onboardingState = onboardingState
         self.selectedKid = selectedKid
         self.selectedDate = selectedDate
+        self.userCredentials = userCredentials
     }
 }
 
@@ -35,6 +38,7 @@ extension AppState {
     enum CurrentViewState {
         case intro
         case onboarding
+        case signUp
         case root
     }
 }
@@ -44,6 +48,7 @@ extension AppState {
 extension AppState {
     enum Action {
         case load(ModelContext)
+        case saveCrenentials(usedID: String, fullName: String, email: String)
         case openAddKidOnboarding
         case onboarding(OnboardingState.Action)
         case setSelectedKid(Kid, ModelContext)
@@ -72,6 +77,7 @@ extension AppState {
         private let databaseService: DatabaseService
         private let settingsManager: SettingsManager
         private let sleepManager: SleepManager = .init()
+        private let keychainManager: KeychainManager = .init()
         
         private let isDebugMode: Bool
         
@@ -94,13 +100,17 @@ extension AppState {
             case .load(let context):
                 handleLoadAction(state: &newState, context: context)
                 
+            case .saveCrenentials(let userId, let fullName, let email):
+                try? keychainManager.saveUserCredentials(.init(userID: userId, fullName: fullName, email: email), account: "apple")
+                newState.currentViewState = newState.appSettings.kidId.isEmpty ? .onboarding : newState.onboardingState.isOnboardingCompleted ?  .root : .onboarding
+                
             case .openAddKidOnboarding:
                 handleOpenAddKidOnboarding(state: &newState)
                 
             case .onboarding(let subAction):
                 switch subAction {
                 case .close:
-                    newState.currentViewState = .root
+                    newState.currentViewState = .signUp
                 default:
                     handleOnboardingAction(state: &newState, action: subAction)
                 }
@@ -180,6 +190,7 @@ extension AppState {
         private func handleLoadAction(state: inout AppState, context: ModelContext) {
             state.appSettings = settingsManager.getSettings()
             state.currentViewState = state.appSettings.kidId.isEmpty ? .intro : .root
+            state.userCredentials = try? keychainManager.loadUserCredentials(account: "apple")
             
             guard !state.appSettings.kidId.isEmpty else { return }
             let kids = databaseService.loadKids(context: context)
@@ -266,7 +277,7 @@ extension AppState {
                     context: context
                 )
                 state.selectedKid = newKid
-                state.currentViewState = .root
+                state.currentViewState = .signUp
                 updateSleepSessionState(state: &state, kid: newKid, context: context)
             } catch {
                 fatalError("Error saving kid in the database: \(error)")

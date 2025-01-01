@@ -40,7 +40,6 @@ struct OnboardingView: View {
                     .transition(.push(from: .trailing))
             }
         }
-        .background(Color.gunmetalBlue) // Ensure Color.gunmetalBlue is defined in your assets or extensions
         .onChange(of: onboardingSubmitted) { _, completed in
             if completed {
                 // Safely unwrap all required fields
@@ -71,7 +70,6 @@ struct OnboardingView: View {
         )
         .frame(maxWidth: .infinity)
         .foregroundStyle(.white)
-        .background(Color.gunmetalBlue)
     }
     
     var childNameInputView: some View {
@@ -83,7 +81,6 @@ struct OnboardingView: View {
         )
         .frame(maxWidth: .infinity)
         .foregroundStyle(.white)
-        .background(Color.gunmetalBlue)
     }
     
     var kidAgeView: some View {
@@ -95,7 +92,6 @@ struct OnboardingView: View {
         )
         .frame(maxWidth: .infinity)
         .foregroundStyle(.white)
-        .background(Color.gunmetalBlue)
     }
     
     var sleepTimeView: some View {
@@ -107,7 +103,6 @@ struct OnboardingView: View {
         )
         .frame(maxWidth: .infinity)
         .foregroundStyle(.white)
-        .background(Color.gunmetalBlue)
     }
     
     var wakeTimeView: some View {
@@ -119,7 +114,6 @@ struct OnboardingView: View {
         )
         .frame(maxWidth: .infinity)
         .foregroundStyle(.white)
-        .background(Color.gunmetalBlue)
     }
 }
 

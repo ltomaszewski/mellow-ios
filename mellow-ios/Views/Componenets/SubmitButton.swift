@@ -19,7 +19,7 @@ struct SubmitButton: View {
                 .foregroundColor(isInverted ? .white : .white) // Choose color based on isInverted
                 .padding()
                 .frame(maxWidth: .infinity) // Ensures the button takes the full width
-                .background(isInverted ? .darkBlueGray : .softPeriwinkle) 
+                .background(isInverted ? .darkBlueGray : .softPeriwinkle)
                 .cornerRadius(10)
         }
     }

@@ -11,27 +11,39 @@ struct ContentView: View {
     @EnvironmentObject private var appStateStore: AppState.Store
     @Environment(\.modelContext) private var modelContext
 
+    @State private var animatedViewState: AppState.CurrentViewState = .intro
+
     var body: some View {
         VStack {
-            switch appStateStore.state.currentViewState {
+            switch animatedViewState {
             case .intro:
                 IntroView(imageResource: .kidoHim,
-                          text: "Science based sleep program that adapts to your kid.") {
+                          text: "Science-based sleep program that adapts to your kid.") {
                     withAnimation {
                         appStateStore.dispatch(.openAddKidOnboarding)
                     }
                 }
             case .onboarding:
                 OnboardingView()
+                    .transition(.push(from: .bottom))
+            case .signUp:
+                SignUpView()
+                    .transition(.push(from: .bottom))
             case .root:
-                RootView().transition(.push(from: .bottom))
+                RootView()
+                    .transition(.push(from: .bottom))
             }
         }
-        .background(.gunmetalBlue)
-        .onAppear(perform: {
+        .background(Color.deepNight)
+        .onAppear {
             appStateStore.dispatch(.load(modelContext))
             UIDatePicker.appearance().overrideUserInterfaceStyle = .light
-        })
+        }
+        .onChange(of: appStateStore.state.currentViewState) { _, newViewState in
+            withAnimation {
+                animatedViewState = newViewState
+            }
+        }
     }
 }
 

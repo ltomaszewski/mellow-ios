@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import SwiftUI
+import WidgetKit
 
 // MARK: - AppState
 
@@ -73,6 +74,7 @@ extension AppState {
 
 extension AppState {
     struct Reducer: ReducerProtocol {
+        private let sharedSleepSessionUserDefaultsManager: SharedSleepSessionUserDefaultsManager = .init()
         private let onboardingReducer: OnboardingState.Reducer
         private let databaseService: DatabaseService
         private let settingsManager: SettingsManager
@@ -141,7 +143,12 @@ extension AppState {
                 }
                 
             case .sleepSessionOperation(let operation, let sleepSession, let modelContext):
-                handleSleepSessionOperation(state: &newState, operation: operation, sleepSession: sleepSession, context: modelContext)
+                handleSleepSessionOperation(
+                    state: &newState,
+                    operation: operation,
+                    sleepSession: sleepSession,
+                    context: modelContext
+                )
                 
             case .startSleepSessionInProgress(let modelContext):
                 handleSleepSessionOperation(
@@ -151,9 +158,18 @@ extension AppState {
                     context: modelContext
                 )
                 
+                sharedSleepSessionUserDefaultsManager
+                    .saveSharedSleepSession(
+                        .init(name: newState.selectedKid!.name,
+                              startDate: .now,
+                              type: "Sleeping...")
+                    )
+                WidgetCenter.shared.reloadAllTimelines()
             case .endSleepSessionInProgress(let modelContext):
                 handleEndSleepSessionInProgress(state: &newState, context: modelContext)
                 
+                sharedSleepSessionUserDefaultsManager.clearSharedSleepSession()
+                WidgetCenter.shared.reloadAllTimelines()
             case .refreshSchedule:
                 handleRefreshSchedule(state: &newState)
                 

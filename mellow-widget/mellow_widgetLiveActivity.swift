@@ -19,10 +19,10 @@ struct MellowWidgetLiveActivity: Widget {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("\(context.state.name) is a sleep for")
                             .font(.system(size: 12))
-                            .foregroundColor(.mellowWhite)
+                            .foregroundColor(Color("mellowWhite"))
                         Text(context.state.startDate, style: .timer)
                             .font(.system(size: 32))
-                            .foregroundColor(.mellowWhite)
+                            .foregroundColor(Color("mellowWhite"))
                     }
                     
                     Spacer()
@@ -30,10 +30,10 @@ struct MellowWidgetLiveActivity: Widget {
                     VStack(alignment: .trailing, spacing: 4) {
                         Text("Estimated wakeup")
                             .font(.system(size: 12))
-                            .foregroundColor(.mellowWhite)
+                            .foregroundColor(Color("mellowWhite"))
                         Text(context.state.expectedEndDate, style: .time)
                             .font(.system(size: 18))
-                            .foregroundColor(.mellowWhite)
+                            .foregroundColor(Color("mellowWhite"))
                         Spacer()
                     }
                 }

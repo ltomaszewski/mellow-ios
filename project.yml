@@ -12,7 +12,7 @@ packages:
     branch: master
   Firebase:
     url: https://github.com/firebase/firebase-ios-sdk
-    from: 11.6.0   # or use upToNextMajor: 11.6.0 if you prefer
+    from: 11.6.0   # or use upToNextMajor: 11.6.0
 
 targets:
   # Main iOS App
@@ -21,6 +21,8 @@ targets:
     platform: iOS
     sources:
       - path: mellow-ios
+      - path: mellow-ios/Utils/SharedSleepSessionUserDefaultsManager.swift
+      - path: mellow-ios/Utils/MellowWidgetAttributes.swift
     resources:
       - path: mellow-ios/Resources/Assets.xcassets
     dependencies:
@@ -35,6 +37,11 @@ targets:
         product: FirebaseCrashlytics
       - package: Firebase
         product: FirebaseFirestore
+      # -----
+      # The critical fix: embed the widget extension in the main app.
+      - target: mellow-widgetExtension
+        embed: true
+      # -----
     settings:
       base:
         CODE_SIGN_STYLE: Automatic
@@ -47,6 +54,8 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS: YES
         ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+        # <-- Add the entitlements file reference here
+        CODE_SIGN_ENTITLEMENTS: mellow-ios/mellow-ios.entitlements
     info:
       path: mellow-ios/Info.plist
       properties:
@@ -102,21 +111,40 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.growgenie.mellow-iosUITests
         GENERATE_INFOPLIST_FILE: YES
 
-  # Widget Extension (no NSSupportsLiveActivities here)
+  # Widget Extension
   mellow-widgetExtension:
     type: app-extension
     platform: iOS
     sources:
       - path: mellow-widget
+      - path: mellow-ios/Utils/SharedSleepSessionUserDefaultsManager.swift
+      - path: mellow-ios/Utils/MellowWidgetAttributes.swift
     resources:
-      - path: mellow-widget
+      - path: mellow-widget/Resources/Assets.xcassets
     settings:
       base:
         CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: DRU4XTX272
-        INFOPLIST_FILE: mellow-widget/Info.plist
+        INFOPLIST_FILE: mellow-widget/Resources/Info.plist
         GENERATE_INFOPLIST_FILE: YES
+        MARKETING_VERSION: 1.1.6
+        CURRENT_PROJECT_VERSION: 42
+        ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS: YES
+        ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
         SWIFT_VERSION: 5.0
+        PRODUCT_BUNDLE_IDENTIFIER: com.growgenie.mellow-ios.mellow-widget
+        # <-- Add the entitlements file reference here as well
+        CODE_SIGN_ENTITLEMENTS: mellow-widgetExtension.entitlements
+    info:
+      path: mellow-widget/Resources/Info.plist
+      properties:
+        CFBundleShortVersionString: 1.1.6
+        CFBundleVersion: "42"
+        # ---------------------------------
+        # The required NSExtension dictionary for WidgetKit
+        NSExtension:
+          NSExtensionPointIdentifier: "com.apple.widgetkit-extension"
+        # ---------------------------------
 
 configurations:
   Debug:

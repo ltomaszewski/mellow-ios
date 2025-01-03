@@ -47,10 +47,10 @@ struct MellowWidgetEntryView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("\(session.name) is a sleep for")
                                 .font(.system(size: 12))
-                                .foregroundColor(.mellowWhite)
+                                .foregroundColor(Color("mellowWhite"))
                             Text(session.startDate, style: .timer)
                                 .font(.system(size: 32))
-                                .foregroundColor(.mellowWhite)
+                                .foregroundColor(Color("mellowWhite"))
                             Spacer()
                         }
                         
@@ -59,10 +59,10 @@ struct MellowWidgetEntryView: View {
                         VStack(alignment: .trailing, spacing: 4) {
                             Text("Estimated wakeup")
                                 .font(.system(size: 12))
-                                .foregroundColor(.mellowWhite)
+                                .foregroundColor(Color("mellowWhite"))
                             Text(session.expectedEndDate, style: .time)
                                 .font(.system(size: 18))
-                                .foregroundColor(.mellowWhite)
+                                .foregroundColor(Color("mellowWhite"))
                             Spacer()
                         }
                     }
@@ -82,7 +82,7 @@ struct MellowWidgetEntryView: View {
                 VStack {
                     Text("No Active Sleep Session")
                         .font(.headline)
-                        .foregroundStyle(.mellowWhite)
+                        .foregroundColor(Color("mellowWhite"))
                 }
                 .padding()
             }

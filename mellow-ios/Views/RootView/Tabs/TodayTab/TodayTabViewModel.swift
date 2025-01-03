@@ -88,7 +88,7 @@ class TodayTabViewModel: ObservableObject {
         }
         
         totalAsleep = sessions
-            .filter { !$0.isScheduled || !$0.isInProgress } // Exclude scheduled and in progres sessions
+            .filter { !$0.isScheduled && !$0.isInProgress } // Exclude scheduled and in progres sessions
             .reduce(0) { total, session in
                 
                 // If `endDate` is nil, we treat "now" as the end of the session

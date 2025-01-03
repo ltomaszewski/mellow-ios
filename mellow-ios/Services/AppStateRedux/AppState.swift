@@ -162,13 +162,16 @@ extension AppState {
                     .saveSharedSleepSession(
                         .init(name: newState.selectedKid!.name,
                               startDate: .now,
+                              expectedEndDate: .now.adding(hours: 6)!,
                               type: "Sleeping...")
                     )
+                MellowLiveActivityManager.startLiveActivity(for: newState.selectedKid!.name, startDate: .now, expectedEndDate: .now.adding(hours: 6)!)
                 WidgetCenter.shared.reloadAllTimelines()
             case .endSleepSessionInProgress(let modelContext):
                 handleEndSleepSessionInProgress(state: &newState, context: modelContext)
                 
                 sharedSleepSessionUserDefaultsManager.clearSharedSleepSession()
+                MellowLiveActivityManager.endLiveActivity(for: newState.selectedKid!.name)
                 WidgetCenter.shared.reloadAllTimelines()
             case .refreshSchedule:
                 handleRefreshSchedule(state: &newState)

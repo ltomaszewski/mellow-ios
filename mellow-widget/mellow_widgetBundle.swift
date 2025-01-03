@@ -13,6 +13,6 @@ struct mellow_widgetBundle: WidgetBundle {
     var body: some Widget {
         MellowWidget()
         mellow_widgetControl()
-        mellow_widgetLiveActivity()
+        MellowWidgetLiveActivity()
     }
 }

@@ -12,9 +12,10 @@ packages:
     branch: master
   Firebase:
     url: https://github.com/firebase/firebase-ios-sdk
-    from: 11.6.0   # or use `upToNextMajor: 11.6.0` if you prefer that syntax
+    from: 11.6.0   # or use upToNextMajor: 11.6.0 if you prefer
 
 targets:
+  # Main iOS App
   mellow-ios:
     type: application
     platform: iOS
@@ -49,6 +50,7 @@ targets:
     info:
       path: mellow-ios/Info.plist
       properties:
+        NSSupportsLiveActivities: YES
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationLandscapeLeft
@@ -66,6 +68,7 @@ targets:
           - gothamrnd_bold.otf
         ITSAppUsesNonExemptEncryption: NO
 
+  # Unit Tests
   mellow-iosTests:
     type: bundle.unit-test
     platform: iOS
@@ -82,6 +85,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.growgenie.mellow-iosTests
         GENERATE_INFOPLIST_FILE: YES
 
+  # UI Tests
   mellow-iosUITests:
     type: bundle.ui-testing
     platform: iOS
@@ -97,6 +101,22 @@ targets:
         TEST_TARGET_NAME: mellow-ios
         PRODUCT_BUNDLE_IDENTIFIER: com.growgenie.mellow-iosUITests
         GENERATE_INFOPLIST_FILE: YES
+
+  # Widget Extension (no NSSupportsLiveActivities here)
+  mellow-widgetExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: mellow-widget
+    resources:
+      - path: mellow-widget
+    settings:
+      base:
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: DRU4XTX272
+        INFOPLIST_FILE: mellow-widget/Info.plist
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: 5.0
 
 configurations:
   Debug:

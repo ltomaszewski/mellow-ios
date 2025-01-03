@@ -42,39 +42,52 @@ struct MellowWidgetEntryView: View {
     var body: some View {
         Group {
             if let session = entry.sessionData {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("Sleep in progress...")
-                            .font(.system(size: 16))
-                            .foregroundColor(.white)
-                        Text(session.startDate, style: .time)
-                            .font(.system(size: 14))
-                            .foregroundColor(.white.opacity(0.7))
-                    }
-                    
-                    Spacer()
-                    
-                    Button(action: {
+                VStack {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("\(session.name) is a sleep for")
+                                .font(.system(size: 12))
+                                .foregroundColor(.mellowWhite)
+                            Text(session.startDate, style: .timer)
+                                .font(.system(size: 32))
+                                .foregroundColor(.mellowWhite)
+                            Spacer()
+                        }
                         
-                    }) {
-                        Text("End")
-                            .font(.system(size: 14))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 8)
-                            .cornerRadius(10)
+                        Spacer()
+                        
+                        VStack(alignment: .trailing, spacing: 4) {
+                            Text("Estimated wakeup")
+                                .font(.system(size: 12))
+                                .foregroundColor(.mellowWhite)
+                            Text(session.expectedEndDate, style: .time)
+                                .font(.system(size: 18))
+                                .foregroundColor(.mellowWhite)
+                            Spacer()
+                        }
                     }
+                    
+                    ProgressView(
+                        timerInterval: session.startDate...session.expectedEndDate,
+                        countsDown: false,
+                        label: { },
+                        currentValueLabel: { EmptyView() }
+                    )
+                    .tint(Color(cgColor: .init(red: 90.0 / 255.0, green: 108.0 / 255.0, blue: 250.0 / 255.0, alpha: 1.0)))
+                    .scaleEffect(x: 1, y: 2, anchor: .center)
                 }
+                .padding(.vertical, 12)
+                .padding(.horizontal, 8)
             } else {
                 VStack {
                     Text("No Active Sleep Session")
                         .font(.headline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.mellowWhite)
                 }
                 .padding()
             }
         }
-        .containerBackground(for: .widget) { Color.blue }
+        .containerBackground(for: .widget) { Color.clear }
     }
 }
 
@@ -85,7 +98,7 @@ struct MellowWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             MellowWidgetEntryView(entry: entry)
         }
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        .supportedFamilies([.systemMedium])
         .configurationDisplayName("Mellow Sleep Tracker")
         .description("Track your ongoing sleep sessions.")
     }
@@ -94,6 +107,9 @@ struct MellowWidget: Widget {
 #Preview(as: .systemMedium) {
     MellowWidget()
 } timeline: {
-    Entry(date: .now, sessionData: .init(name: "Nick", startDate: .now, type: "Sleeping..."))
+    Entry(date: .now, sessionData: .init(name: "Nick",
+                                         startDate: .now,
+                                         expectedEndDate: Date().addingTimeInterval(400),
+                                         type: "Sleeping..."))
     Entry(date: .now, sessionData: nil)
 }

@@ -9,72 +9,114 @@ import ActivityKit
 import WidgetKit
 import SwiftUI
 
-struct mellow_widgetAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
-        // Dynamic stateful properties about your activity go here!
-        var emoji: String
-    }
-
-    // Fixed non-changing properties about your activity go here!
-    var name: String
-}
-
-struct mellow_widgetLiveActivity: Widget {
+struct MellowWidgetLiveActivity: Widget {
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: mellow_widgetAttributes.self) { context in
-            // Lock screen/banner UI goes here
+        ActivityConfiguration(for: MellowWidgetAttributes.self) { context in
             VStack {
-                Text("Hello \(context.state.emoji)")
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("\(context.state.name) is a sleep for")
+                            .font(.system(size: 12))
+                            .foregroundColor(.mellowWhite)
+                        Text(context.state.startDate, style: .timer)
+                            .font(.system(size: 32))
+                            .foregroundColor(.mellowWhite)
+                    }
+                    
+                    Spacer()
+                    
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text("Estimated wakeup")
+                            .font(.system(size: 12))
+                            .foregroundColor(.mellowWhite)
+                        Text(context.state.expectedEndDate, style: .time)
+                            .font(.system(size: 18))
+                            .foregroundColor(.mellowWhite)
+                        Spacer()
+                    }
+                }
+                
+                ProgressView(
+                    timerInterval: context.state.startDate...context.state.expectedEndDate,
+                    countsDown: false,
+                    label: { },
+                    currentValueLabel: { EmptyView() }
+                )
+                .tint(Color(cgColor: .init(red: 90.0 / 255.0, green: 108.0 / 255.0, blue: 250.0 / 255.0, alpha: 1.0)))
+                .scaleEffect(x: 1, y: 2, anchor: .center)
             }
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
+            .padding(.vertical, 24)
+            .padding(.horizontal, 16)
 
         } dynamicIsland: { context in
             DynamicIsland {
-                // Expanded UI goes here.  Compose the expanded UI through
-                // various regions, like leading/trailing/center/bottom
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                    EmptyView()
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
+                    EmptyView()
                 }
-                DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
-                    // more content
+                DynamicIslandExpandedRegion(.center) {
+                    EmptyView()
                 }
             } compactLeading: {
-                Text("L")
+                Text("\(context.state.name)")
+                    .padding()
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                Text(context.state.startDate, style: .timer)
+                    .frame(width: 64)
+                    .minimumScaleFactor(1.0)
             } minimal: {
-                Text(context.state.emoji)
+                Text(context.state.name.prefix(1))
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
+            .keylineTint(Color.white)
         }
     }
 }
 
-extension mellow_widgetAttributes {
-    fileprivate static var preview: mellow_widgetAttributes {
-        mellow_widgetAttributes(name: "World")
+struct TimerView: View {
+    let startDate: Date
+    
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 1.0)) { context in
+            let elapsedTime = context.date.timeIntervalSince(startDate)
+            Text(elapsedTime.formattedTime)
+        }
     }
 }
 
-extension mellow_widgetAttributes.ContentState {
-    fileprivate static var smiley: mellow_widgetAttributes.ContentState {
-        mellow_widgetAttributes.ContentState(emoji: "😀")
-     }
-     
-     fileprivate static var starEyes: mellow_widgetAttributes.ContentState {
-         mellow_widgetAttributes.ContentState(emoji: "🤩")
-     }
+private extension TimeInterval {
+    var formattedTime: String {
+        let hours = Int(self) / 3600
+        let minutes = (Int(self) % 3600) / 60
+        let seconds = Int(self) % 60
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
 }
 
-#Preview("Notification", as: .content, using: mellow_widgetAttributes.preview) {
-   mellow_widgetLiveActivity()
+extension MellowWidgetAttributes {
+    fileprivate static var preview: MellowWidgetAttributes {
+        MellowWidgetAttributes(title: "Sleep Session")
+    }
+}
+
+extension MellowWidgetAttributes.ContentState {
+    fileprivate static var preview: MellowWidgetAttributes.ContentState {
+        MellowWidgetAttributes.ContentState(name: "Nick", startDate: .now, expectedEndDate: Date().addingTimeInterval(400))
+    }
+}
+
+#Preview("Notification", as: .content, using: MellowWidgetAttributes.preview) {
+    MellowWidgetLiveActivity()
 } contentStates: {
-    mellow_widgetAttributes.ContentState.smiley
-    mellow_widgetAttributes.ContentState.starEyes
+    MellowWidgetAttributes.ContentState.preview
+}
+
+
+#Preview("Notification", as: .dynamicIsland(.minimal), using: MellowWidgetAttributes.preview) {
+    MellowWidgetLiveActivity()
+} contentStates: {
+    MellowWidgetAttributes.ContentState.preview
 }

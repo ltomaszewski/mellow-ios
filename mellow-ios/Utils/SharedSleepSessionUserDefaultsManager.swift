@@ -10,13 +10,13 @@ import Foundation
 struct SharedSleepSessionData: Codable {
     let name: String
     let startDate: Date
-    var endDate: Date?
+    let expectedEndDate: Date
     let type: String
     
-    init(name: String, startDate: Date, endDate: Date? = nil, type: String) {
+    init(name: String, startDate: Date, expectedEndDate: Date, type: String) {
         self.name = name
         self.startDate = startDate
-        self.endDate = endDate
+        self.expectedEndDate = expectedEndDate
         self.type = type
     }
 }
@@ -55,17 +55,7 @@ struct SharedSleepSessionUserDefaultsManager {
             return nil
         }
     }
-
-    // Update the end date of a shared sleep session
-    func updateSharedSleepSessionEndDate(for name: String, to endDate: Date) {
-        guard var session = loadSharedSleepSession(), session.name == name else {
-            print("No matching session found for name: \(name)")
-            return
-        }
-        session.endDate = endDate
-        saveSharedSleepSession(session)
-    }
-
+    
     // Clear shared sleep session data
     func clearSharedSleepSession() {
         sharedDefaults.removeObject(forKey: sleepSessionKey)

@@ -74,6 +74,7 @@ extension AppState {
 
 extension AppState {
     struct Reducer: ReducerProtocol {
+        private let liveActivityManager: MellowLiveActivityManager = .init()
         private let sharedSleepSessionUserDefaultsManager: SharedSleepSessionUserDefaultsManager = .init()
         private let onboardingReducer: OnboardingState.Reducer
         private let databaseService: DatabaseService
@@ -158,20 +159,24 @@ extension AppState {
                     context: modelContext
                 )
                 
+                let expectedEndDate: Date = .now.calculateExpectedEndDate(using: newState.sleepSessions) ?? .now
+                
                 sharedSleepSessionUserDefaultsManager
                     .saveSharedSleepSession(
                         .init(name: newState.selectedKid!.name,
                               startDate: .now,
-                              expectedEndDate: .now.adding(hours: 6)!,
+                              expectedEndDate: expectedEndDate,
                               type: "Sleeping...")
                     )
-                MellowLiveActivityManager.startLiveActivity(for: newState.selectedKid!.name, startDate: .now, expectedEndDate: .now.adding(hours: 6)!)
+                liveActivityManager.startLiveActivity(for: newState.selectedKid!.name,
+                                                            startDate: .now,
+                                                            expectedEndDate: expectedEndDate)
                 WidgetCenter.shared.reloadAllTimelines()
             case .endSleepSessionInProgress(let modelContext):
                 handleEndSleepSessionInProgress(state: &newState, context: modelContext)
                 
                 sharedSleepSessionUserDefaultsManager.clearSharedSleepSession()
-                MellowLiveActivityManager.endLiveActivity(for: newState.selectedKid!.name)
+                liveActivityManager.endLiveActivity()
                 WidgetCenter.shared.reloadAllTimelines()
             case .refreshSchedule:
                 handleRefreshSchedule(state: &newState)
@@ -520,5 +525,31 @@ extension AppState.Store {
             get: { self.state.sleepSessionInProgress },
             set: { _ in /* Intentionally left blank */ }
         )
+    }
+}
+
+
+private extension Date {
+    /// Calculates the expected end date based on the provided sessions.
+    /// - Parameters:
+    ///   - sessions: A list of scheduled sessions (`SleepSessionViewRepresentation`).
+    ///   - endDate: The optional end date of the in-progress session.
+    /// - Returns: The calculated expected end date or `nil` if no suitable session is found.
+    func calculateExpectedEndDate(using sessions: [SleepSessionViewRepresentation]) -> Date? {
+        // Find the first session that starts at the same time or later, but before the end date
+        if let matchingSession = sessions.first(where: {
+            $0.startDate >= self && $0.startDate < $0.endDate!
+        }) {
+            return matchingSession.endDate
+        }
+
+        // Find the first following session and calculate the duration
+        if let nextSession = sessions.first(where: { $0.startDate > self }),
+           let duration = nextSession.endDate?.timeIntervalSince(nextSession.startDate) {
+            return self.addingTimeInterval(duration)
+        }
+
+        // No matching or following session found
+        return nil
     }
 }

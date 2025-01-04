@@ -138,6 +138,7 @@ targets:
     info:
       path: mellow-widget/Resources/Info.plist
       properties:
+        CFBundleDisplayName: "Mellow Widget"  # <-- Add this
         CFBundleShortVersionString: 1.1.6
         CFBundleVersion: "42"
         # ---------------------------------

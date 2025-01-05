@@ -83,6 +83,9 @@ struct ScheduleTabView: View {
                 showAddSleepSession = true
             }
         }
+        .onAppear {
+            date = Date().adjustToMidday()
+        }
     }
 }
 

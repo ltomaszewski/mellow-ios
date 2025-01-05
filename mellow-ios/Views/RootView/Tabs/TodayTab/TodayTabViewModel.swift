@@ -137,9 +137,11 @@ class TodayTabViewModel: ObservableObject {
 
         // Retrieve the kid's age in months
         let ageInMonths = kidAgeInMonths
+        
+        let wakeUpTime = state.sleepSessions.nightSleepEnding(on: currentDate)?.endDate
 
         // Get today's sleep schedule based on the kid's age
-        guard let scheduledSessions = sleepManager.getSleepSchedule(for: ageInMonths, baseDate: currentDate) else {
+        guard let scheduledSessions = sleepManager.getSleepSchedule(for: ageInMonths, wakeUpTime: wakeUpTime, baseDate: currentDate) else {
             nextSleep = 0 // No schedule available
             nextSleepText = "No more sessions today"
             return
@@ -188,8 +190,10 @@ class TodayTabViewModel: ObservableObject {
             Calendar.current.date(byAdding: .day, value: -1, to: today)!
         }
 
+        let wakeUpTime = sessions.nightSleepEnding(on: today)?.endDate
+
         // Retrieve the expected sleep schedule for the current kid's age on today's date
-        guard let expectedSchedule = sleepManager.getSleepSchedule(for: kidAgeInMonths, baseDate: yesterday) else {
+        guard let expectedSchedule = sleepManager.getSleepSchedule(for: kidAgeInMonths, wakeUpTime: wakeUpTime, baseDate: yesterday) else {
             return 0
         }
         

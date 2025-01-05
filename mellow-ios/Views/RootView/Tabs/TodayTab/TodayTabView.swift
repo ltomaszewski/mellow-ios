@@ -96,7 +96,7 @@ struct TodayTabView: View {
                 .foregroundStyle(.slateGray)
                 .padding(.bottom, 8)
             
-            if appStateStore.state.dayStreak > 3 {
+            if appStateStore.state.dayStreak > 2 {
                 VStack {
                     scoreDetailView(
                         infoType: .score,

@@ -63,7 +63,6 @@ struct IntroView: View {
             }
             .padding(.horizontal)
         }
-        .background(.gunmetalBlue)
         .foregroundStyle(.white)
         .alert(isPresented: $showAlert) {
             Alert(

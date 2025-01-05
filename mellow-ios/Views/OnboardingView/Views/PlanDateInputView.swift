@@ -25,27 +25,27 @@ extension PlanDateInputView {
 
 struct PlanDateInputView: View {
     @Binding var value: Date?
-    
+
     let headlineText: String
     let submitText: String
-    
-    // New property to determine the type of DatePicker
     let datePickerType: DatePickerType
-    
+    let maximumDate: Date
+
     @State private var selectedDate = Date()
-    
-    // Initializer with the new parameter
+
     init(value: Binding<Date?>,
          headlineText: String,
          submitText: String,
-         datePickerType: DatePickerType = .date) {
+         datePickerType: DatePickerType = .date,
+         maximumDate: Date = .distantFuture) {
         self._value = value
         self.headlineText = headlineText
         self.submitText = submitText
         self.datePickerType = datePickerType
+        self.maximumDate = maximumDate
         self._selectedDate = .init(initialValue: value.wrappedValue ?? .now)
     }
-    
+
     var body: some View {
         VStack {
             Spacer()
@@ -54,11 +54,14 @@ struct PlanDateInputView: View {
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.white)
                 .padding()
-            DatePicker("", selection: $selectedDate, displayedComponents: datePickerType.components)
-                .datePickerStyle(WheelDatePickerStyle())
-                .labelsHidden()
-                .colorInvert()
-                .colorMultiply(.white)
+            DatePicker("",
+                       selection: $selectedDate,
+                       in: ...maximumDate, // Apply maximumDate or allow all dates
+                       displayedComponents: datePickerType.components)
+            .datePickerStyle(WheelDatePickerStyle())
+            .labelsHidden()
+            .colorInvert()
+            .colorMultiply(.white)
             Spacer()
             SubmitButton(title: submitText) {
                 withAnimation {
@@ -73,8 +76,10 @@ struct PlanDateInputView: View {
 
 #Preview {
     PlanDateInputView(value: .constant(Date()),
-                      headlineText: "When is your child's birthday?",
-                      submitText: "Continue")
+                      headlineText: "Select a date",
+                      submitText: "Continue",
+                      datePickerType: .date,
+                      maximumDate: Date())
     .onAppear {
         UIDatePicker.appearance().overrideUserInterfaceStyle = .light
     }

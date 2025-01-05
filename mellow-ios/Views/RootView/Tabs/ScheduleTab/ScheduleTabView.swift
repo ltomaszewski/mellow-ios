@@ -10,7 +10,7 @@ import SwiftUI
 struct ScheduleTabView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var appStateStore: AppState.Store
-    @State var date: Date = Date.now.adjustToMidday()
+    @State var date: Date = .now.adjustToMidday()
     @State private var showAddSleepSession = false
     @State private var editSleepSession: SleepSessionViewRepresentation?
     @State private var sheetHeight: CGFloat = 300
@@ -82,6 +82,9 @@ struct ScheduleTabView: View {
             if newValue != nil {
                 showAddSleepSession = true
             }
+        }
+        .onAppear {
+            date = .now.adjustToMidday()
         }
     }
 }

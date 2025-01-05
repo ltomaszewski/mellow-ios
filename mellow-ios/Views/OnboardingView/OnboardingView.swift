@@ -88,7 +88,8 @@ struct OnboardingView: View {
             value: appStateStore.kidAgeBinding,
             headlineText: "When was \(appStateStore.state.onboardingState.childName) born?",
             submitText: "Continue",
-            datePickerType: .date // Assuming you modified PlanDateInputView to accept this parameter
+            datePickerType: .date,
+            maximumDate: .now
         )
         .frame(maxWidth: .infinity)
         .foregroundStyle(.white)

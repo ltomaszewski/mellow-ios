@@ -9,6 +9,7 @@ import Foundation
 import SwiftData
 import SwiftUI
 import WidgetKit
+import Combine
 
 // MARK: - AppState
 
@@ -23,6 +24,7 @@ struct AppState {
     var sleepSessionInProgress: SleepSessionViewRepresentation?
     var appSettings: AppSettings = .init(deviceId: "", kidId: "")
     var userCredentials: UserCredentials?
+    var cloudKitSyncInProgress: Bool = false
     
     init(onboardingState: OnboardingState = .init(),
          selectedKid: Kid? = nil,
@@ -49,6 +51,8 @@ extension AppState {
 extension AppState {
     enum Action {
         case load(ModelContext)
+        case syncCloudKit
+        case syncCloudKitDone
         case saveCrenentials(usedID: String, fullName: String, email: String)
         case openAddKidOnboarding
         case onboarding(OnboardingState.Action)
@@ -59,8 +63,8 @@ extension AppState {
         case startSleepSessionInProgress(ModelContext)
         case endSleepSessionInProgress(ModelContext)
         case refreshSchedule
-        case updateSettings(AppSettings)
-        case resetSettings
+        case updateSettings((inout AppSettings) -> Void, ModelContext)
+        case resetSettings(ModelContext)
     }
     
     enum CRUDOperation {
@@ -73,6 +77,7 @@ extension AppState {
 // MARK: - Reducer
 
 extension AppState {
+    @MainActor
     struct Reducer: ReducerProtocol {
         private let liveActivityManager: MellowLiveActivityManager = .init()
         private let sharedSleepSessionUserDefaultsManager: SharedSleepSessionUserDefaultsManager = .init()
@@ -81,8 +86,9 @@ extension AppState {
         private let settingsManager: SettingsManager
         private let sleepManager: SleepManager = .init()
         private let keychainManager: KeychainManager = .init()
-        
         private let isDebugMode: Bool
+        private let syncMonitor = SyncMonitor.default
+        private var cancellables: Set<AnyCancellable> = []
         
         init(onboardingReducer: OnboardingState.Reducer,
              databaseService: DatabaseService,
@@ -92,6 +98,46 @@ extension AppState {
             self.databaseService = databaseService
             self.settingsManager = settingsManager
             self.isDebugMode = isDebugMode
+            
+            syncMonitor
+                .$setupState
+                .print("$setupState")
+                .sink { _ in
+                //TODO: Add logic to enable loading only after sync has been done. Right now AppSettings got rewritten and it conflic with remote state that is not fetched yet.
+            }
+                .store(in: &cancellables)
+            
+            syncMonitor
+                .$exportState
+                .print("$exportState")
+                .sink { _ in
+                    
+                }
+                .store(in: &cancellables)
+            
+            syncMonitor
+                .$importState
+                .print("$importState")
+                .sink { _ in
+                    
+                }
+                .store(in: &cancellables)
+        
+            syncMonitor
+                .$isNetworkAvailable
+                .print("$isNetworkAvailable")
+                .sink { _ in
+                    
+                }
+                .store(in: &cancellables)
+            
+            syncMonitor
+                .$iCloudAccountStatus
+                .print("$iCloudAccountStatus")
+                .sink { _ in
+                    
+                }
+                .store(in: &cancellables)
         }
         
         func reduce(_ oldState: AppState, action: AppState.Action) -> AppState {
@@ -122,10 +168,7 @@ extension AppState {
                 newState.selectedKid = kid
                 updateSleepSessionState(state: &newState, kid: kid, context: modelContext)
                 
-                var currentSettings = oldState.appSettings
-                currentSettings.kidId = kid.id
-                newState = self.reduce(newState, action: .updateSettings(currentSettings))
-                
+                newState = self.reduce(newState, action: .updateSettings({ $0.kidId = kid.id }, modelContext))
             case .setSelectedDate(let date):
                 newState.selectedDate = date
                 handleRefreshSchedule(state: &newState)
@@ -136,9 +179,7 @@ extension AppState {
                 switch operation {
                 case .create where newState.appSettings.kidId.isEmpty:
                     guard let firstKid = databaseService.loadKids(context: modelContext).first else { fatalError("Kid not found despite create request") }
-                    var currentSettings = oldState.appSettings
-                    currentSettings.kidId = firstKid.id
-                    newState = self.reduce(newState, action: .updateSettings(currentSettings))
+                    newState = self.reduce(newState, action: .updateSettings({ $0.kidId = firstKid.id }, modelContext))
                 default:
                     break;
                 }
@@ -181,11 +222,11 @@ extension AppState {
             case .refreshSchedule:
                 handleRefreshSchedule(state: &newState)
                 
-            case .updateSettings(let newSettings):
-                handleUpdateSettings(state: &newState, newSettings: newSettings)
+            case .updateSettings(let newSettings, let context):
+                handleUpdateSettings(state: &newState, newSettings: newSettings, context: context)
                 
-            case .resetSettings:
-                handleResetSettings(state: &newState)
+            case .resetSettings(let context):
+                handleResetSettings(state: &newState, context: context)
             }
             
             // Debug prints
@@ -197,22 +238,23 @@ extension AppState {
         
         // MARK: - AppSettings Actions
         
-        private func handleUpdateSettings(state: inout AppState, newSettings: AppSettings) {
-            settingsManager.updateSettings { settings in
-                settings = newSettings
-            }
-            state.appSettings = newSettings
+        private func handleUpdateSettings(state: inout AppState, newSettings: (inout AppSettings) -> Void, context: ModelContext) {
+            settingsManager.updateSettings(context: context, update: newSettings)
+            state.appSettings = settingsManager.getSettings(context: context)
+            print("state.appSettings: \(state.appSettings.kidId)")
         }
         
-        private func handleResetSettings(state: inout AppState) {
-            settingsManager.reset()
-            state.appSettings = settingsManager.getSettings()
+        private func handleResetSettings(state: inout AppState, context: ModelContext) {
+            settingsManager.reset(context: context)
+            state.appSettings = settingsManager.getSettings(context: context)
         }
         
         // MARK: - Helper Methods
         
         private func handleLoadAction(state: inout AppState, context: ModelContext) {
-            state.appSettings = settingsManager.getSettings()
+            state.appSettings = settingsManager.getSettings(context: context)
+            print("state.appSettings: \(state.appSettings.deviceId) - \(state.appSettings.kidId)")
+
             state.currentViewState = state.appSettings.kidId.isEmpty ? .intro : .root
             state.userCredentials = try? keychainManager.loadUserCredentials(account: "apple")
             
@@ -223,6 +265,28 @@ extension AppState {
             }
             state.selectedKid = selectedKid
             updateSleepSessionState(state: &state, kid: selectedKid, context: context)
+            
+            isCloudKitSyncComplete { isComplete in
+                    guard isComplete else {
+                        print("CloudKit sync failed or incomplete")
+                        return
+                    }
+
+                    DispatchQueue.main.async {
+                        guard !state.appSettings.kidId.isEmpty else {
+                            state.currentViewState = .onboarding
+                            return
+                        }
+
+                        let kids = self.databaseService.loadKids(context: context)
+                        guard let selectedKid = kids.first(where: { $0.id == state.appSettings.kidId }) else {
+                            fatalError("App settings invalid, no kid found with id \(state.appSettings.kidId)")
+                        }
+                        state.selectedKid = selectedKid
+                        self.updateSleepSessionState(state: &state, kid: selectedKid, context: context)
+                        state.currentViewState = .root
+                    }
+                }
         }
         
         private func handleOpenAddKidOnboarding(state: inout AppState) {
@@ -458,6 +522,7 @@ extension AppState {
 // MARK: - Store
 extension AppState {
     // TODO: Think about how to make store an actor
+    @MainActor
     final class Store: ObservableObject {
         @Published private(set) var state: AppState
         private let reducer: Reducer

@@ -8,7 +8,6 @@
 import Foundation
 import SwiftlyBeautiful
 
-@Printable
 struct SleepSessionViewRepresentation: Hashable {
     let id: String
     let startDate: Date

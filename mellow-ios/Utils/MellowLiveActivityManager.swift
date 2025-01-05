@@ -10,6 +10,11 @@ import ActivityKit
 
 final class MellowLiveActivityManager {
     private var currentActivity: Activity<MellowWidgetAttributes>?
+    private let userDefaultsKey = "currentLiveActivityId"
+
+    init() {
+        restoreLiveActivity()
+    }
 
     func startLiveActivity(for kidName: String, startDate: Date, expectedEndDate: Date) {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else {
@@ -18,17 +23,19 @@ final class MellowLiveActivityManager {
         }
 
         let attributes = MellowWidgetAttributes(title: "Sleep in Progress")
-        let initialContentState = MellowWidgetAttributes.ContentState(name: kidName,
-                                                                      startDate: startDate,
-                                                                      expectedEndDate: expectedEndDate)
+        let initialContentState = MellowWidgetAttributes.ContentState(
+            name: kidName,
+            startDate: startDate,
+            expectedEndDate: expectedEndDate
+        )
 
         do {
             let activity = try Activity<MellowWidgetAttributes>.request(
                 attributes: attributes,
-                contentState: initialContentState,
-                pushType: nil
+                content: .init(state: initialContentState, staleDate: nil)
             )
             currentActivity = activity
+            saveLiveActivityId(activity.id)
             print("Started Live Activity with ID: \(activity.id)")
         } catch {
             print("Failed to start Live Activity: \(error.localizedDescription)")
@@ -42,9 +49,36 @@ final class MellowLiveActivityManager {
         }
 
         Task {
-            await activity.end(dismissalPolicy: .immediate)
+            await activity.end(nil, dismissalPolicy: .immediate)
+            clearLiveActivityId()
             print("Ended Live Activity with ID: \(activity.id)")
             currentActivity = nil
+        }
+    }
+
+    private func saveLiveActivityId(_ id: String) {
+        UserDefaults.standard.set(id, forKey: userDefaultsKey)
+    }
+
+    private func loadLiveActivityId() -> String? {
+        UserDefaults.standard.string(forKey: userDefaultsKey)
+    }
+
+    private func clearLiveActivityId() {
+        UserDefaults.standard.removeObject(forKey: userDefaultsKey)
+    }
+
+    private func restoreLiveActivity() {
+        guard let savedId = loadLiveActivityId() else { return }
+
+        Task {
+            if let restoredActivity = Activity<MellowWidgetAttributes>.activities.first(where: { $0.id == savedId }) {
+                currentActivity = restoredActivity
+                print("Restored Live Activity with ID: \(restoredActivity.id)")
+            } else {
+                print("No matching live activity found for ID: \(savedId). Clearing saved data.")
+                clearLiveActivityId()
+            }
         }
     }
 }

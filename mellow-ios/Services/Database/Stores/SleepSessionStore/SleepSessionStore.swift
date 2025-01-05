@@ -20,7 +20,7 @@ struct SleepSessionStore: SleepSessionStoreProtocol {
             sortBy: [],
             context: context
         ).first {
-            return updatedKid.sleepSessions
+            return updatedKid.sleepSessions ?? []
         } else {
             throw NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "Kid not found"])
         }
@@ -64,11 +64,11 @@ struct SleepSessionStore: SleepSessionStoreProtocol {
             sortBy: [],
             context: context
         ).first {
-            let sessions = updatedKid.sleepSessions
+            let sessions = updatedKid.sleepSessions ?? []
             for session in sessions {
                 try SleepSession.delete(session, context: context)
             }
-            try Kid.update(id: kid.id, updateClosure: { $0.sleepSessions.removeAll() }, context: context)
+            try Kid.update(id: kid.id, updateClosure: { $0.sleepSessions?.removeAll() }, context: context)
         } else {
             throw NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "Kid not found"])
         }

@@ -30,6 +30,6 @@ struct SleepScoreLockedView: View {
     }
 }
 
-#Preview {
-    SleepScoreLockedView()
-}
+//#Preview {
+//    SleepScoreLockedView()
+//}

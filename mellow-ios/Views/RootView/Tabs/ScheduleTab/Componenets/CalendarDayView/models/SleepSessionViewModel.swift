@@ -8,7 +8,6 @@
 import Foundation
 import SwiftlyBeautiful
 
-@Printable
 struct SleepSessionViewModel: Hashable {
     let topOffset: CGFloat
     let height: CGFloat

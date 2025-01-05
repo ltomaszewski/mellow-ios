@@ -13,13 +13,13 @@ import SwiftlyBeautiful
 @Printable
 @SwiftDataCRUD
 class Kid {
-    @Attribute(.unique) var id: String
-    var name: String
-    var dateOfBirth: Date
-    var isHim: Bool
-    var sleepTime: Date
-    var wakeTime: Date
-    var sleepSessions: [SleepSession] = []
+    var id: String = UUID().uuidString // Default value
+    var name: String = "Unnamed" // Default value
+    var dateOfBirth: Date = Date() // Default value
+    var isHim: Bool = true // Default value
+    var sleepTime: Date = Date() // Default value
+    var wakeTime: Date = Date() // Default value
+    var sleepSessions: [SleepSession]? = [] // Optional relationship
     
     init(name: String, dateOfBirth: Date, sleepTime: Date, wakeTime: Date) {
         self.id = UUID().uuidString
@@ -31,21 +31,26 @@ class Kid {
     }
     
     func addSleepSession(_ session: SleepSession) {
-        sleepSessions.append(session)
+        session.kid = self // Set inverse relationship
+        sleepSessions?.append(session)
     }
-    
+
     func removeSleepSession(_ session: SleepSession) {
-        if let index = sleepSessions.firstIndex(where: { $0.id == session.id }) {
-            sleepSessions.remove(at: index)
+        if let index = sleepSessions?.firstIndex(where: { $0.id == session.id }) {
+            sleepSessions?.remove(at: index)
+            session.kid = nil // Clear inverse relationship
         }
     }
-    
+
     func replaceSleepSession(id: String, with newSession: SleepSession) {
-        if let index = sleepSessions.firstIndex(where: { $0.id == id }) {
-            let oldSession = sleepSessions[index]
+        if let index = sleepSessions?.firstIndex(where: { $0.id == id }),
+            let oldSession = sleepSessions?[index] {
             oldSession.type = newSession.type
             oldSession.startDate = newSession.startDate
             oldSession.endDate = newSession.endDate
+            oldSession.kid = nil // Clear old inverse relationship
+            newSession.kid = self // Set new inverse relationship
+            sleepSessions?[index] = newSession
         }
     }
 }

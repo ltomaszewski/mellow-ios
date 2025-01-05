@@ -9,7 +9,8 @@ import SwiftUI
 import Combine
 import SwiftData
 
-class TodayTabViewModel: ObservableObject {
+@MainActor
+final class TodayTabViewModel: ObservableObject {
     @Published var progress: Float = 0.0
     @Published var totalAsleep: Float = 0.0
     @Published var sleepGoal: Float = 11.0

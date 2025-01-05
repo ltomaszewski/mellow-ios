@@ -78,11 +78,11 @@ struct SleepTimePicker: View {
     }
 }
 
-#Preview {
-    SleepTimePicker(text: "Start Time",
-                    date: .init(get: { .now }, set: { date in print("New Test Date \(date)") }),
-                    minDate: .init(get: { .distantPast }, set: { date in print("New min Date \(date)") }),
-                    maxDate: .init(get: { .distantFuture }, set: { date in print("New max Date \(date)") }),
-                    isDatePickerVisible: .init(get: { false }, set: { _ in }),
-                    width: .init(get: { 400 }, set: { _ in }))
-}
+//#Preview {
+//    SleepTimePicker(text: "Start Time",
+//                    date: .init(get: { .now }, set: { date in print("New Test Date \(date)") }),
+//                    minDate: .init(get: { .distantPast }, set: { date in print("New min Date \(date)") }),
+//                    maxDate: .init(get: { .distantFuture }, set: { date in print("New max Date \(date)") }),
+//                    isDatePickerVisible: .init(get: { false }, set: { _ in }),
+//                    width: .init(get: { 400 }, set: { _ in }))
+//}

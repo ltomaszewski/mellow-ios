@@ -9,6 +9,7 @@ import Foundation
 import SwiftData
 import Combine
 
+@MainActor
 final class ProfileCalendarViewModel: ObservableObject {
     @Published var monthDate: Date
 

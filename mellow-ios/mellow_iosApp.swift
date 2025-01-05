@@ -29,6 +29,6 @@ struct mellow_iosApp: App {
             ContentView()
                 .environmentObject(rAppStateStore)
         }
-        .modelContainer(for: [Kid.self, SleepSession.self])
+        .modelContainer(for: [Kid.self, SleepSession.self, AppSettings.self])
     }
 }

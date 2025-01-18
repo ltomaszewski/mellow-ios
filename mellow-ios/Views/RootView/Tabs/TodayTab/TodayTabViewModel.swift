@@ -74,38 +74,52 @@ class TodayTabViewModel: ObservableObject {
     }
 
     private func updateTotalAsleep(from sessions: [SleepSessionViewRepresentation]) {
-        let calendar = Calendar.current
-        let now = Date()
-        
-        // Today starts at midnight:
-        let startOfToday = calendar.startOfDay(for: now)
-        
-        // Option A: End of today can be next midnight (the beginning of tomorrow)
-        guard let endOfToday = calendar.date(byAdding: .day, value: 1, to: startOfToday) else {
-            // Fallback if we can’t compute the next day for any reason.
+        guard let lastNightSleep = getLastNightSleep(from: sessions) else {
+            // If no valid last night sleep exists, set total sleep to zero
             totalAsleep = 0
             return
         }
+
+        // Determine start of the day (last wake-up time)
+        let startOfDay = lastNightSleep.endDate ?? Date()
         
+        // Determine end of the day (next wake-up time)
+        let nextWakeupSession = sessions.first(where: {
+            $0.type == .nighttime && $0.startDate > startOfDay
+        })
+        let endOfDay = nextWakeupSession?.endDate ?? Date()
+
+        // Calculate total sleep within the boundaries
         totalAsleep = sessions
-            .filter { !$0.isScheduled && !$0.isInProgress } // Exclude scheduled and in progres sessions
+            .filter { $0.startDate >= startOfDay && ($0.endDate ?? Date()) <= endOfDay && !$0.isScheduled && !$0.isInProgress }
             .reduce(0) { total, session in
-                
-                // If `endDate` is nil, we treat "now" as the end of the session
-                let sessionEnd = session.endDate ?? now
-                
-                // Calculate intersection between session interval and today's interval
-                //  i.e.  [max(startOfToday, session.startDate), min(endOfToday, sessionEnd)]
-                let actualStart = max(session.startDate, startOfToday)
-                let actualEnd = min(sessionEnd, endOfToday)
-                
-                // If the session doesn't overlap with today (end <= start), skip
-                guard actualEnd > actualStart else { return total }
-                
-                // Convert the time interval to hours
-                let duration = actualEnd.timeIntervalSince(actualStart) / 3600.0
-                return total + Float(duration)
+                let overlap = calculateOverlap(
+                    start: max(session.startDate, startOfDay),
+                    end: min(session.endDate ?? Date(), endOfDay)
+                )
+                return total + overlap
             }
+    }
+    
+    private func getLastNightSleep(from sessions: [SleepSessionViewRepresentation]) -> SleepSessionViewRepresentation? {
+        let now = Date()
+
+        // Filter sessions to include only past, completed, and nighttime sessions
+        let validNightSessions = sessions.filter {
+            $0.type == .nighttime &&
+            $0.endDate != nil && // Must have an end date
+            $0.endDate! < now && // Must occur in the past
+            !$0.isScheduled && // Exclude scheduled sessions
+            !$0.isInProgress
+        }
+
+        // Return the most recent night session based on endDate
+        return validNightSessions.max(by: { $0.endDate! < $1.endDate! })
+    }
+
+    private func calculateOverlap(start: Date, end: Date) -> Float {
+        guard end > start else { return 0.0 }
+        return Float(end.timeIntervalSince(start) / 3600.0) // Convert to hours
     }
 
     private func updateProgress() {

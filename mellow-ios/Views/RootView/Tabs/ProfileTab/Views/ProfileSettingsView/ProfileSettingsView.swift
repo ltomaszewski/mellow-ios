@@ -21,7 +21,7 @@ struct ProfileSettingsView: View {
             VStack(spacing: 1) {
                 headerView
                 kidsListView
-                addChildButtonView
+//                addChildButtonView
                 pushNotificationsView
                 logoutButtonView
                 Spacer()

@@ -25,10 +25,10 @@ struct ProfileHeaderView: View {
                 Text(name)
                     .font(.main18)
                     .fontWeight(.semibold)
-                Image(.arrowBottom)
-                    .renderingMode(.template)
-                    .tint(.white)
-                    .frame(width: 10, height: 15)
+//                Image(.arrowBottom)
+//                    .renderingMode(.template)
+//                    .tint(.white)
+//                    .frame(width: 10, height: 15)
             }
             
             // Age

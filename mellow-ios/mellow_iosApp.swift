@@ -24,11 +24,29 @@ struct mellow_iosApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var rAppStateStore = AppState.Store(databaseService: .init())
     
+    // 1) Keep a ModelContainer property
+    let container: ModelContainer
+    
+    // 2) Build the container in init(), specifying cloudKitDatabase: .none
+    init() {
+        do {
+            // Turn off CloudKit sync:
+            let config = ModelConfiguration(cloudKitDatabase: .none)
+            container = try ModelContainer(
+                for: Kid.self, SleepSession.self,
+                configurations: config
+            )
+        } catch {
+            fatalError("Failed to create model container: \(error)")
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(rAppStateStore)
+                // 3) Pass the container into the .modelContainer(...) modifier
+                .modelContainer(container)
         }
-        .modelContainer(for: [Kid.self, SleepSession.self])
     }
 }

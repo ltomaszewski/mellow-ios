@@ -35,9 +35,9 @@ struct ProfileView: View {
             ProfileHeaderView(name: $name,
                               imageResource: $imageResource,
                               age: $age)
-            .onTapGesture {
-                showKidsList.toggle()
-            }
+//            .onTapGesture {
+//                showKidsList.toggle()
+//            }
             
             // Stats (Hours tracked and Day streak)
             ProfileStatsView(hoursTracked: hoursTracked,

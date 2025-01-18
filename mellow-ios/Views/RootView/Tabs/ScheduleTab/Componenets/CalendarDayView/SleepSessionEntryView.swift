@@ -62,7 +62,6 @@ struct SleepSessionEntryView: View {
                             .foregroundColor(Color.slate100)
                         Spacer()
                     }
-                    .padding(.top, 16)
                 } else {
                     Text(model.text)
                         .font(.main18)
@@ -72,9 +71,37 @@ struct SleepSessionEntryView: View {
                         .foregroundColor(Color.slate100)
                 }
                 Spacer()
+                
+                VStack(alignment: .trailing) {
+                    Text(model.durationDescription)
+                        .font(.main16)
+                        .foregroundStyle(.white.opacity(0.7))
+                    Spacer()
+                }
             }
-            .padding(.leading, 16)
+            .padding(.top, 16)
+            .padding(.horizontal, 16)
         }
         .frame(height: model.height)
     }
+}
+
+#Preview("Night Sleep - In Progress") {
+    SleepSessionEntryView(
+        model: SleepSessionViewModel(
+            topOffset: 0,
+            height: 120,
+            text: "Night Sleep",
+            subText: "In Progress…",
+            sleepSession: SleepSessionViewRepresentation(
+                id: UUID().uuidString,
+                startDate: Date(),
+                endDate: nil,  // No end date means in progress
+                type: .nap,
+                formattedTimeRange: "22:00 - 06:00",
+                isScheduled: false
+            )
+        )
+    )
+    .padding()
 }

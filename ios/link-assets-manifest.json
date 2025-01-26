@@ -1,0 +1,17 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/gothamrnd_bold.otf",
+      "sha1": "707080814e66dceef29fab19c78a4658a585e7ac"
+    },
+    {
+      "path": "assets/fonts/gothamrnd_light.otf",
+      "sha1": "1c3982df300669b45b5fdb7a29d0336be17926ac"
+    },
+    {
+      "path": "assets/fonts/gothamrnd_medium.otf",
+      "sha1": "88f9fda60de3615335b542067fe467a6073e4036"
+    }
+  ]
+}

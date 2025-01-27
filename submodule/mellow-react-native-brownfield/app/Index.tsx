@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     paddingLeft: "15%",
   },
   text: {
-    fontFamily: "GothamRoundedMedium",
+    fontFamily: "GothamRnd-Medium",
     paddingTop: 42,
     fontSize: 32,
     lineHeight: 36,
@@ -133,11 +133,12 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   chapterText: {
+    fontFamily: "GothamRnd-Bold",
     fontSize: 16,
-    fontWeight: "bold",
     color: "#FFFFFF",
   },
   titleText: {
+    fontFamily: "GothamRnd-Medium",
     fontSize: 16,
     color: "#A0A4AA",
   },

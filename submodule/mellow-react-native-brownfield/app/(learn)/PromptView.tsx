@@ -32,13 +32,13 @@ const styles = StyleSheet.create({
   },
   title: {
     paddingTop: "2%",
-    fontFamily: "GothamRoundedBold",
+    fontFamily: "GothamRnd-Bold",
     fontSize: 18,
     lineHeight: 27,
     color: "white", // Added text color
   },
   text: {
-    fontFamily: "GothamRoundedMedium",
+    fontFamily: "GothamRnd-Medium",
     fontSize: 16,
     lineHeight: 24,
     textAlign: "left",

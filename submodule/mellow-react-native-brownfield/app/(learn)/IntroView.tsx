@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   text: {
     paddingTop: 42,
-    fontFamily: "GothamRoundedMedium",
+    fontFamily: "GothamRnd-Medium",
     fontSize: 28,
     lineHeight: 36,
     marginBottom: 8,

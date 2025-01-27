@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#37C882",
   },
   courseName: {
+    fontFamily: "GothamRnd-Medium",
     fontSize: 24,
     fontWeight: "bold",
   },

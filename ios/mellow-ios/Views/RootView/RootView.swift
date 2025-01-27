@@ -37,7 +37,7 @@ struct RootView: View {
                         moduleName: "mellow-react-native",
                         rootViewFactory: reactViewFactory.value!
                     )
-                    .background(.gunmetalBlue)
+                    .background(Color.gunmetalBlue)
                     .tabItem {
                         Label(RootViewModel.TabItem.learn.name,
                               image: RootViewModel.TabItem.learn.imageName)

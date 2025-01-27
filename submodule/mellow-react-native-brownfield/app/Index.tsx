@@ -102,7 +102,7 @@ export default function Index({ text, style, ...otherProps }: IndexProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#282C34",
+    backgroundColor: "#222938",
   },
   content: {
     flex: 1,

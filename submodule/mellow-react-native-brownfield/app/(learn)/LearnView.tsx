@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     height: "100%",
     paddingVertical: "4%",
     paddingHorizontal: "4%",
-    backgroundColor: "#282C34",
+    backgroundColor: "#222938",
   },
   container: {
     flex: 1,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   progressBarContainer: {
     height: 10,
     width: "100%",
-    backgroundColor: "#222938",
+    backgroundColor: "#383D47",
     borderRadius: 5,
     overflow: "hidden",
   },

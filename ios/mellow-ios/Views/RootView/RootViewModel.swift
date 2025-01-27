@@ -12,6 +12,7 @@ final class RootViewModel: ObservableObject {
         case profile
         case today
         case schedule
+        case learn
         
         var name: String {
             switch self {
@@ -21,6 +22,8 @@ final class RootViewModel: ObservableObject {
                 return "Today"
             case .schedule:
                 return "Schedule"
+            case .learn:
+                return "Learn"
             }
         }
         
@@ -32,6 +35,8 @@ final class RootViewModel: ObservableObject {
                 return "today_home"
             case .schedule:
                 return "moon_tab"
+            case .learn:
+                return "learn_tab"
             }
         }
     }

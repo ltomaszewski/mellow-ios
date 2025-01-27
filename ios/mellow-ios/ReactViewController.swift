@@ -38,22 +38,8 @@ class UIReactNativeHostingController: UIViewController {
     
     // MARK: - Lifecycle
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Build the custom view
-        let mainView = contentViewBuilder()
-        mainView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Add to controller’s view hierarchy
-        view.addSubview(mainView)
-        
-        // Pin edges to take the full space of the view controller
-        NSLayoutConstraint.activate([
-            mainView.topAnchor.constraint(equalTo: view.topAnchor),
-            mainView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            mainView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+    override func loadView() {
+        // Make your custom view the controller’s main view
+        view = contentViewBuilder()
     }
 }

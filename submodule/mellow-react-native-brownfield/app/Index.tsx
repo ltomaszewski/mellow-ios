@@ -54,7 +54,7 @@ export default function Index({ text, style, ...otherProps }: IndexProps) {
       title: "Sleep 101",
       chapterText: "Chapter 1",
       onPressAction: async () => {
-        navigation.navigate("LearnView", { course: "Kakao" });
+        navigation.navigate("LearnView", { course: "sleep101" });
       },
     },
   ];
@@ -119,8 +119,8 @@ const styles = StyleSheet.create({
     color: "black",
   },
   image: {
-    width: 120,
-    height: 120,
+    width: 100,
+    height: 100,
   },
   iconStack: {
     marginVertical: 8, // Configurable space between elements

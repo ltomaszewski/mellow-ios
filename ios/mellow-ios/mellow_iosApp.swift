@@ -54,6 +54,7 @@ class AppDelegate: RCTAppDelegate {
 struct mellow_iosApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var rAppStateStore = AppState.Store(databaseService: .init())
+    @StateObject var reactViewFactor: ObservableWrapper<RCTRootViewFactory> = .init()
     
     // 1) Keep a ModelContainer property
     let container: ModelContainer
@@ -74,13 +75,13 @@ struct mellow_iosApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ReactView(
-                moduleName: "mellow-react-native",
-                rootViewFactory: delegate.rootViewFactory
-            )
-            //            ContentView()
-            //                .environmentObject(rAppStateStore)
-            //                .modelContainer(container)
+            ContentView()
+                .environmentObject(rAppStateStore)
+                .environmentObject(reactViewFactor)
+                .modelContainer(container)
+                .onAppear() {
+                    self.reactViewFactor.update(delegate.rootViewFactory)
+                }
         }
     }
 }

@@ -3,11 +3,11 @@ import { TurboModuleRegistry } from "react-native";
 import type { EventEmitter } from "react-native/Libraries/Types/CodegenTypes";
 
 export interface Spec extends TurboModule {
-  getHelloMessage(): string | null;
-  add(a: number, b: number): Promise<number>;
-  readonly onValueChanged: EventEmitter<number>;
+  onCourseStarted(course: string): void;
+  onCourseEnded(course: string): void;
+  readonly onRestState: EventEmitter<void>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>(
-  "NativeCalculator"
-) as Spec | null;
+  "NativeLearnConnector"
+) as Spec;

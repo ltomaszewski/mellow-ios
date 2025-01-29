@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   type ViewProps,
   Image,
   TouchableOpacity,
+  EventSubscription,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 

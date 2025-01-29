@@ -1,3 +1,0 @@
-[submodule "submodule/mellow-react-native"]
-	path = submodule/mellow-react-native
-	url = git@github.com:ltomaszewski/mellow-react-native.git

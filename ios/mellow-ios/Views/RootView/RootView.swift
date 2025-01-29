@@ -13,6 +13,7 @@ struct RootView: View {
     @StateObject var viewModel = RootViewModel()
     @State var endSleepTriggered: Bool = false
     @State private var selectedItem: RootViewModel.TabItem = .schedule
+    @State var tabBarVisibility = Visibility.visible
     
     var body: some View {
         ZStack {
@@ -34,7 +35,7 @@ struct RootView: View {
                         }
                         .tag(RootViewModel.TabItem.schedule)
                     ReactView(
-                        moduleName: "mellow-react-native",
+                        moduleName: "mellow-learn-module",
                         rootViewFactory: reactViewFactory.value!
                     )
                     .background(Color.gunmetalBlue)
@@ -52,9 +53,12 @@ struct RootView: View {
                         }
                         .tag(RootViewModel.TabItem.profile)
                 }
+                .toolbar(tabBarVisibility, for: .tabBar)
                 .toolbarBackground(.gunmetalBlue, for: .tabBar)
                 .toolbarBackground(.visible, for: .tabBar)
             })
+        }.onReceive(LearnConnector.shared.$courseInProgress) { courseInProgress in
+            tabBarVisibility = courseInProgress ? .hidden : .visible
         }
     }
 }

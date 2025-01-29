@@ -6,13 +6,14 @@ import {
   ViewProps,
   Animated,
   TouchableOpacity,
+  EventSubscription,
 } from "react-native";
 import { sleep101 } from "./model/sleep101";
 import Screen from "./model/Screen";
 import { useNavigation } from "@react-navigation/native";
 import PromptView from "./PromptView";
 import IntroView from "./IntroView";
-// import NativeLocalStorage from "../../../../specs/NativeLocalStorage";
+import NativeLearnConnector from "../../../../specs/NativeLearnConnector";
 
 interface Course {
   screens: Screen[];
@@ -39,13 +40,27 @@ export default function LearnView({ route, ...otherProps }: LearnViewProps) {
   const courseAsset = courseAssets[course];
 
   const [currentScreenIndex, setCurrentScreenIndex] = useState(0);
-  const progressAnim = useRef(new Animated.Value(0)).current;
-
   useEffect(() => {
-    // console.log(NativeLocalStorage);
-    // const storedValue = NativeLocalStorage?.getItem("myKey");
-    // console.log(storedValue);
+    NativeLearnConnector.onCourseStarted(course);
+    return () => {
+      NativeLearnConnector.onCourseEnded(course);
+    };
+  }, []);
 
+  const listenerSubscription = useRef<null | EventSubscription>(null);
+  useEffect(() => {
+    listenerSubscription.current = NativeLearnConnector?.onRestState(() => {
+      console.log("Rest state received");
+      navigation.popToTop();
+    });
+    return () => {
+      listenerSubscription.current?.remove();
+      listenerSubscription.current = null;
+    };
+  }, [listenerSubscription]);
+
+  const progressAnim = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
     Animated.timing(progressAnim, {
       toValue: (currentScreenIndex + 1) / courseAsset.screens.length,
       duration: 500,

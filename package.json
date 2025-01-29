@@ -9,6 +9,14 @@
     "start": "react-native start",
     "test": "jest"
   },
+  "codegenConfig": {
+    "name": "NativeSpecs",
+    "type": "all",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.nativeSpecs"
+    }
+  },
   "dependencies": {
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/native-stack": "^7.2.0",

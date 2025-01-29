@@ -12,6 +12,7 @@ import Screen from "./model/Screen";
 import { useNavigation } from "@react-navigation/native";
 import PromptView from "./PromptView";
 import IntroView from "./IntroView";
+// import NativeLocalStorage from "../../../../specs/NativeLocalStorage";
 
 interface Course {
   screens: Screen[];
@@ -41,6 +42,10 @@ export default function LearnView({ route, ...otherProps }: LearnViewProps) {
   const progressAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    // console.log(NativeLocalStorage);
+    // const storedValue = NativeLocalStorage?.getItem("myKey");
+    // console.log(storedValue);
+
     Animated.timing(progressAnim, {
       toValue: (currentScreenIndex + 1) / courseAsset.screens.length,
       duration: 500,

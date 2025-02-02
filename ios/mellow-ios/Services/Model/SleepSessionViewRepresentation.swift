@@ -42,4 +42,15 @@ extension SleepSessionViewRepresentation {
             type: self.type.rawValue
         )
     }
+    
+    // Method to check if two sleep sessions overlap
+    func overlaps(with other: SleepSessionViewRepresentation?) -> Bool {
+        guard let other else { return false }
+        guard isScheduled else { return false}
+        
+        let currentEndDate = self.endDate ?? Date()
+        let otherCurrentEndDate = other.endDate ?? Date()
+
+        return !(self.startDate >= otherCurrentEndDate || currentEndDate <= other.startDate)
+    }
 }

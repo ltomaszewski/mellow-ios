@@ -101,6 +101,7 @@ struct CalendarDayView: View {
                 editSleepSession = model.sleepSession
                 showEditSleepSession = true
             }
+            .opacity(model.sleepSession.overlaps(with: appStateStore.state.sleepSessionInProgress) ? 0 : 1)
         }
         .zIndex(model.sleepSession.isScheduled ? -99 : 999)
     }

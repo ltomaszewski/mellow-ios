@@ -30,31 +30,53 @@ struct AddSleepView: View {
     @State private var endTimePickerVisible = false
         
     init(date: Date, width: CGFloat, session: Binding<SleepSessionViewRepresentation?>) {
+        let calendar = Calendar.current
+        let now = Date()
+        
         self.date = date
         self.width = width
         
+        // Helper function to create date without minutes
+        let dateWithoutMinutes: (Date) -> Date = { date in
+            let components = calendar.dateComponents([.year, .month, .day, .hour], from: date)
+            return calendar.date(from: components) ?? date
+        }
+        
         if let existingSession = session.wrappedValue {
+            // Existing session case
             self._selectedOption = State(initialValue: existingSession.type)
             self._startTime = State(initialValue: existingSession.startDate)
             self._endTime = State(initialValue: existingSession.endDate)
             
-            self._startTimeMin = .init(initialValue: Date.distantPast)
-            self._startTimeMax = .init(initialValue: existingSession.endDate?.adding(hours: -1) ?? Date())
+            // Calculate time boundaries using calendar
+            let startMax = calendar.date(byAdding: .hour, value: -1, to: existingSession.endDate ?? now)
+            let endMin = calendar.date(byAdding: .minute, value: 15, to: existingSession.startDate)
+            let endMax = calendar.date(byAdding: .hour, value: 12, to: existingSession.startDate)
             
-            self._endTimeMin = .init(initialValue: existingSession.startDate.adding(hours: 1)!)
-            self._endTimeMax = .init(initialValue: existingSession.startDate.adding(hours: 12)!)
+            self._startTimeMin = .init(initialValue: .distantPast)
+            self._startTimeMax = .init(initialValue: startMax ?? now)
+            self._endTimeMin = .init(initialValue: endMin ?? now)
+            self._endTimeMax = .init(initialValue: endMax ?? .distantFuture)
             
         } else {
+            // New session case
             self._selectedOption = State(initialValue: .nap)
-            self._startTime = State(initialValue: date.isToday() ? Date().dateWithoutMinutes() : date)
+            
+            // Initialize start time with calendar-aware date
+            let initialStartDate = calendar.isDateInToday(date) ? now : date
+            self._startTime = State(initialValue: initialStartDate)
             self._endTime = State(initialValue: nil)
             
-            self._startTimeMin = .init(initialValue: Date.distantPast)
-            self._startTimeMax = .init(initialValue: date.isToday() ? Date().dateWithoutMinutes() : date)
+            // Calculate initial boundaries
+            let endMin = calendar.date(byAdding: .minute, value: 15, to: initialStartDate)
+            let endMax = calendar.date(byAdding: .hour, value: 12, to: initialStartDate)
             
-            self._endTimeMin = .init(initialValue: Date.distantPast)
-            self._endTimeMax = .init(initialValue: Date.distantFuture)
+            self._startTimeMin = .init(initialValue: .distantPast)
+            self._startTimeMax = .init(initialValue: initialStartDate)
+            self._endTimeMin = .init(initialValue: endMin ?? initialStartDate)
+            self._endTimeMax = .init(initialValue: endMax ?? .distantFuture)
         }
+        
         self._session = session
     }
     
